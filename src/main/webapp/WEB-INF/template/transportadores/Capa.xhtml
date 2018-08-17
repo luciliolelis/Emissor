@@ -1,0 +1,138 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:panelGrid columns="4" layout="grid" style="margin-top: 10px"
+		styleClass="panelgrid-noborder"
+		columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4">
+
+		<p:outputLabel value="Tipo da pessoa" for="tipo" />
+		<p:selectOneMenu id="tipo" label="Tipo" required="true"
+			value="#{gestaoTransportadorBean.clienteEdicao.tipoPessoa}">
+			<f:selectItems value="#{gestaoTransportadorBean.tipoPessoa}"
+				var="tipoPessoa" itemLabel="#{tipoPessoa.descricao}"
+				itemValue="#{tipoPessoa}" />
+			<p:ajax event="change" process="@this" update="@form" />
+		</p:selectOneMenu>
+
+		<p:outputLabel value="Contribuinte ICMS" for="contribuinte" />
+		<p:selectBooleanButton id="contribuinte" onIcon="ui-icon-check"
+			offIcon="ui-icon-close"
+			value="#{gestaoTransportadorBean.clienteEdicao.contribuinte}"
+			onLabel="Sim" offLabel="Não" style="width:100px">
+			<p:ajax event="change" process="@this"
+				update="grupo-ie-label grupo-ie-campo grupo-suframa-label grupo-suframa-campo" />
+		</p:selectBooleanButton>
+
+
+		<h:panelGroup id="grupo-cnpj-label">
+			<p:outputLabel value="CNPJ" for="cnpj"
+				rendered="#{gestaoTransportadorBean.clienteEdicao.tipoPessoa eq 'JURIDICA'}" />
+			<p:outputLabel value="CPF" for="cpf"
+				rendered="#{gestaoTransportadorBean.clienteEdicao.tipoPessoa eq 'FISICA'}" />
+		</h:panelGroup>
+
+
+		<h:panelGroup id="grupo-cnpj-campo">
+
+
+
+			<p:inputMask id="cnpj" size="18" maxlength="18" required="true"
+				rendered="#{gestaoTransportadorBean.clienteEdicao.tipoPessoa eq 'JURIDICA'}"
+				value="#{gestaoTransportadorBean.clienteEdicao.docReceitaFederal}"
+				mask="99.999.999/9999-99" />
+
+
+
+
+			<p:inputMask id="cpf" size="18" maxlength="18" required="true"
+				rendered="#{gestaoTransportadorBean.clienteEdicao.tipoPessoa eq 'FISICA'}"
+				value="#{gestaoTransportadorBean.clienteEdicao.docReceitaFederal}"
+				mask="999.999.999.99" />
+		</h:panelGroup>
+
+		<p:outputLabel
+			rendered="#{gestaoTransportadorBean.clienteEdicao.tipoPessoa eq 'JURIDICA'}" />
+		<p:commandButton value="Buscar transportador por CNPJ" icon="ui-icon-search"
+			actionListener="#{gestaoTransportadorBean.concultarCadastro}" styleClass="ui-priority-primary"
+			rendered="#{gestaoTransportadorBean.clienteEdicao.tipoPessoa eq 'JURIDICA'}"
+			process="@this cnpj" update="@form" />
+
+
+
+		<h:panelGroup id="grupo-razao-social-label">
+			<p:outputLabel value="Razão social" for="razao-social"
+				rendered="#{gestaoTransportadorBean.clienteEdicao.tipoPessoa eq 'JURIDICA'}" />
+			<p:outputLabel value="Nome" for="nome-fantasia"
+				rendered="#{gestaoTransportadorBean.clienteEdicao.tipoPessoa eq 'FISICA'}" />
+		</h:panelGroup>
+
+		<h:panelGroup id="grupo-razao-social-campo">
+			<p:inputText id="razao-social" maxlength="120" required="true"
+				rendered="#{gestaoTransportadorBean.clienteEdicao.tipoPessoa eq 'JURIDICA'}"
+				value="#{gestaoTransportadorBean.clienteEdicao.nome}">
+				<p:ajax event="change"
+					listener="#{gestaoTransportadorBean.automatizaNomeFantazia}"
+					process="@this" update="nome" />
+			</p:inputText>
+
+			<p:inputText id="nome" maxlength="80" required="true"
+				rendered="#{gestaoTransportadorBean.clienteEdicao.tipoPessoa eq 'FISICA'}"
+				value="#{gestaoTransportadorBean.clienteEdicao.nome}" />
+		</h:panelGroup>
+
+		<h:panelGroup id="grupo-nome-label">
+			<p:outputLabel value="Nome fantasia" for="nome-fantasia"
+				rendered="#{gestaoTransportadorBean.clienteEdicao.tipoPessoa eq 'JURIDICA'}" />
+			<p:outputLabel value="RG" for="rg"
+				rendered="#{gestaoTransportadorBean.clienteEdicao.tipoPessoa eq 'FISICA'}" />
+		</h:panelGroup>
+
+		<h:panelGroup id="grupo-nome-campo">
+
+			<p:inputMask id="rg" size="18" maxlength="18"
+				rendered="#{gestaoTransportadorBean.clienteEdicao.tipoPessoa eq 'FISICA'}"
+				value="#{gestaoTransportadorBean.clienteEdicao.rg}"
+				mask="9.999.999-9" />
+			<p:inputText id="nome-fantasia" maxlength="80" required="true"
+				rendered="#{gestaoTransportadorBean.clienteEdicao.tipoPessoa eq 'JURIDICA'}"
+				value="#{gestaoTransportadorBean.clienteEdicao.nomeFantasia}" />
+		</h:panelGroup>
+
+
+
+
+		<p:outputLabel value="Inscrição municipal" for="imJ" />
+		<p:inputText id="imJ"
+			value="#{gestaoTransportadorBean.clienteEdicao.inscricaoMunicipal}" />
+
+		<h:panelGroup id="grupo-ie-label">
+			<p:outputLabel value="Inscrição estadual (IE)" for="ieJ"
+				rendered="#{gestaoTransportadorBean.clienteEdicao.contribuinte eq true}" />
+		</h:panelGroup>
+
+		<h:panelGroup id="grupo-ie-campo">
+			<p:inputText id="ieJ" required="true"
+				rendered="#{gestaoTransportadorBean.clienteEdicao.contribuinte eq true}"
+				value="#{gestaoTransportadorBean.clienteEdicao.inscricaoEstadual}" />
+		</h:panelGroup>
+
+		<h:panelGroup id="grupo-suframa-label">
+			<p:outputLabel value="Inscrição suframa" for="suframaJ"
+				rendered="#{(gestaoTransportadorBean.clienteEdicao.contribuinte eq true) and (gestaoTransportadorBean.clienteEdicao.tipoPessoa eq 'JURIDICA')}" />
+		</h:panelGroup>
+
+		<h:panelGroup id="grupo-suframa-campo">
+			<p:inputText id="suframaJ"
+				rendered="#{(gestaoTransportadorBean.clienteEdicao.contribuinte eq true) and (gestaoTransportadorBean.clienteEdicao.tipoPessoa eq 'JURIDICA')}"
+				value="#{gestaoTransportadorBean.clienteEdicao.inscricaoSuframa}" />
+		</h:panelGroup>
+	</p:panelGrid>
+
+
+
+
+
+</ui:composition>

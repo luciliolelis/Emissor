@@ -1,0 +1,18 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h3>NCM</h3>
+	<p:selectManyCheckbox value="#{gestaoGruposBean.selectedNcm}"
+		layout="pageDirection">
+		<f:selectItem itemLabel="Pesquisar ncm"
+			itemValue="NCM_PESQUISAR" />
+		<f:selectItem itemLabel="Incluir novo ncm"
+			itemValue="NCM_INCLUIR" />
+		<f:selectItem itemLabel="Editar ncm existente"
+			itemValue="NCM_EDITAR" />
+		<f:selectItem itemLabel="Excluir ncm" itemValue="NCM_EXCLUIR" />
+	</p:selectManyCheckbox>
+</ui:composition>

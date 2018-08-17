@@ -1,0 +1,93 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h1 class="aw-page-title"></h1>
+	<div class="ui-fluid">
+		<p:panelGrid columns="4" layout="grid" 
+			styleClass="panelgrid-noborder"
+			columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4">
+
+			<p:outputLabel value="Forma de pagamento" for="formaPagamento" />
+			<p:selectOneMenu id="formaPagamento" required="true"  effect="fold"
+				value="#{cadastroNFeBean.nfe.formaPagamento}">
+				<f:selectItem itemLabel="Selecione" />
+				<f:selectItems value="#{cadastroNFeBean.formasPagamento}"
+					var="formaPagamento" itemValue="#{formaPagamento}"
+					itemLabel="#{formaPagamento.descricao}" />
+
+				<p:ajax event="change" process="@this" update="panel-duplicadas" />
+			</p:selectOneMenu>
+
+		</p:panelGrid>
+
+		<h:panelGroup id="panel-duplicadas">
+
+			<h:panelGroup
+				rendered="#{cadastroNFeBean.nfe.formaPagamento eq 'DUPLICATA_MERCANTIL'}">
+
+				<p:panelGrid columns="4" layout="grid" style="margin-top: 10px"
+					styleClass="panelgrid-noborder"
+					columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4">
+
+					<p:outputLabel value="Intervalo de dias" for="intervalo-parcelas" />
+					<p:spinner id="intervalo-parcelas" min="0"
+						value="#{cadastroNFeBean.nfe.intervaloParcelas}">
+						<p:ajax event="change" process="@this" update="@this" />
+					</p:spinner>
+
+					<p:outputLabel value="Número de parcelas" for="numero-parcelas" />
+					<p:spinner id="numero-parcelas" min="0"
+						value="#{cadastroNFeBean.nfe.quantidadeParcelas}">
+						<p:ajax event="change"
+							listener="#{cadastroNFeBean.adicionaParcela}"
+							update="tabelaItensDuplicatas" />
+					</p:spinner>
+				</p:panelGrid>
+
+
+
+				<p:dataTable value="#{cadastroNFeBean.listaDuplicatas}" var="item"
+					emptyMessage="Nenhuma parcela cadastrada" style="margin-top:15px"
+					rowIndexVar="linha" id="tabelaItensDuplicatas" reflow="true">
+
+					<p:column headerText="Número">
+						<p:inputText value="#{item.numeroDuplicata}">
+						</p:inputText>
+					</p:column>
+
+					<p:column headerText="Vencimento">
+						<p:calendar value="#{item.dataVencimento}" pattern="dd/MM/yyyy" />
+					</p:column>
+
+					<p:column headerText="Valor">
+						<p:inputText styleClass="moeda" value="#{item.valorParcela}">
+							<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+							<p:ajax event="change"
+								listener="#{cadastroNFeBean.atualizarTotalParcelas}"
+								update="tabelaItensDuplicatas" />
+						</p:inputText>
+					</p:column>
+					<p:columnGroup type="footer">
+						<p:row>
+							<p:column colspan="2" footerText="Total das parcelas"
+								style="text-align: right" />
+							<p:column style="text-align: right">
+								<f:facet name="footer">
+									<h:outputText value="#{cadastroNFeBean.nfe.valorTotalParcelas}">
+										<f:convertNumber type="currency" />
+									</h:outputText>
+								</f:facet>
+							</p:column>
+						</p:row>
+					</p:columnGroup>
+
+				</p:dataTable>
+			</h:panelGroup>
+		</h:panelGroup>
+
+	</div>
+
+</ui:composition>

@@ -1,0 +1,22 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"      
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h3>Produtos</h3>
+	<p:selectManyCheckbox 
+		value="#{gestaoGruposBean.selectedProdutos}" 
+		layout="pageDirection">
+				<f:selectItem itemLabel="Pesquisar produtos"
+			itemValue="PRODUTO_PESQUISAR" />
+		<f:selectItem itemLabel="Incluir novos produtos"
+			itemValue="PRODUTO_INCLUIR" />
+		<f:selectItem itemLabel="Editar produtos existentes"
+			itemValue="PRODUTO_EDITAR" />
+		<f:selectItem itemLabel="Excluir produtos"
+			itemValue="PRODUTO_EXCLUIR" />
+	</p:selectManyCheckbox>
+
+	
+</ui:composition>

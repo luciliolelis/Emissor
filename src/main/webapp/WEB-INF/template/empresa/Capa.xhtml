@@ -1,0 +1,91 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<p:panelGrid columns="4" layout="grid" style="margin-top: 10px"
+		styleClass="panelgrid-noborder"
+		columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4">
+
+
+		<p:outputLabel value="CNPJ" for="cnpj" />
+		<p:inputMask id="cnpj" maxlength="18" required="true"
+			value="#{gestaoEmpresasBean.empresaEdicao.cnpj}"
+			mask="99.999.999/9999-99" />
+
+		<p:outputLabel />
+
+		<p:commandButton value="Buscar cliente por CNPJ" icon="ui-icon-search"
+			disabled="#{gestaoEmpresasBean.editando}"
+			styleClass="ui-priority-primary"
+			actionListener="#{gestaoEmpresasBean.concultarCadastro}"
+			process="@this cnpj" update="@form" />
+
+		<p:outputLabel value="Razão social" for="razao-social" />
+		<p:inputText id="razao-social" maxlength="120" required="true"
+			value="#{gestaoEmpresasBean.empresaEdicao.razao_social}" />
+
+		<p:outputLabel value="Nome fantasia" for="nome-fantasia" />
+		<p:inputText id="nome-fantasia" maxlength="80" required="true"
+			value="#{gestaoEmpresasBean.empresaEdicao.nome_fantasia}" />
+
+		<p:outputLabel value="Inscrição Municipal" for="inscricaoMunicial" />
+		<p:inputText id="inscricaoMunicial"
+			value="#{gestaoEmpresasBean.empresaEdicao.inscricao_municipal}" />
+
+		<p:outputLabel value="Inscrição Estadual" for="inscricaoEstadual" />
+		<p:inputText id="inscricaoEstadual"
+			value="#{gestaoEmpresasBean.empresaEdicao.inscricao_estadual}" />
+
+		<p:outputLabel value="Regime tributário" for="tributacao" />
+		<p:selectOneMenu id="tributacao" required="true"
+			value="#{gestaoEmpresasBean.empresaEdicao.regimeTributario}">
+			<f:selectItem itemLabel="Selecione" />
+			<f:selectItems value="#{gestaoEmpresasBean.regimeTributarios}"
+				var="tributacao" itemLabel="#{tributacao.descricao}"
+				itemValue="#{tributacao}" />
+		</p:selectOneMenu>
+
+
+		<p:outputLabel value="Telefone" for="telefone" />
+		<p:inputMask id="telefone" mask="(99)9999-9999"
+			value="#{gestaoEmpresasBean.empresaEdicao.fone}" />
+
+		<p:outputLabel value="E-mail" for="fax" />
+		<p:inputMask id="fax" value="#{gestaoEmpresasBean.empresaEdicao.mail}" />
+
+
+
+		<p:spacer />
+		<p:fileUpload
+			fileUploadListener="#{gestaoEmpresasBean.uploadCertificado}"
+			label="Encotrar Certificado .pfx" mode="advanced"
+			update="frm:tab:certificado" auto="true" sizeLimit="100000"
+			allowTypes="/(\.|\/)(pfx)$/" />
+
+
+
+		<p:outputLabel value="Certificado" />
+		<p:inputText readonly="true"
+			value="#{gestaoEmpresasBean.empresaEdicao.nomeCertificado}" />
+
+		<p:outputLabel value="Senha" for="senhaCertificado" />
+
+		<p:password id="senhaCertificado" required="true"
+			value="#{gestaoEmpresasBean.empresaEdicao.senhaCertificado}"
+			promptLabel="Informe uma senha" inline="true" redisplay="true" />
+
+		<p:outputLabel value="Ambiente Sefaz" />
+		<p:spinner id="ambiente"
+			value="#{gestaoEmpresasBean.empresaEdicao.wsAmbiente}"
+			title="1=produção/2=homologação" min="1" max="2" />
+		<p:tooltip id="toolTipFocus" for="ambiente" hideEvent="blur" />
+
+	</p:panelGrid>
+
+
+
+
+
+
+</ui:composition>

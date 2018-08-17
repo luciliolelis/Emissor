@@ -1,0 +1,575 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<div class="ui-fluid">
+
+		<p:panelGrid columns="2" styleClass="panelgrid-noborder" layout="grid"
+			style="margin-top:15px; margin-left:-10px"
+			columnClasses="ui-grid-col-3, ui-grid-col-12">
+
+			<p:commandButton icon="ui-icon-search" title="Pesquisar"
+				value="Pesquisar produtos" process="@this"
+				rendered="#{(cadastroNFeBean.nfe.status != 'AUTORIZADA' and cadastroNFeBean.nfe.status != 'AUTORIZADACORRECAO' and cadastroNFeBean.nfe.status != 'CANCELADA')}"
+				update="produtos-dialog panel-produtos"
+				actionListener="#{cadastroNFeBean.pesquisaProdutos}"
+				oncomplete="PF('produtosDialog').show()" ignoreAutoUpdate="true">
+			</p:commandButton>
+		</p:panelGrid>
+
+		<p:dataTable value="#{cadastroNFeBean.nfe.itensProdutos}" var="item"
+			style="margin-top:5px" sortBy="#{item.cfop}" rowIndexVar="linha"
+			id="tabelaItens" reflow="true">
+
+			<p:summaryRow>
+				<p:column rendered="#{linha != 0}" colspan="11">
+					<h:outputText value=" #{item.cfop}" />
+				</p:column>
+			</p:summaryRow>
+
+			<p:column headerText="CFOP">
+				<h:outputText value=" #{item.cfop}"
+					rendered="#{item.produtoAssociado and linha eq 0 or (cadastroNFeBean.nfe.status eq 'AUTORIZADA' or cadastroNFeBean.nfe.status eq 'AUTORIZADACORRECAO' or cadastroNFeBean.nfe.status eq 'CANCELADA')}" />
+
+				<p:inputText value="#{item.cfop}"
+					rendered="#{linha != 0 and (cadastroNFeBean.nfe.status != 'AUTORIZADA' and cadastroNFeBean.nfe.status != 'AUTORIZADACORRECAO' and cadastroNFeBean.nfe.status != 'CANCELADA')}"
+					style="width:75%" required="#{linha > 0}"
+					requiredMessage="O CFOP do produto é necessário">
+					<p:ajax event="change" process="@this" update="tabelaItens"
+						listener="#{cadastroNFeBean.pesquisarCfopProduto(item, linha)}" />
+				</p:inputText>
+				<h:graphicImage library="images" name="alerta.png" id="semEstoque"
+					style="horizontal-align: center; certical-align: center"
+					rendered="#{item.cfopProduto}" />
+			</p:column>
+
+			<p:column headerText="Código">
+
+				<h:outputText value="#{item.produto.sku}"
+					rendered="#{item.produtoAssociado}" />
+
+				<p:inputText size="8" value="#{cadastroNFeBean.codigoProduto}"
+					placeholder="Digite o código" label="Código"
+					rendered="#{not item.produtoAssociado}">
+					<p:ajax event="change" process="@this"
+						update="tabelaItens frm:tab:complemento frm:tab:totalPedido frm:tab:subtotal frm:tab:base-icms frm:tab:valor-icms frm:tab:base-icms-st frm:tab:valor-icms-st frm:tab:valor-ipi frm:tab:valor-total-pis frm:tab:valor-total-cofins"
+						listener="#{cadastroNFeBean.carregarProdutoPorSku}" />
+				</p:inputText>
+			</p:column>
+
+			<p:column headerText="Produto">
+
+				<h:outputText value="#{item.produto.nome}"
+					rendered="#{item.produtoAssociado}" />
+
+				<p:autoComplete styleClass="produto-tabela"
+					placeholder="Digite o nome" minQueryLength="3"
+					value="#{cadastroNFeBean.produtoLinhaEditavel}"
+					completeMethod="#{cadastroNFeBean.completarProduto}" var="produto"
+					itemLabel="#{produto.nome}" itemValue="#{produto}"
+					forceSelection="true" rendered="#{not item.produtoAssociado}">
+					<p:ajax event="itemSelect"
+						update="tabelaItens frm:tab:totalPedido frm:tab:subtotal frm:tab:base-icms frm:tab:valor-icms frm:tab:base-icms-st frm:tab:valor-icms-st frm:tab:valor-ipi frm:tab:valor-total-pis frm:tab:valor-total-cofins"
+						listener="#{cadastroNFeBean.carregarProdutoLinhaEditavel}" />
+					<p:column>
+						<h:outputText value="#{produto.nome}" />
+					</p:column>
+					<p:column>
+						<h:outputText value="#{produto.unidadeMedida}" />
+					</p:column>
+					<p:column>
+						<h:outputText value="#{produto.valorUnitario}">
+							<f:convertNumber type="currency" />
+						</h:outputText>
+					</p:column>
+				</p:autoComplete>
+			</p:column>
+
+			<p:column headerText="NCM">
+				<h:outputText value="#{item.ncm}">
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="CST"
+				rendered="#{seguranca.empresa.regimeTributario != 'SIMPLES' and cadastroNFeBean.nfe.vendaConsumidorFinal eq false}">
+				<h:outputText
+					value="#{item.produto.origemProduto.codigo}#{item.cstIcms}">
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="CSOSN"
+				rendered="#{seguranca.empresa.regimeTributario == 'SIMPLES' and cadastroNFeBean.nfe.vendaConsumidorFinal eq false}">
+				<h:outputText value="#{item.csosn}">
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="CST CF"
+				rendered="#{seguranca.empresa.regimeTributario != 'SIMPLES' and cadastroNFeBean.nfe.vendaConsumidorFinal eq true}">
+
+				<h:graphicImage library="images" name="alerta.png" id="semCst"
+					style="horizontal-align: center; certical-align: center"
+					rendered="#{item.produto.csticms eq null and linha != 0}" />
+
+				<h:outputText value="#{item.produto.csticms.codigo}"
+					rendered="#{linha != 0}">
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="CSOSN CF"
+				rendered="#{seguranca.empresa.regimeTributario == 'SIMPLES' and cadastroNFeBean.nfe.vendaConsumidorFinal eq true}">
+				<h:graphicImage library="images" name="alerta.png" id="semCsosn"
+					style="horizontal-align: center; certical-align: center"
+					rendered="#{item.produto.csosn eq null and linha != 0}" />
+
+				<h:outputText value="#{item.produto.csosn.codigo}"
+					rendered="#{item.produtoAssociado  and linha eq 0}">
+				</h:outputText>
+
+				<h:outputText value="#{item.produto.csosn.codigo}"
+					rendered="#{linha != 0}">
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="Unid.">
+				<h:outputText value="#{item.produto.unidadeMedida}" />
+			</p:column>
+
+			<p:column headerText="Qtd.">
+
+				<h:outputText value=" #{item.quantidade}"
+					rendered="#{item.produtoAssociado and linha eq 0 or (cadastroNFeBean.nfe.status eq 'AUTORIZADA' or cadastroNFeBean.nfe.status eq 'AUTORIZADACORRECAO' or cadastroNFeBean.nfe.status eq 'CANCELADA')}" />
+				<p:inputText size="8" value="#{item.quantidade}"
+					rendered="#{linha != 0 and (cadastroNFeBean.nfe.status != 'AUTORIZADA' and cadastroNFeBean.nfe.status != 'AUTORIZADACORRECAO' and cadastroNFeBean.nfe.status != 'CANCELADA')}">
+					<p:ajax event="change" process="@this"
+						update="tabelaItens frm:tab:totalPedido frm:tab:subtotal frm:tab:base-icms frm:tab:valor-icms frm:tab:base-icms-st frm:tab:valor-icms-st frm:tab:valor-ipi frm:tab:valor-total-pis frm:tab:valor-total-cofins frm:tab:valorFrete frm:tab:valor-seguro frm:tab:outras-despesas"
+						listener="#{cadastroNFeBean.atualizarQuantidade(item, linha)}" />
+				</p:inputText>
+			</p:column>
+
+			<p:column headerText="Valor unitário">
+
+				<h:outputText value="#{item.valorUnitario}"
+					rendered="#{item.produtoAssociado and linha eq 0 or (cadastroNFeBean.nfe.status eq 'AUTORIZADA' or cadastroNFeBean.nfe.status eq 'AUTORIZADACORRECAO' or cadastroNFeBean.nfe.status eq 'CANCELADA')}">
+					<f:convertNumber type="currency" />
+				</h:outputText>
+
+				<p:inputText value="#{item.valorUnitario}" styleClass="moeda"
+					rendered="#{linha != 0 and (cadastroNFeBean.nfe.status != 'AUTORIZADA' and cadastroNFeBean.nfe.status != 'AUTORIZADACORRECAO' and cadastroNFeBean.nfe.status != 'CANCELADA')}">
+					<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+					<p:ajax event="change" process="@this"
+						update="tabelaItens frm:tab:totalPedido frm:tab:subtotal frm:tab:base-icms frm:tab:valor-icms frm:tab:base-icms-st frm:tab:valor-icms-st frm:tab:valor-ipi frm:tab:valor-total-pis frm:tab:valor-total-cofins"
+						listener="#{cadastroNFeBean.atualizarValorProduto(item, linha)}" />
+				</p:inputText>
+			</p:column>
+
+			<p:column headerText="Desconto">
+
+				<h:outputText value=" #{item.valorDesconto}"
+					rendered="#{item.produtoAssociado and linha eq 0 or (cadastroNFeBean.nfe.status eq 'AUTORIZADA' or cadastroNFeBean.nfe.status eq 'AUTORIZADACORRECAO' or cadastroNFeBean.nfe.status eq 'CANCELADA')}">
+					<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+				</h:outputText>
+				<p:inputText value="#{item.valorDesconto}" styleClass="moeda"
+					rendered="#{linha != 0 and (cadastroNFeBean.nfe.status != 'AUTORIZADA' and cadastroNFeBean.nfe.status != 'AUTORIZADACORRECAO' and cadastroNFeBean.nfe.status != 'CANCELADA')}">
+					<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+					<p:ajax event="change" process="@this"
+						update="tabelaItens frm:tab:totalPedido frm:tab:subtotal frm:tab:base-icms frm:tab:valor-icms frm:tab:base-icms-st frm:tab:valor-icms-st frm:tab:valor-ipi frm:tab:valor-total-pis frm:tab:valor-total-cofins"
+						listener="#{cadastroNFeBean.atualizarValorDesconto(item, linha)}" />
+				</p:inputText>
+			</p:column>
+
+			<p:column headerText="Valor total">
+
+				<h:outputText value="#{item.valorTotal}"
+					rendered="#{linha eq 0 and item.produtoAssociado}">
+					<f:convertNumber type="currency" />
+				</h:outputText>
+
+				<h:outputText value="#{item.valorTotal}" rendered="#{linha != 0}">
+					<f:convertNumber type="currency" />
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="Opções" style="text-align: center; width:90px">
+				<p:commandButton update="frm:tab:carDetail"
+					rendered="#{linha != 0 and (cadastroNFeBean.nfe.status != 'AUTORIZADA' and cadastroNFeBean.nfe.status != 'AUTORIZADACORRECAO' and cadastroNFeBean.nfe.status != 'CANCELADA')}"
+					style="width:40px"
+					oncomplete="PF('detalhesProduto').show('#{component.clientId}')"
+					icon="ui-icon-info" title="Veja detalhes do produto">
+					<f:setPropertyActionListener value="#{item}"
+						target="#{cadastroNFeBean.produtoSelecionado}" />
+				</p:commandButton>
+
+				<p:commandButton icon="ui-icon-trash" update="tabelaItens"
+					title="Remover produto" style="width:40px"
+					rendered="#{linha != 0 and (cadastroNFeBean.nfe.status != 'AUTORIZADA' and cadastroNFeBean.nfe.status != 'AUTORIZADACORRECAO' and cadastroNFeBean.nfe.status != 'CANCELADA')}"
+					process="tabelaItens">
+					<p:confirm icon="ui-icon-alert" header="Confirmação de exclusão"
+						message="Tem certeza que deseja remover este produto" />
+					<p:ajax event="click" process="@this"
+						update="tabelaItens frm:tab:totalPedido frm:tab:subtotal frm:tab:base-icms frm:tab:valor-icms frm:tab:base-icms-st frm:tab:valor-icms-st frm:tab:valor-ipi frm:tab:valor-total-pis frm:tab:valor-total-cofins frm:tab:valorFrete frm:tab:valor-seguro frm:tab:outras-despesas"
+						listener="#{cadastroNFeBean.removerItem(item, linha)}" />
+				</p:commandButton>
+			</p:column>
+
+			<p:columnGroup type="footer">
+				<p:row>
+					<p:column colspan="8" footerText="Totais" style="text-align: right" />
+
+					<p:column style="text-align: right">
+						<f:facet name="footer">
+							<h:outputText value="#{cadastroNFeBean.nfe.valorDesconto}">
+								<f:convertNumber type="currency" />
+							</h:outputText>
+						</f:facet>
+					</p:column>
+
+					<p:column style="text-align: right">
+						<f:facet name="footer">
+							<h:outputText value="#{cadastroNFeBean.nfe.valorTotalProdutos}">
+								<f:convertNumber type="currency" />
+							</h:outputText>
+						</f:facet>
+					</p:column>
+
+					<p:column style="text-align: right">
+						<f:facet name="footer">
+
+						</f:facet>
+					</p:column>
+				</p:row>
+			</p:columnGroup>
+		</p:dataTable>
+
+		<p:overlayPanel widgetVar="detalhesProduto" showEffect="fade"
+			modal="false" hideEffect="fade" showCloseIcon="true">
+			<p:outputPanel id="carDetail">
+
+				<p:panelGrid columns="4" columnClasses="rotulo,campo,rotulo, campo"
+					rendered="#{not empty cadastroNFeBean.nfe.itensProdutos}">
+
+					<h:outputText value="UF" />
+					<h:outputText value="#{cadastroNFeBean.produtoSelecionado.uf}">
+					</h:outputText>
+
+					<h:outputText value="Frete" />
+
+					<h:outputText
+						value="#{cadastroNFeBean.produtoSelecionado.valorFrete}">
+						<f:convertNumber type="currency" />
+					</h:outputText>
+
+					<h:outputText value="Despesas" />
+					<h:outputText
+						value="#{cadastroNFeBean.produtoSelecionado.valorDespesa}">
+						<f:convertNumber type="currency" />
+					</h:outputText>
+
+					<h:outputText value="Seguro" />
+					<h:outputText
+						value="#{cadastroNFeBean.produtoSelecionado.valorSeguro}">
+						<f:convertNumber type="currency" />
+					</h:outputText>
+				</p:panelGrid>
+
+
+				<h1 class="aw-table-title">ICMS</h1>
+				<p:panelGrid columns="4" columnClasses="rotulo,campo,rotulo, campo"
+					rendered="#{not empty cadastroNFeBean.nfe.itensProdutos}">
+
+					<h:outputText value="Alíquota" />
+					<h:outputText
+						value="#{cadastroNFeBean.produtoSelecionado.aliquotaIcms}">
+					</h:outputText>
+
+					<h:outputText value="Alíquota ST" />
+					<h:outputText
+						value="#{cadastroNFeBean.produtoSelecionado.aliquotaIcmsSt}">
+					</h:outputText>
+
+					<h:outputText value="Redução BC" />
+					<h:outputText
+						value="#{cadastroNFeBean.produtoSelecionado.reducaoBaseCalculoIcms}">
+					</h:outputText>
+
+					<h:outputText value="Redução BC ST" />
+					<h:outputText
+						value="#{cadastroNFeBean.produtoSelecionado.reducaoBaseCalculoIcmsSt}">
+					</h:outputText>
+
+					<h:outputText value="MVA" />
+					<h:outputText value="#{cadastroNFeBean.produtoSelecionado.mva}">
+					</h:outputText>
+
+					<h:outputText value="Pauta" />
+					<h:outputText value="#{cadastroNFeBean.produtoSelecionado.pauta}">
+						<f:convertNumber type="currency" />
+					</h:outputText>
+
+					<h:outputText value="BC" />
+					<h:outputText
+						value="#{cadastroNFeBean.produtoSelecionado.baseIcms}">
+						<f:convertNumber type="currency" />
+					</h:outputText>
+
+					<h:outputText value="ICMS" />
+					<h:outputText
+						value="#{cadastroNFeBean.produtoSelecionado.valorIcms}">
+						<f:convertNumber type="currency" />
+					</h:outputText>
+
+					<h:outputText value="BC ST" />
+					<h:outputText
+						value="#{cadastroNFeBean.produtoSelecionado.baseIcmsSt}">
+						<f:convertNumber type="currency" />
+					</h:outputText>
+
+					<h:outputText value="ICMS ST" />
+					<h:outputText
+						value="#{cadastroNFeBean.produtoSelecionado.valorIcmsSt}">
+						<f:convertNumber type="currency" />
+					</h:outputText>
+				</p:panelGrid>
+
+				<h1 class="aw-table-title">IPI</h1>
+
+				<p:panelGrid columns="4" columnClasses="rotulo,campo,rotulo, campo"
+					rendered="#{not empty cadastroNFeBean.nfe.itensProdutos}">
+					<h:outputText value="CST IPI" />
+					<h:outputText value="#{cadastroNFeBean.produtoSelecionado.cstIpi}">
+					</h:outputText>
+
+					<p:spacer />
+					<p:spacer />
+
+					<h:outputText value="Alíquota" />
+					<h:outputText
+						value="#{cadastroNFeBean.produtoSelecionado.aliquotaIpi}">
+					</h:outputText>
+
+					<h:outputText value="IPI" />
+					<h:outputText
+						value="#{cadastroNFeBean.produtoSelecionado.valorIpi}">
+						<f:convertNumber type="currency" />
+					</h:outputText>
+
+				</p:panelGrid>
+
+				<h1 class="aw-table-title">PIS e COFINS</h1>
+
+				<p:panelGrid columns="4" columnClasses="rotulo,campo,rotulo, campo"
+					rendered="#{not empty cadastroNFeBean.nfe.itensProdutos}">
+
+					<h:outputText value="CST" />
+					<h:outputText value="#{cadastroNFeBean.produtoSelecionado.cstPis}">
+						<f:convertNumber type="currency" />
+					</h:outputText>
+
+					<p:spacer />
+					<p:spacer />
+
+					<h:outputText value="Alíquota PIS" />
+					<h:outputText
+						value="#{cadastroNFeBean.produtoSelecionado.aliquotaPis}">
+					</h:outputText>
+
+					<h:outputText value="PIS" />
+					<h:outputText value="#{cadastroNFeBean.produtoSelecionado.pis}">
+						<f:convertNumber type="currency" />
+					</h:outputText>
+
+					<h:outputText value="Alíquota COFINS" />
+					<h:outputText
+						value="#{cadastroNFeBean.produtoSelecionado.aliquotaCofins}">
+					</h:outputText>
+
+					<h:outputText value="COFINS" />
+					<h:outputText value="#{cadastroNFeBean.produtoSelecionado.cofins}">
+						<f:convertNumber type="currency" />
+					</h:outputText>
+
+				</p:panelGrid>
+
+			</p:outputPanel>
+		</p:overlayPanel>
+
+
+		<h1 class="aw-page-title">Custos</h1>
+
+
+		<p:panelGrid columns="4" layout="grid" styleClass="panelgrid-noborder"
+			columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4">
+
+			<p:outputLabel value="Valor do seguro" for="valor-seguro" />
+			<p:inputText id="valor-seguro" styleClass="moeda"
+				value="#{cadastroNFeBean.nfe.valorSeguro}">
+				<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+				<p:ajax event="change" process="@this"
+					update="tabelaItens frm:tab:totalPedido frm:tab:subtotal frm:tab:base-icms frm:tab:valor-icms frm:tab:base-icms-st frm:tab:valor-icms-st frm:tab:valor-ipi frm:tab:valor-total-pis frm:tab:valor-total-cofins frm:tab:valorFrete frm:tab:valor-seguro frm:tab:outras-despesas"
+					listener="#{cadastroNFeBean.recalcularNota}" />
+			</p:inputText>
+
+			<p:outputLabel value="Somar seguro a B.C de ICMS"
+				for="somar-seguro-icms" />
+
+			<p:selectBooleanButton id="somar-seguro-icms" onIcon="ui-icon-check"
+				offIcon="ui-icon-close"
+				value="#{cadastroNFeBean.nfe.somarSeguroBaseCalculo}" onLabel="Sim"
+				offLabel="Não" style="width:100px">
+				<p:ajax event="change" process="@this"
+					update="tabelaItens frm:tab:totalPedido frm:tab:subtotal frm:tab:base-icms frm:tab:valor-icms frm:tab:base-icms-st frm:tab:valor-icms-st frm:tab:valor-ipi frm:tab:valor-total-pis frm:tab:valor-total-cofins frm:tab:valorFrete frm:tab:valor-seguro frm:tab:outras-despesas"
+					listener="#{cadastroNFeBean.recalcularNota}" />
+			</p:selectBooleanButton>
+
+			<p:outputLabel value="Outras despesas" for="outras-despesas" />
+			<p:inputText id="outras-despesas" styleClass="moeda"
+				value="#{cadastroNFeBean.nfe.valorDespesas}">
+				<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+				<p:ajax event="change" process="@this"
+					update="tabelaItens frm:tab:totalPedido frm:tab:subtotal frm:tab:base-icms frm:tab:valor-icms frm:tab:base-icms-st frm:tab:valor-icms-st frm:tab:valor-ipi frm:tab:valor-total-pis frm:tab:valor-total-cofins frm:tab:valorFrete frm:tab:valor-seguro frm:tab:outras-despesas"
+					listener="#{cadastroNFeBean.recalcularNota}" />
+			</p:inputText>
+
+			<p:outputLabel value="Somar despesas a B.C de ICMS"
+				for="somar-despesas-icms" />
+
+			<p:selectBooleanButton id="somar-despesas-icms"
+				onIcon="ui-icon-check" offIcon="ui-icon-close"
+				value="#{cadastroNFeBean.nfe.somarDespesasBaseCalculo}"
+				onLabel="Sim" offLabel="Não" style="width:100px">
+				<p:ajax event="change" process="@this"
+					update="tabelaItens frm:tab:totalPedido frm:tab:subtotal frm:tab:base-icms frm:tab:valor-icms frm:tab:base-icms-st frm:tab:valor-icms-st frm:tab:valor-ipi frm:tab:valor-total-pis frm:tab:valor-total-cofins frm:tab:valorFrete frm:tab:valor-seguro frm:tab:outras-despesas"
+					listener="#{cadastroNFeBean.recalcularNota}" />
+			</p:selectBooleanButton>
+
+			<p:outputLabel value="Valor do frete" for="valorFrete" />
+			<p:inputText id="valorFrete" styleClass="moeda"
+				value="#{cadastroNFeBean.nfe.valorFrete}">
+				<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+				<p:ajax event="change" process="@this"
+					update="tabelaItens frm:tab:totalPedido frm:tab:subtotal frm:tab:base-icms frm:tab:valor-icms frm:tab:base-icms-st frm:tab:valor-icms-st frm:tab:valor-ipi frm:tab:valor-total-pis frm:tab:valor-total-cofins frm:tab:valorFrete frm:tab:valor-seguro frm:tab:outras-despesas"
+					listener="#{cadastroNFeBean.recalcularNota}" />
+			</p:inputText>
+
+			<p:outputLabel value="Somar frete a B.C de ICMS"
+				for="somar-frete-icms" />
+			<p:selectBooleanButton id="somar-frete-icms" onIcon="ui-icon-check"
+				offIcon="ui-icon-close"
+				value="#{cadastroNFeBean.nfe.somarFreteBaseCalculo}" onLabel="Sim"
+				offLabel="Não" style="width:100px">
+				<p:ajax event="change" process="@this"
+					update="tabelaItens frm:tab:totalPedido frm:tab:subtotal frm:tab:base-icms frm:tab:valor-icms frm:tab:base-icms-st frm:tab:valor-icms-st frm:tab:valor-ipi frm:tab:valor-total-pis frm:tab:valor-total-cofins frm:tab:valorFrete frm:tab:valor-seguro frm:tab:outras-despesas"
+					listener="#{cadastroNFeBean.recalcularNota}" />
+			</p:selectBooleanButton>
+		</p:panelGrid>
+
+		<h1 class="aw-page-title">Cálculo do imposto</h1>
+
+		<p:panelGrid columns="4" layout="grid" styleClass="panelgrid-noborder"
+			columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4">
+
+			<p:outputLabel value="Base do ICMS" for="base-icms" />
+			<h:outputText id="base-icms"
+				value="#{(seguranca.empresa.regimeTributario == 'SIMPLES' and cadastroNFeBean.nfe.finalidadeOperacao != 'DEVOLUCAO')?'Não destaca':cadastroNFeBean.nfe.valorBaseIcms}">
+				<f:convertNumber type="currency" />
+			</h:outputText>
+
+			<p:outputLabel value="Valor do ICMS" for="valor-icms" />
+			<h:outputText id="valor-icms"
+				value="#{(seguranca.empresa.regimeTributario == 'SIMPLES' and cadastroNFeBean.nfe.finalidadeOperacao != 'DEVOLUCAO')?'Não destaca':cadastroNFeBean.nfe.valorIcms}">
+				<f:convertNumber type="currency" />
+			</h:outputText>
+
+			<p:outputLabel value="Base do ICMS ST" for="base-icms-st" />
+			<h:outputText id="base-icms-st"
+				value="#{cadastroNFeBean.nfe.valorBaseIcmsSt}">
+				<f:convertNumber type="currency" />
+			</h:outputText>
+
+			<p:outputLabel value="Valor do ICMS ST" for="valor-icms-st" />
+			<h:outputText id="valor-icms-st"
+				value="#{cadastroNFeBean.nfe.valorIcmsSt}">
+				<f:convertNumber type="currency" />
+			</h:outputText>
+
+			<p:outputLabel value="Valor do IPI" />
+
+			<h:outputText id="valor-ipi"
+				value="#{(seguranca.empresa.regimeTributario == 'SIMPLES' and cadastroNFeBean.nfe.finalidadeOperacao != 'DEVOLUCAO')?'Não destaca':cadastroNFeBean.nfe.valorIpi}">
+				<f:convertNumber type="currency" />
+			</h:outputText>
+
+			<p:outputLabel value="Total PIS" />
+			<h:outputText id="valor-total-pis"
+				value="#{cadastroNFeBean.nfe.valorTotalPIS}">
+				<f:convertNumber type="currency" />
+			</h:outputText>
+
+			<p:outputLabel value="Total COFINS" />
+
+			<h:outputText id="valor-total-cofins"
+				value="#{cadastroNFeBean.nfe.valorTotalCOFINS}">
+				<f:convertNumber type="currency" />
+			</h:outputText>
+
+
+			<p:outputLabel value="Total dos produtos" />
+			<h:outputText value="#{cadastroNFeBean.nfe.valorTotalSemDesconto}"
+				style="font-weight: bold; font-size: 1.1em" id="subtotal">
+				<f:convertNumber type="currency" />
+			</h:outputText>
+
+			<p:outputLabel value="Total da Nf-e" />
+			<h:outputText value="#{cadastroNFeBean.nfe.valorTotalNota}"
+				style="font-weight: bold; font-size: 1.1em" id="totalPedido">
+				<f:convertNumber type="currency" />
+			</h:outputText>
+
+		</p:panelGrid>
+
+
+
+		<p:dialog header="Pesquisa de produtos" widgetVar="produtosDialog"
+			modal="true" id="produtos-dialog"  closeOnEscape="true" resizable="true">
+
+			<h:panelGroup id="panel-produtos" style="margin-top:5px">
+				<p:dataTable id="produtosTable" widgetVar="table-produtos"
+					style="max-width:550px; max-higth:450px"
+					value="#{cadastroNFeBean.produtosFiltrados}" var="produto"
+					emptyMessage="Nenhum produto encontrado." rows="7" reflow="true"
+					paginatorPosition="bottom" paginatorAlwaysVisible="false"
+					paginator="true">
+
+					<p:column style="width: 30px; text-align: center">
+						<p:commandButton icon="ui-icon-check" title="Selecionar"
+							oncomplete="if (!args.validationFailed) PF('produtosDialog').hide()"
+							process="@this"
+							action="#{cadastroNFeBean.produtosSelecionar(produto)}"
+							update=":frm:tab:tabelaItens  frm:tab:complemento frm:tab:totalPedido frm:tab:subtotal frm:tab:base-icms frm:tab:valor-icms frm:tab:base-icms-st frm:tab:valor-icms-st frm:tab:valor-ipi frm:tab:valor-total-pis frm:tab:valor-total-cofins frm:tab:valorFrete frm:tab:valor-seguro frm:tab:outras-despesas" />
+					</p:column>
+
+					<p:column headerText="Código"
+						style="width: 80px; text-align:center" filterBy="#{produto.sku}">
+						<h:outputText value="#{produto.sku}" />
+					</p:column>
+
+					<p:column headerText="Nome" filterBy="#{produto.nome}">
+						<h:outputText value="#{produto.nome}" />
+					</p:column>
+
+					<p:column headerText="Valor unitário"
+						style="width: 100px; text-align:center">
+						<h:outputText value="#{produto.valorUnitario}">
+							<f:convertNumber type="currency" />
+						</h:outputText>
+					</p:column>
+
+				</p:dataTable>
+
+			</h:panelGroup>
+		</p:dialog>
+
+	</div>
+
+</ui:composition>

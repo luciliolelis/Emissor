@@ -1,0 +1,134 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template/Layout.xhtml">
+
+
+	<f:metadata>
+		<f:viewParam name="dummy" />
+		<f:event listener="#{graficoNfeEmitidasBean.preRender}"
+			type="preRenderView" />
+	</f:metadata>
+
+
+
+	<ui:define name="content">
+
+		<h1 class="aw-page-title">Dashboard</h1>
+
+
+		<p:messages autoUpdate="false" closable="true" id="msg">
+
+		</p:messages>
+
+		<div class="ui-g">
+			<div class="ui-g-6 ui-md-3">
+				<div class="box">
+					<span>#{graficoNfeEmitidasBean.nfeVersao}</span>
+					<h2>#{graficoNfeEmitidasBean.nfeStatus}
+						#{seguranca.empresa.wsAmbiente eq 1 ? 'Producao' : ' Homologacao'}</h2>
+				</div>
+			</div>
+
+			<div class="ui-g-6 ui-md-3">
+				<div class="box">
+					<span>#{graficoNfeEmitidasBean.nfceVersao}</span>
+					<h2>#{graficoNfeEmitidasBean.nfceStatus}
+						#{seguranca.empresa.wsAmbiente eq 1 ? 'Produacao' : 'Homologacao'}</h2>
+				</div>
+			</div>
+
+			<div class="ui-g-6 ui-md-3">
+				<div class="box">
+					<span>#{graficoNfeEmitidasBean.numeroClientes} </span>
+					<h2>Clientes</h2>
+				</div>
+			</div>
+
+			<!-- 			<div class="ui-g-5 ui-md-2"> -->
+			<!-- 				<div class="box"> -->
+			<!-- 					<span>#{graficoNfeEmitidasBean.numeroTransportadores}</span> -->
+			<!-- 					<h2>Transportadores</h2> -->
+			<!-- 				</div> -->
+			<!-- 			</div> -->
+
+
+			<div class="ui-g-6 ui-md-3">
+				<div class="box">
+					<span>#{graficoNfeEmitidasBean.numeroProdutos} </span>
+					<h2>Produtos</h2>
+				</div>
+			</div>
+
+			<!-- 			<div class="ui-g-5 ui-md-2"> -->
+			<!-- 				<div class="box"> -->
+			<!-- 					<span>#{graficoNfeEmitidasBean.numeroUsuarios} </span> -->
+			<!-- 					<h2>usuários</h2> -->
+			<!-- 				</div> -->
+			<!-- 			</div> -->
+
+
+		</div>
+
+
+
+		<div class="ui-g">
+
+
+			<div class="ui-g-6 ui-md-4">
+				<div class="box">
+					<span>#{graficoNfeEmitidasBean.totalSaida} </span>
+					<h2>Total saída NF-e</h2>
+				</div>
+			</div>
+
+
+			<div class="ui-g-6 ui-md-4">
+				<div class="box">
+					<span>#{graficoNfeEmitidasBean.totalSaidaNFCe} </span>
+					<h2>Total saída NFC-e</h2>
+				</div>
+			</div>
+
+
+			<div class="ui-g-6 ui-md-4">
+				<div class="box">
+					<span>#{graficoNfeEmitidasBean.totalEntrada} </span>
+					<h2>Total entrada NF-e</h2>
+				</div>
+			</div>
+
+
+		</div>
+
+		<p:panelGrid columns="2" layout="grid" style="margin-top: 10px"
+			styleClass="panelgrid-noborder"
+			columnClasses="ui-grid-col-6, ui-grid-col-6">
+
+			<p:chart type="line" model="#{graficoNfeEmitidasBean.model}"
+				responsive="true" style="height: 350px; margin-top:25px" />
+
+			<p:chart type="line" model="#{graficoNfeEmitidasBean.modelNFCe}"
+				responsive="true" style="height: 350px; margin-top:25px" />
+		</p:panelGrid>
+
+
+
+
+
+		<h5>#{graficoNfeEmitidasBean.dadosCertificado.descricao}</h5>
+		<h5>#{graficoNfeEmitidasBean.dadosCertificado.strDataInicial}</h5>
+		<h5>#{graficoNfeEmitidasBean.dadosCertificado.strDataFinal}</h5>
+		<h5>Faltam #{graficoNfeEmitidasBean.dadosCertificado.diasValidos}
+			dias para o vencimento do seu certificado digital A1</h5>
+
+		<a href="http://www.nfe.fazenda.gov.br/portal/disponibilidade.aspx"
+			target="_blank">Visão Geral de Disponibilidade dos Serviços</a>
+
+	</ui:define>
+
+
+
+</ui:composition>

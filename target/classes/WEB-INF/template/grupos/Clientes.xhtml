@@ -1,0 +1,21 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h3>Clientes</h3>
+	<p:selectManyCheckbox 
+		value="#{gestaoGruposBean.selectedClientes}"
+		layout="pageDirection">
+		<f:selectItem itemLabel="Pesquisar clientes"
+			itemValue="CLIENTE_PESQUISAR" />
+		<f:selectItem itemLabel="Incluir novos clientes"
+			itemValue="CLIENTE_INCLUIR" />
+		<f:selectItem itemLabel="Editar clientes existentes"
+			itemValue="CLIENTE_EDITAR" />
+		<f:selectItem itemLabel="Excluir clientes"
+			itemValue="CLIENTE_EXCLUIR" />
+	</p:selectManyCheckbox>
+
+</ui:composition>

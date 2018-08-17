@@ -1,0 +1,169 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
+	template="/WEB-INF/template/Layout.xhtml">
+
+	<ui:define name="content">
+
+		<script>
+			$(document).ready(function() {
+				// Sempre que um input Mudar
+				$(':input').change(function() {
+					setConfirmUnload(true);
+				});
+
+				// Sem mudança no form
+				$('form').submit(function() {
+					setConfirmUnload(false);
+				});
+			});
+
+			function setConfirmUnload(on) {
+				window.onbeforeunload = (on) ? function() {
+					return "Você tem dados não salvos, deseja sair da tela?";
+				} : null;
+			}
+		</script>
+
+		<h:form id="frm">
+
+			<f:metadata>
+				<o:viewParam name="cliente"
+					value="#{gestaoClientesBean.clienteEdicao}" />
+				<f:event listener="#{gestaoClientesBean.inicializar}"
+					type="preRenderView" />
+				<f:event listener="#{loginEmpresaBean.preRender}"
+					type="preRenderView" />
+			</f:metadata>
+
+			<p:toolbar style="position: fixed; margin-top:15px">
+				<p:toolbarGroup>
+					<p:button title="Pesquisa" outcome="/clientes/PesquisaClientes"
+						icon="ui-icon-search" />
+					<p:separator />
+					<p:commandButton icon="ui-icon-plus" title="Novo"
+						rendered="#{seguranca.incluirCliente}" update="@form"
+						action="#{gestaoClientesBean.prepararNovoCadastro}"
+						process="@this">
+					</p:commandButton>
+					<p:commandButton title="Salvar" icon="ui-icon-disk"
+						onsuccess="setConfirmUnload(false)" id="salvar-button"
+						rendered="#{seguranca.editarCliente or seguranca.incluirCliente}"
+						action="#{gestaoClientesBean.salvar}" update="frm" process="frm" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<h1 class="aw-page-title"></h1>
+			<p:messages id="msgs" closable="true" />
+			<p:defaultCommand target="salvar-button" />
+
+			<div class="ui-fluid">
+				<h1 class="aw-page-title">#{gestaoClientesBean.editando ?
+					'Edição do cliente' : 'Novo cliente'}</h1>
+
+				<p:panelGrid columns="4" layout="grid" style="margin-top: 10px"
+					styleClass="panelgrid-noborder"
+					columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4">
+
+					<p:outputLabel value="Tipo da pessoa" for="tipo" />
+					<p:selectOneMenu id="tipo" label="Tipo" required="true"
+						value="#{gestaoClientesBean.clienteEdicao.tipoPessoa}">
+						<f:selectItems value="#{gestaoClientesBean.tipoPessoa}"
+							var="tipoPessoa" itemLabel="#{tipoPessoa.descricao}"
+							itemValue="#{tipoPessoa}" />
+						<p:ajax event="change" process="@this" listener="#{gestaoClientesBean.atualizarContribuinte}"
+							update="grupoJuridica grupoFisica tab:grupoEndereco contribuinte" />
+					</p:selectOneMenu>
+
+					<p:outputLabel value="Contribuinte ICMS" for="contribuinte" />
+					<p:selectBooleanButton id="contribuinte" onIcon="ui-icon-check"
+						offIcon="ui-icon-close"
+						value="#{gestaoClientesBean.clienteEdicao.contribuinte}"
+						onLabel="Sim" offLabel="Não" style="width:100px">
+					</p:selectBooleanButton>
+
+					<p:outputLabel value="Estrangeiro" for="estrangeiro" />
+					<p:selectBooleanButton id="estrangeiro" onIcon="ui-icon-check"
+						offIcon="ui-icon-close"
+						value="#{gestaoClientesBean.clienteEdicao.estrangeiro}"
+						onLabel="Sim" offLabel="Não" style="width:100px">
+						<p:ajax event="change" process="@this"
+							listener="#{gestaoClientesBean.atualizarExportacao}"
+							update="tab:grupoEndereco grupoJuridica grupoFisica grupoExportacaoLabel grupoExportacao" />
+					</p:selectBooleanButton>
+
+					<h:panelGroup id="grupoExportacaoLabel">
+						<p:outputLabel value="Exportação" for="exportacao"
+							rendered="#{gestaoClientesBean.clienteEdicao.estrangeiro}" />
+					</h:panelGroup>
+
+					<h:panelGroup id="grupoExportacao">
+						<p:selectBooleanButton id="exportacao" onIcon="ui-icon-check"
+							rendered="#{gestaoClientesBean.clienteEdicao.estrangeiro}"
+							offIcon="ui-icon-close"
+							value="#{gestaoClientesBean.clienteEdicao.exterior}"
+							onLabel="Sim" offLabel="Não" style="width:100px">
+							<p:ajax event="change" process="@this"
+								update="tab:grupoEndereco grupoJuridica grupoFisica" />
+						</p:selectBooleanButton>
+					</h:panelGroup>
+
+				</p:panelGrid>
+
+				<h:panelGroup id="grupoJuridica">
+					<p:focus context="grupoJuridica" />
+					<ui:include src="/WEB-INF/template/clientes/PessoaJuridica.xhtml" />
+				</h:panelGroup>
+
+				<h:panelGroup id="grupoFisica">
+					<p:focus context="grupoFisica" />
+					<ui:include src="/WEB-INF/template/clientes/PessoaFisica.xhtml" />
+				</h:panelGroup>
+
+				<p:tabView style="margin-top:25px" id="tab">
+					<p:tab title="Endereço">
+						<h:panelGroup id="grupoEndereco">
+							<h:panelGroup
+								rendered="#{gestaoClientesBean.clienteEdicao.estrangeiro eq false and gestaoClientesBean.clienteEdicao.exterior eq false}">
+								<ui:include src="/WEB-INF/template/clientes/Enderecos.xhtml" />
+							</h:panelGroup>
+
+							<h:panelGroup
+								rendered="#{gestaoClientesBean.clienteEdicao.estrangeiro eq true or gestaoClientesBean.clienteEdicao.exterior eq true}">
+								<ui:include
+									src="/WEB-INF/template/clientes/PessoaEstrangeira.xhtml" />
+							</h:panelGroup>
+						</h:panelGroup>
+					</p:tab>
+
+					<p:tab title="Contato">
+						<h:panelGroup id="grupoContato">
+							<ui:include src="/WEB-INF/template/clientes/Contato.xhtml" />
+						</h:panelGroup>
+					</p:tab>
+
+					<p:tab title="Emitentes">
+						<h:panelGroup id="grupoCompartilhar">
+							<ui:include src="/WEB-INF/template/clientes/Compartilhar.xhtml" />
+						</h:panelGroup>
+					</p:tab>
+				</p:tabView>
+			</div>
+			<p:confirmDialog id="myDialogID" widgetVar="myDialogVar"
+				header="CPF/CNPJ já cadastrado" severity="alert"
+				message="Deseja vizualizar o cadastro?">
+
+				<h:commandButton value="Não" class="button-green" onclick="PF('myDialogVar').hide()">
+				</h:commandButton>
+
+				<h:commandButton value="sim" class="button-blue" action="#{gestaoClientesBean.buscarClientePorDoc}" >
+				</h:commandButton>
+			</p:confirmDialog>
+		</h:form>
+		<h:form id="frm1">
+			<ui:include src="/WEB-INF/template/clientes/CadastroEndereco.xhtml" />
+		</h:form>
+	</ui:define>
+</ui:composition>

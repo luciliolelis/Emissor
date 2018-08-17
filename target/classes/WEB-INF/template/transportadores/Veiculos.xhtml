@@ -1,0 +1,146 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:panelGrid columns="2" cellpadding="5" style="margin-top:5px">
+		<p:commandButton value="Adicionar veículo" process="@this"
+			icon="fa fa-truck" update=":frm:tab:inclusaoPanel"
+			actionListener="#{gestaoTransportadorBean.incluirVeiculo}"
+			onclick="PF('inclusaoVeiculoDialog').show()">
+			<p:resetInput target="inclusaoPanel" />
+		</p:commandButton>
+	</h:panelGrid>
+
+
+	<p:dataTable value="#{gestaoTransportadorBean.clienteEdicao.veiculos}"
+		style="margin-top:10px" var="veiculo" id="veiculoTable" reflow="true"
+		emptyMessage="Não existem veículos">
+
+
+		<p:column headerText="Placa">
+			<h:outputText value="#{veiculo.placa}" />
+		</p:column>
+		<p:column headerText="Marca">
+			<h:outputText value="#{veiculo.marca}" />
+		</p:column>
+
+		<p:column headerText="Renavam">
+			<h:outputText value="#{veiculo.renavam}" />
+		</p:column>
+
+		<p:column headerText="Cidade">
+			<h:outputText value="#{veiculo.cidade} - #{veiculo.uf}" />
+		</p:column>
+
+		<p:column headerText="Opções" style="width:100px">
+			<p:commandButton update=":frm:tab:inclusaoPanel" style="width:45px"
+				oncomplete="PF('inclusaoVeiculoDialog').show()" process="@this"
+				actionListener="#{gestaoTransportadorBean.carregarCidadesVeiculos}"
+				icon="ui-icon-pencil" title="Editar">
+				<f:setPropertyActionListener value="#{veiculo}"
+					target="#{gestaoTransportadorBean.veiculoSelecionado}" />
+			</p:commandButton>
+			<p:commandButton icon="ui-icon-trash" update="veiculoTable"
+				style="width:45px" process="veiculoTable">
+				<p:confirm icon="ui-icon-alert" header="Confirmação de exclusão"
+					message="Tem certeza que deseja remover este veículo" />
+				<p:collector value="#{veiculo}"
+					removeFrom="#{gestaoTransportadorBean.clienteEdicao.veiculos}" />
+			</p:commandButton>
+		</p:column>
+	</p:dataTable>
+
+	<p:dialog header="Veículo" widgetVar="inclusaoVeiculoDialog"
+		showEffect="fade" hideEffect="fade" modal="true" resizable="false"
+		id="veculo-dialog">
+		<h:panelGroup id="inclusaoPanel">
+			<p:messages />
+
+			<p:defaultCommand target="salvar-veiculo-button"
+				scope="veculo-dialog" />
+
+			<p:panelGrid columns="2">
+				<p:outputLabel value="Placa" for="placa" />
+				<p:inputMask id="placa" mask="aaa-9999"
+					value="#{gestaoTransportadorBean.veiculoSelecionado.placa}" />
+
+
+				<p:outputLabel value="Estado" for="estado-veiculo" />
+				<p:selectOneMenu id="estado-veiculo" filter="true"
+					filterMatchMode="startsWith" effect="fade"
+					value="#{gestaoTransportadorBean.veiculoSelecionado.uf}">
+
+					<f:selectItem itemLabel="Selecione" />
+					<f:selectItems value="#{gestaoTransportadorBean.listaEstados}"
+						var="estado" itemLabel="#{estado.uf}" itemValue="#{estado.uf}" />
+
+					<p:ajax event="change" process="@this" update="cidade-veiculo"
+						listener="#{gestaoTransportadorBean.carregarCidadesVeiculos}" />
+
+					<p:ajax event="itemSelect"
+						listener="#{gestaoTransportadorBean.ufSelecionado}" update="@this" />
+
+				</p:selectOneMenu>
+
+				<p:outputLabel value="Cidade" for="cidade-veiculo" />
+				<p:selectOneMenu id="cidade-veiculo" filter="true"
+					filterMatchMode="startsWith" effect="fade"
+					value="#{gestaoTransportadorBean.veiculoSelecionado.cidade}">
+
+					<f:selectItem itemLabel="Selecione" />
+					<f:selectItems value="#{gestaoTransportadorBean.listaCidades}"
+						var="cidade" itemLabel="#{cidade}" itemValue="#{cidade}" />
+
+					<p:ajax event="itemSelect"
+						listener="#{gestaoTransportadorBean.cidadeSelecionada}"
+						update="@this" />
+
+				</p:selectOneMenu>
+
+
+				<p:outputLabel value="Marca" for="marca" />
+				<p:autoComplete id="marca" dropdown="false" minQueryLength="1"
+					value="#{gestaoTransportadorBean.veiculoSelecionado.marca}"
+					completeMethod="#{gestaoTransportadorBean.completarMarca}"
+					var="marca" itemLabel="#{marca}" itemValue="#{marca}"
+					forceSelection="false" />
+
+				<p:outputLabel value="Renavam" for="renavam" />
+				<p:inputText id="renavam" maxlength="11"
+					value="#{gestaoTransportadorBean.veiculoSelecionado.renavam}">
+					<f:validateLength minimum="11" maximum="11" />
+				</p:inputText>
+
+				<p:outputLabel value="RNTRC" for="rntrc" />
+				<p:inputText id="rntrc" maxlength="8"
+					value="#{gestaoTransportadorBean.veiculoSelecionado.rntrc}">
+					<f:validateLength minimum="8" maximum="8" />
+				</p:inputText>
+
+				<p:outputLabel value="CIOT" for="ciot" />
+				<p:inputText id="ciot" maxlength="12"
+					value="#{gestaoTransportadorBean.veiculoSelecionado.ciot}">
+					<f:validateLength minimum="12" maximum="12" />
+				</p:inputText>
+
+				<p:outputLabel value="ANTT" for="antt" />
+				<p:inputText id="antt"
+					value="#{gestaoTransportadorBean.veiculoSelecionado.antt}" />
+
+				<p:spacer />
+
+				<p:commandButton value="Confirmar" id="salvar-veiculo-button"
+					action="#{gestaoTransportadorBean.onConfirmaVeiculo}"
+					update="veiculoTable inclusaoPanel" process="inclusaoPanel"
+					oncomplete="if (!args.validationFailed) PF('inclusaoVeiculoDialog').hide()" />
+
+			</p:panelGrid>
+
+
+		</h:panelGroup>
+	</p:dialog>
+
+</ui:composition>

@@ -1,0 +1,31 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<p:panelGrid columns="4" layout="grid" style="margin-top: 10px"
+		styleClass="panelgrid-noborder"
+		columnClasses="ui-grid-col-2, ui-grid-col-6,ui-grid-col-2, ui-grid-col-6">
+
+		
+
+		<p:outputLabel value="CSC produção" for="csc" />
+		<p:inputText id="csc" value="#{gestaoEmpresasBean.empresaEdicao.csc}" />
+
+		<p:outputLabel value="CSC homologação" for="csc-homologacao" />
+		<p:inputText id="csc-homologacao"
+			value="#{gestaoEmpresasBean.empresaEdicao.cscHomologacao}" />
+
+		<p:outputLabel value="Token" for="token" />
+		<p:inputText id="token"
+			value="#{gestaoEmpresasBean.empresaEdicao.token}" />
+
+		<p:outputLabel value="Consulta QRCode" />
+		<p:inputText value="#{gestaoEmpresasBean.empresaEdicao.wsQRCode}" />
+
+	</p:panelGrid>
+
+
+</ui:composition>

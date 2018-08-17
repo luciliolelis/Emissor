@@ -1,0 +1,19 @@
+package com.amsoft.erp.model.enun;
+
+public enum TipoPessoa {
+
+
+	FISICA("Física"), 
+	JURIDICA("Jurídica");
+	
+	private String descricao;
+
+	TipoPessoa(String descricao) {
+		this.descricao = descricao;
+	}
+	
+	public String getDescricao() {
+		return descricao;
+	}
+	
+}

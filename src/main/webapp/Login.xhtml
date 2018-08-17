@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Login</title>
+
+	<h:outputStylesheet library="css" name="login.css" />
+
+
+</h:head>
+
+
+<h:body>
+	<f:metadata>
+		<f:viewParam name="dummy" />
+		<f:event listener="#{loginBean.preRender}" type="preRenderView" />
+	</f:metadata>
+
+	<div id="outer">
+
+
+
+
+		<div id="inner" class="login-form">
+
+			<header>
+
+
+				<h1>
+					<h:graphicImage library="images" name="logo.png"
+						style="width:125px;height:35px" />
+				</h1>
+				<h1 class="aw-page-title">Seja bem vindo</h1>
+				<p:messages id="messages" autoUpdate="true" closable="true" />
+			</header>
+
+			<h:form id="frm" prependId="false">
+
+				<div class="ui-fluid">
+					<p:focus context="grid-login" />
+					<h:panelGrid columns="1" layout="grid" id="grid-login"
+						styleClass="panelgrid-noborder">
+
+
+						<p:inputText id="j_username" value="#{loginBean.email}" size="40"
+							placeholder="Email" />
+						<p:outputLabel />
+						<p:watermark for="j_username" value="Informe o login" />
+
+						<p:password id="j_password" placeholder="Senha" size="40" />
+
+
+						<p:commandLink actionListener="#{loginBean.recuperaSenha}"
+							ajax="false">
+							<h:outputText value="Esqueceu sua senha?" style="font-size: 12px" />
+						</p:commandLink>
+						<p:spacer />
+
+
+						<h:commandButton value="Login" action="#{loginBean.login}"
+							class="button-login" ajax="false" icon="fa fa-unlock-alt" />
+
+					</h:panelGrid>
+
+
+
+
+				</div>
+
+
+
+
+
+
+			</h:form>
+		</div>
+		<div style="float: right; margin-top: 10px; margin-right: 10px">
+			<h:graphicImage library="images" name="img-nfe400.png" />
+		</div>
+
+	</div>
+
+
+
+</h:body>
+</html>

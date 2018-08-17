@@ -1,0 +1,39 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<p:dataTable value="#{gestaoPerfilUsuariosBean.usuarioEdicao.empresasGrupos}"
+		reflow="true" id="tableGrupoEmpresa" var="grupo"
+		style="margin-top:10px">
+
+		<p:column headerText="Logo" style="width:60px;text-align: center">
+			<p:graphicImage style="max-width:50px;max-height:48px" cache="false"
+				value="#{imageBean.streamedImageById}">
+				<f:param name="id" value="#{grupo.empresa.id}" />
+			</p:graphicImage>
+		</p:column>
+
+		<p:column headerText="Nome fantasia">
+			<h:outputText value="#{grupo.empresa.nome_fantasia}" />
+		</p:column>
+
+		<p:column headerText="Razão social">
+			<h:outputText value="#{grupo.empresa.razao_social}" />
+		</p:column>
+
+
+
+		<p:column headerText="Grupo">
+			<h:outputText value="#{grupo.grupo.nome}" />
+		</p:column>
+
+
+	</p:dataTable>
+
+
+
+
+</ui:composition>

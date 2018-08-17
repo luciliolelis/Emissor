@@ -1,0 +1,45 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:panelGrid columns="4" layout="grid" style="margin-top: 10px"
+		rendered="#{gestaoClientesBean.clienteEdicao.tipoPessoa eq 'FISICA'}"
+		styleClass="panelgrid-noborder"
+		columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4">
+
+		<p:outputLabel value="Nome" for="nome" />
+		<p:inputText id="nome" maxlength="80" required="true"
+			value="#{gestaoClientesBean.clienteEdicao.nome}">
+			<p:ajax event="change"
+				listener="#{gestaoClientesBean.automatizaNomeFantazia}"
+				process="@this" update="@this" />
+		</p:inputText>
+
+		<p:outputLabel value="RG" for="rg"
+			rendered="#{gestaoClientesBean.clienteEdicao.estrangeiro eq false}" />
+		<p:inputMask id="rg" size="18" maxlength="18"
+			rendered="#{gestaoClientesBean.clienteEdicao.estrangeiro eq false}"
+			value="#{gestaoClientesBean.clienteEdicao.rg}" mask="9.999.999-9" />
+		
+		<p:outputLabel value="CPF" for="cpf"
+			rendered="#{gestaoClientesBean.clienteEdicao.estrangeiro eq false}" />
+		<p:inputMask id="cpf" size="18" maxlength="18" required="true"
+			rendered="#{gestaoClientesBean.clienteEdicao.estrangeiro eq false}"
+			value="#{gestaoClientesBean.clienteEdicao.docReceitaFederal}"
+			mask="999.999.999.99" />
+
+		<p:outputLabel value="Documento" for="doc-fisica"
+			rendered="#{gestaoClientesBean.clienteEdicao.estrangeiro eq true}" />
+		<p:inputText id="doc-fisica" maxlength="18"
+			rendered="#{gestaoClientesBean.clienteEdicao.estrangeiro eq true}"
+			value="#{gestaoClientesBean.clienteEdicao.docReceitaFederal}" />
+
+		<p:outputLabel value="Inscrição estadual" for="ie-fisica" rendered="#{gestaoClientesBean.clienteEdicao.estrangeiro eq false}" />
+		<p:inputText id="ie-fisica" rendered="#{gestaoClientesBean.clienteEdicao.estrangeiro eq false}"
+			value="#{gestaoClientesBean.clienteEdicao.inscricaoEstadual}" />
+
+	</p:panelGrid>
+
+</ui:composition>

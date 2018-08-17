@@ -1,0 +1,81 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
+	template="/WEB-INF/template/Layout.xhtml">
+
+	<ui:define name="content">
+
+		<script>
+			$(document).ready(function() {
+				// Sempre que um input Mudar
+				$(':input').change(function() {
+					setConfirmUnload(true);
+				});
+
+				// Sem mudança no form
+				$('form').submit(function() {
+					setConfirmUnload(false);
+				});
+			});
+
+			function setConfirmUnload(on) {
+				var message = "Você tem dados não salvos, deseja sair da tela?";
+				window.onbeforeunload = (on) ? function() {
+					return message;
+				} : null;
+			}
+		</script>
+
+
+		<f:metadata>
+			<o:viewParam name="nfce" value="#{cadastroNFCeBean.nfce}" />
+			<f:event listener="#{cadastroNFCeBean.inicializar}"
+				type="preRenderView" />
+		</f:metadata>
+
+		<h:form id="frm">
+			<ui:include src="/WEB-INF/template/nfce/BotoesNFCe.xhtml" />
+			<h1 class="aw-page-title"></h1>
+
+			<h1 class="aw-page-title">#{cadastroNFCeBean.editando ? 'Edição
+				da NFC-e' : 'Nova NFC-e'} #{cadastroNFCeBean.producao ? '
+				(Produção)' : ' (Homologação)'}</h1>
+
+			<p:messages autoUpdate="false" closable="true" id="msg" />
+
+			<ui:include src="/WEB-INF/template/nfce/DadosIniciais.xhtml" />
+
+			<p:tabView style="margin-top:10px" id="tab">
+
+
+				<p:tab title="Produtos">
+					<ui:include src="/WEB-INF/template/nfce/ProdutosNfe.xhtml" />
+					<ui:include src="/WEB-INF/template/nfce/FormaPagamentoNfe.xhtml" />
+					<ui:include src="/WEB-INF/template/nfce/TransparenciaNfe.xhtml" />
+					<ui:include src="/WEB-INF/template/nfce/CompementosNfe.xhtml" />
+
+				</p:tab>
+
+				<p:tab title="Endereço">
+					<h:panelGroup id="grupoEndereco">
+						<ui:include src="/WEB-INF/template/nfce/Enderecos.xhtml" />
+					</h:panelGroup>
+				</p:tab>
+
+				<p:tab title="XML NFC-e">
+
+					<p:inputTextarea id="enviNFe" style="margin-top:15px"
+						value="#{cadastroNFCeBean.nfce.enviNFe}" cols="80000"
+						readonly="true" />
+				</p:tab>
+			</p:tabView>
+
+
+		</h:form>
+
+
+	</ui:define>
+
+</ui:composition>

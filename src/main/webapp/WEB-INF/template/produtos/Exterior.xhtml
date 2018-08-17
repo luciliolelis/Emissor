@@ -1,0 +1,39 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:panelGrid columns="4" layout="grid" style="margin-top: 10px"
+		styleClass="panelgrid-noborder"
+		columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4">
+
+		<p:outputLabel value="CST" for="cstIcmsExterior"
+			rendered="#{seguranca.empresa.regimeTributario != 'SIMPLES'}" />
+		<p:selectOneMenu id="cstIcmsExterior" autoWidth="false"
+			rendered="#{seguranca.empresa.regimeTributario != 'SIMPLES'}"
+			value="#{cadastroProdutoBean.produto.csticmsExterior}">
+			<f:selectItem itemLabel="Selecione" />
+			<f:selectItems value="#{cadastroProdutoBean.cstIcmsExterior}"
+				var="cstIcms" itemValue="#{cstIcms}"
+				itemLabel="#{cstIcms.codigo} - #{cstIcms.descricao}" />
+			<p:ajax event="change" process="@this" update="outputAliquotaIcms"
+				resetValues="true" />
+		</p:selectOneMenu>
+
+		<p:outputLabel value="CSOSN" for="csosnExterior"
+			rendered="#{seguranca.empresa.regimeTributario eq 'SIMPLES'}" />
+		<p:selectOneMenu id="csosnExterior" autoWidth="false"
+			rendered="#{seguranca.empresa.regimeTributario eq 'SIMPLES'}"
+			value="#{cadastroProdutoBean.produto.csosnExterior}">
+			<f:selectItem itemLabel="Selecione" />
+			<f:selectItems value="#{cadastroProdutoBean.csosnsExterior}"
+				var="csosn" itemValue="#{csosn}"
+				itemLabel="#{csosn.codigo} - #{csosn.descricao}" />
+			<p:ajax event="change" process="@this" update="outputAliquotaIcms"
+				resetValues="true" />
+		</p:selectOneMenu>
+	</p:panelGrid>
+
+
+</ui:composition>

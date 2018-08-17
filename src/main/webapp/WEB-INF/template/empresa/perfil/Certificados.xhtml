@@ -1,0 +1,68 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<h1 class="aw-page-title">Certificado</h1>
+
+	<p:panelGrid columns="2" layout="grid" style="margin-top: 10px"
+		styleClass="panelgrid-noborder"
+		columnClasses="ui-grid-col-2, ui-grid-col-6">
+
+		<p:spacer />
+
+		<p:commandButton value="Adicionar certificado" process="@this"
+			update=":frm:tab:certificadoPanel"
+			onclick="PF('certificadoDialog').show()">
+			<p:resetInput target="certificadoPanel" />
+		</p:commandButton>
+
+		<p:outputLabel value="Certificado" />
+		<p:outputLabel
+			value="#{gestaoPerfilEmpresasBean.empresaEdicao.nomeCertificado}" />
+
+		<p:outputLabel value="Senha" />
+		<p:inputText
+			value="#{gestaoPerfilEmpresasBean.empresaEdicao.senhaCertificado}" />
+
+
+	</p:panelGrid>
+	<h1 class="aw-page-title">Tipo de ambiente</h1>
+
+	<p:panelGrid columns="2" layout="grid" style="margin-top: 10px"
+		styleClass="panelgrid-noborder"
+		columnClasses="ui-grid-col-2, ui-grid-col-6">
+
+		<p:outputLabel value="Tipo emissão" />
+		<p:inputText value="#{gestaoPerfilEmpresasBean.empresaEdicao.tipoEmissao}" />
+
+
+		<p:outputLabel value="Ws ambiente" />
+		<p:inputText value="#{gestaoPerfilEmpresasBean.empresaEdicao.wsAmbiente}" />
+
+
+	</p:panelGrid>
+
+
+	<p:dialog header="Certificado A1" widgetVar="certificadoDialog"
+		showEffect="fade" hideEffect="fade" modal="false" resizable="false"
+		id="certificado-dialog">
+		<h:panelGroup id="certificadoPanel">
+			<p:messages />
+
+			<p:panelGrid columns="1">
+				<p:fileUpload
+					fileUploadListener="#{gestaoPerfilEmpresasBean.uploadCertificado}"
+					mode="advanced" dragDropSupport="true" update="frm:tab:certificado"
+					process="@this" sizeLimit="1000000" fileLimit="1" label="Procupar"
+					uploadLabel="Confirmar" cancelLabel="Cancelar"
+					allowTypes="/(\.|\/)(pfx)$/" />
+			</p:panelGrid>
+
+		</h:panelGroup>
+	</p:dialog>
+
+
+</ui:composition>

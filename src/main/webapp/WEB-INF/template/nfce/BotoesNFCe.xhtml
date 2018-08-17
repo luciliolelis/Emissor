@@ -1,0 +1,133 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<p:toolbar style="position: fixed; margin-top:15px" id="tool">
+		<p:toolbarGroup>
+			<p:button title="Pesquisa" icon="ui-icon-search"
+				outcome="/nfce/PesquisaNFCe" />
+			<p:separator />
+			<p:button icon="ui-icon-plus" title="Novo"
+				outcome="/nfce/CadastroNFCe"
+				action="#{cadastroNFCeBean.prepararNovoCadastro}" process="@this">
+			</p:button>
+
+
+			<p:commandButton title="Salvar" icon="ui-icon-disk"
+				onsuccess="setConfirmUnload(false)" id="salvar-button"
+				disabled="#{cadastroNFCeBean.nfce.naoAlteravel}"
+				action="#{cadastroNFCeBean.salvar}" update="frm" process="frm" />
+			<p:separator />
+
+
+
+			<p:menuButton value="Serviços 4.0">
+
+				<p:menuitem value="Emitir"
+					disabled="#{cadastroNFCeBean.nfce.status == 'AUTORIZADA' || cadastroNFCeBean.nfce.status == 'CANCELADA' || cadastroNFCeBean.nfce.status == 'EMPROCESSAMENTO' || cadastroNFCeBean.editando == false}"
+					action="#{autorizaNFCeBean.emitir}" process="frm" update="frm"
+					icon="ui-icon-check">
+
+					<p:confirm icon="ui-icon-alert" header="Confirmação de emissão"
+						message="Tem certeza que deseja emitir a NFC-e" />
+				</p:menuitem>
+
+
+				<p:menuitem value="Cancelar"
+					disabled="#{cadastroNFCeBean.nfce.status != 'AUTORIZADA'}"
+					action="#{cancelaNFCeBean.emitir}" icon="ui-icon-cancel"
+					process="@this" update="frm">
+					<p:confirm icon="ui-icon-alert"
+						header="Confirmação de cancelamento"
+						message="Tem certeza que deseja cancelar a NFC-e" />
+				</p:menuitem>
+
+
+				<p:menuitem value="Inutilizar"
+					disabled="#{cadastroNFCeBean.nfce.status == 'AUTORIZADA' || cadastroNFCeBean.nfce.status == 'CANCELADA' || cadastroNFCeBean.nfce.status == 'EMPROCESSAMENTO'|| cadastroNFCeBean.nfce.status == 'AUTORIZADACORRECAO' || cadastroNFCeBean.nfce.status == 'INUTILIZADA'}"
+					actionListener="#{inutilizaNFCeBean.inutilizar}" update="frm"
+					process="@this" icon="fa fa-times">
+					<p:confirm icon="ui-icon-alert"
+						header="Confirmação de inutilização"
+						message="Tem certeza que deseja inutilizar o número da Nf-e?" />
+				</p:menuitem>
+
+				<p:menuitem value="Consultar autorização"
+					actionListener="#{statusNFCeBean.status}" update="frm"
+					process="@this" icon="fa fa-search" />
+
+			</p:menuButton>
+
+			<p:separator />
+			<p:menuButton value="Documentos">
+
+				<p:menuitem value="Danfe"
+					actionListener="#{gestaoDanfeBean.upload(cadastroNFCeBean.nfce)}"
+					disabled="#{cadastroNFCeBean.nfce.status != 'AUTORIZADA'}"
+					ajax="false" process="@this" icon="ui-icon-arrowstop-1-s">
+					<p:fileDownload value="#{gestaoDanfeBean.filePdf}" />
+				</p:menuitem>
+
+				<p:menuitem value="XML"
+					disabled="#{cadastroNFCeBean.nfce.status != 'AUTORIZADA'}"
+					actionListener="#{cadastroNFCeBean.exportarNfe}" update="frm"
+					ajax="false" icon="ui-icon-arrowstop-1-s" />
+
+
+				<p:menuitem value="Enviar por e-mail"
+					disabled="#{cadastroNFCeBean.nfce.status != 'AUTORIZADA'}"
+					process="@this" update="pnl-email dlg-email"
+					oncomplete="PF('dlgEmail').show()" ignoreAutoUpdate="true"
+					icon="ui-icon-mail-closed" />
+
+
+
+			</p:menuButton>
+
+		</p:toolbarGroup>
+	</p:toolbar>
+
+	<p:dialog header="Enviar por e-mail" widgetVar="dlgEmail" modal="true"
+		id="dlg-email" height="140">
+
+		<h:panelGroup id="pnl-email" style="margin-top:5px">
+			<p:messages autoUpdate="true" closable="true" id="msgsEmails" />
+
+
+			<div class="ui-fluid">
+				<p:panelGrid columns="1" layout="grid" style="margin-top: 10px"
+					styleClass="panelgrid-noborder">
+					<p:inputText value="#{cadastroNFCeBean.nfce.cliente.email}"
+						id="email">
+						<p:ajax process="@this" update="@this" />
+					</p:inputText>
+
+
+				</p:panelGrid>
+
+
+				<p:panelGrid columns="2" layout="grid" style="margin-top: 10px"
+					styleClass="panelgrid-noborder">
+
+
+					<p:commandButton value="Enviar"
+						actionListener="#{envioNFCeEmailBean.enviarNFe}" process="@this"
+						icon="ui-icon-mail-closed" />
+
+					<p:commandButton icon="ui-icon-close" value="Fechar"
+						oncomplete="PF('dlgEmail').hide()" />
+				</p:panelGrid>
+
+			</div>
+
+
+
+		</h:panelGroup>
+
+	</p:dialog>
+
+
+</ui:composition>

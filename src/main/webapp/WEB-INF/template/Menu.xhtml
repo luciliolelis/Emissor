@@ -1,0 +1,56 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+	<nav class="aw-menu">
+		<ul>
+
+			<li><h:link outcome="/nfe/PesquisaNfe2.xhtml">
+					<i class="fa fa-newspaper-o"></i>NF-e</h:link></li>
+
+			<li><h:link outcome="/nfce/PesquisaNFCe.xhtml">
+					<i class="fa fa-qrcode"></i>NFC-e</h:link></li>
+			<p:separator />
+
+			<li><h:link outcome="/clientes/PesquisaClientes">
+					<i class="fa fa-smile-o"></i>Clientes</h:link></li>
+
+			<li><h:link outcome="/transportador/PesquisaTransportadores">
+					<i class="fa fa-truck"></i>Transportadores</h:link></li>
+
+			<li><h:link outcome="/produtos/PesquisaProdutos">
+					<i class="fa fa-barcode"></i>Produtos</h:link></li>
+
+			<li><h:link outcome="/relatorios/RelatorioPedidosEmitidos">
+					<i class="fa fa-file-text"></i>Relatórios</h:link></li>
+
+			<p:separator />
+
+			<li><h:link outcome="/empresas/PesquisaEmpresas">
+					<i class="fa fa-bank"></i>Emitentes</h:link></li>
+
+			<li><h:link outcome="/usuarios/PesquisaUsuarios">
+					<i class="fa fa-user"></i>Usuários</h:link></li>
+
+			<li><h:link outcome="/grupos/PesquisaGrupos">
+					<i class="fa fa-users"></i>Grupos de usuários</h:link></li>
+			<p:separator />
+			<li><h:link outcome="/LogAcesso">
+					<i class="fa fa-paw"></i>Log de acesso</h:link></li>
+
+			<p:separator />
+
+			<li><h:link outcome="/danfe/ImpressaoDandeXML">
+					<i class="fa fa-file-pdf-o"></i>Danfe NFC-e</h:link></li>
+
+		</ul>
+
+
+	</nav>
+
+	<h:graphicImage library="images" name="img-nfe400.png" height="100px"
+		width="120px" style="transform: translateX(40%);margin-top:35px" />
+
+</ui:composition>
+

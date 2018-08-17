@@ -1,0 +1,27 @@
+<html>
+    <body>
+        <table>
+           	
+          
+          	<tr>
+                <td>Olá $usuario.nome, geramos uma senha temporária para você, acesse o sistema com ela e para sua segurança, crie uma nova senha o mais breve possível.</td>
+            </tr>
+           
+            <br />
+             <tr>
+                <td>Email: $usuario.email</td>
+            </tr>
+            
+              <tr>
+                <td>Senha: $usuario.senha</td>
+            </tr>
+            
+             <tr>
+                <td>Acesse aqui: http://200.98.115.170:8080/amsoft</td>
+            </tr>
+            
+        </table>
+        
+        <br/>
+    </body>
+</html>

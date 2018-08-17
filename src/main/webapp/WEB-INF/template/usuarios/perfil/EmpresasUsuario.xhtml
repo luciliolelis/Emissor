@@ -1,0 +1,101 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<script type="text/javascript">
+		function handleDrop(event, ui) {
+			var droppedEmpresa = ui.draggable;
+			droppedEmpresa.fadeOut('fast');
+		}
+	</script>
+
+	<p:fieldset id="selectedCars" legend="Empresas que o usuário acessa"
+		toggleable="true" style="margin-top:20px">
+
+		<p:outputPanel id="dropArea">
+			<h:outputText value="Arraste aqui!!!"
+				rendered="#{empty gestaoPerfilUsuariosBean.usuarioEdicao.empresas}"
+				style="font-size:24px;" />
+
+			<p:dataTable var="emp" rowKey="#{emp.id}" id="tabelaEmpresaUsuario"
+				value="#{gestaoPerfilUsuariosBean.usuarioEdicao.empresas}"
+				rendered="#{not empty gestaoPerfilUsuariosBean.usuarioEdicao.empresas}">
+
+				<p:column headerText="Razão social" sortBy="#{emp.razao_social}">
+					<h:outputText value="#{emp.razao_social}" />
+				</p:column>
+				<p:column headerText="Nome fantasia" sortBy="#{emp.nome_fantasia}">
+					<h:outputText value="#{emp.nome_fantasia}" />
+				</p:column>
+
+				<p:column style="width:32px;text-align: center">
+					<p:commandButton update="@form" oncomplete="PF('carDialog').show()"
+						icon="ui-icon-search" title="View">
+						<f:setPropertyActionListener value="#{emp}"
+							target="#{gestaoPerfilUsuariosBean.empresaSelecionada}" />
+					</p:commandButton>
+				</p:column>
+
+			</p:dataTable>
+		</p:outputPanel>
+	</p:fieldset>
+
+	<p:fieldset id="availableCarsField" legend="Empresas" toggleable="true"
+		style="margin-top:20px">
+
+		<p:dataTable id="availableCars" var="empresa"
+			value="#{gestaoPerfilUsuariosBean.todasEmpresas}">
+
+			<p:column style="width:20px">
+				<h:outputText id="dragIcon" styleClass="ui-icon ui-icon-arrow-4" />
+				<p:draggable for="dragIcon" revert="true" helper="clone" />
+			</p:column>
+
+			<p:column headerText="Razão social" sortBy="#{empresa.razao_social}">
+				<h:outputText value="#{empresa.razao_social}" />
+			</p:column>
+			<p:column headerText="Nome fantasia"
+				sortBy="#{empresa.nome_fantasia}">
+				<h:outputText value="#{empresa.nome_fantasia}" />
+			</p:column>
+
+		</p:dataTable>
+	</p:fieldset>
+
+	<p:droppable for="selectedCars" tolerance="touch"
+		activeStyleClass="ui-state-highlight" datasource="availableCars"
+		onDrop="handleDrop">
+		<p:ajax listener="#{gestaoPerfilUsuariosBean.onEmpresaDrop}"
+			update="dropArea availableCars" />
+	</p:droppable>
+
+	<p:dialog header="Autorizações" widgetVar="carDialog" modal="true"
+		showEffect="fade" hideEffect="fade" resizable="false">
+		<p:outputPanel id="carDetail" style="text-align:center;">
+			<p:panelGrid columns="2"
+				rendered="#{not empty gestaoPerfilUsuariosBean.empresaSelecionada}"
+				columnClasses="label,value">
+				<f:facet name="header">
+				</f:facet>
+
+				<h:outputText value="Empresa" />
+				<h:outputText
+					value="#{gestaoPerfilUsuariosBean.empresaSelecionada.razao_social}" />
+
+
+				<h:outputText value="Grupo" />
+				<p:selectOneMenu id="grupo">
+					<f:selectItem itemLabel="Selecione" itemValue="" />
+					<f:selectItems value="#{gestaoPerfilUsuariosBean.gruposTodos}" var="g"
+						itemLabel="#{g.descricao}" itemValue="#{grupoSelecionado}" />
+				</p:selectOneMenu>
+				<h:outputText />
+				<p:commandButton value="Confirmar" styleClass="ui-priority-primary">
+				</p:commandButton>
+			</p:panelGrid>
+		</p:outputPanel>
+	</p:dialog>
+</ui:composition>

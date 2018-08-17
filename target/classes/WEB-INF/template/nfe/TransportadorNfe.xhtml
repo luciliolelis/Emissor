@@ -1,0 +1,162 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h1 class="aw-page-title"></h1>
+	<div class="ui-fluid">
+
+		<p:panelGrid columns="4" layout="grid" styleClass="panelgrid-noborder"
+			columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4">
+
+
+
+
+			<h:panelGroup id="groupTransporteLabel">
+				<p:outputLabel value="Transportador" for="transportador" />
+			</h:panelGroup>
+
+			<h:panelGroup id="groupTransporteText">
+
+				<p:panelGrid columns="2" styleClass="panelgrid-noborder"
+					style="width:105%;margin-left:-10px" layout="grid"
+					columnClasses="ui-grid-col-3, ui-grid-col-12">
+
+					<p:commandButton icon="ui-icon-search" title="Pesquisar"
+						process="@this"
+						update="transportadores-dialog panel-transportadores"
+						actionListener="#{cadastroNFeBean.pesquisaTransportadores}"
+						oncomplete="PF('transportadoresDialog').show()"
+						ignoreAutoUpdate="true">
+					</p:commandButton>
+
+					<p:autoComplete id="transportador" size="30" dropdown="false"
+						placeholder="Digite o nome do transportador, CPF ou CNPJ"
+						required="#{cadastroNFeBean.nfe.modalidadeFrete eq 'DESTINATARIO'}"
+						value="#{cadastroNFeBean.nfe.transportador}"
+						completeMethod="#{cadastroNFeBean.completarTransportador}"
+						var="transportador" itemLabel="#{transportador.nome}"
+						itemValue="#{transportador}" forceSelection="true">
+						<p:ajax event="itemSelect"
+							listener="#{cadastroNFeBean.transportadorSelecionado}"
+							update="grupoTrans grupoVeiculos" />
+
+						<p:column>
+							<h:outputText value="#{transportador.nome}" />
+						</p:column>
+						<p:column>
+							<h:outputText value="#{transportador.docReceitaFederal}" />
+						</p:column>
+
+						<p:column>
+							<h:outputText value="#{transportador.enderecos[0].cidade}" />
+						</p:column>
+					</p:autoComplete>
+				</p:panelGrid>
+			</h:panelGroup>
+
+			<p:outputLabel value="Responsável" for="modalidade-frete" />
+
+			<p:selectOneButton value="#{cadastroNFeBean.nfe.modalidadeFrete}"
+				id="modalidade-frete" required="true">
+				<f:selectItem itemLabel="Emitente" itemValue="EMITENTE" />
+				<f:selectItem itemLabel="Destinatário" itemValue="DESTINATARIO" />
+				<f:selectItem itemLabel="Outro" itemValue="OUTRO" />
+				<p:ajax event="change"
+					update="groupTransporteLabel groupTransporteText " />
+			</p:selectOneButton>
+		</p:panelGrid>
+
+		<h:panelGroup id="grupoVeiculos">
+			<h:panelGroup rendered="#{cadastroNFeBean.nfe.transportador != null}">
+				<ui:include src="/WEB-INF/template/nfe/EnderecosTransportador.xhtml" />
+				<ui:include src="/WEB-INF/template/nfe/Veiculos.xhtml" />
+			</h:panelGroup>
+
+			<p:panelGrid columns="2" styleClass="panelgrid-noborder"
+				layout="grid" style="margin-top:20px; margin-left:-10px"
+				columnClasses="ui-grid-col-3, ui-grid-col-12">
+
+				<p:commandButton value="Limpar transportador"
+					rendered="#{cadastroNFeBean.nfe.transportador != null}"
+					actionListener="#{cadastroNFeBean.limparTransportador}"
+					process="@this"
+					update="grupoTrans grupoVeiculos groupTransporteText" />
+			</p:panelGrid>
+		</h:panelGroup>
+
+
+
+
+
+		<h:panelGroup id="grupoTrans">
+			<h1 class="aw-page-title">Carga</h1>
+			<p:panelGrid columns="4" layout="grid"
+				styleClass="panelgrid-noborder"
+				columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4">
+
+				<p:outputLabel value="Espécie" for="especie" />
+				<p:inputText id="especie"
+					value="#{cadastroNFeBean.nfe.estpecieTransporte}" />
+
+				<p:outputLabel value="Peso bruto" for="peso-bruto" />
+				<p:inputText id="peso-bruto"
+					value="#{cadastroNFeBean.nfe.pesoBruto}" />
+
+				<p:outputLabel value="Peso líquilo" for="peso-liquido" />
+				<p:inputText id="peso-liquido"
+					value="#{cadastroNFeBean.nfe.pesoLiquido}" />
+
+				<p:outputLabel value="Quantidade" for="qtd" />
+				<p:inputText id="qtd" value="#{cadastroNFeBean.nfe.quantidade}" />
+
+			</p:panelGrid>
+		</h:panelGroup>
+
+
+
+		<p:dialog header="Pesquisa de transportador"
+			widgetVar="transportadoresDialog" modal="true"
+			id="transportadores-dialog" showEffect="fade" hideEffect="fade"
+			resizable="true" closeOnEscape="true">
+
+			<h:panelGroup id="panel-transportadores" style="margin-top:5px">
+				<p:dataTable value="#{cadastroNFeBean.transportadoresFiltrados}"
+					var="transportador" style="max-width:550px; max-higth:450px"
+					reflow="true" emptyMessage="Nenhum transportador encontrado."
+					rows="6" paginator="true" paginatorPosition="bottom"
+					paginatorAlwaysVisible="false">
+
+					<p:column style="width: 30px; text-align: center">
+						<p:commandButton icon="ui-icon-check" title="Selecionar"
+							oncomplete="if (!args.validationFailed) PF('transportadoresDialog').hide()"
+							process="@this"
+							action="#{cadastroNFeBean.transportadorSelecionar(transportador)}"
+							update=":frm:tab:transportador :frm:tab:grupoTrans :frm:tab:grupoVeiculos" />
+					</p:column>
+
+					<p:column headerText="Nome" filterBy="#{transportador.nome}"
+						filterMatchMode="contains" sortBy="#{transportador.nome}">
+						<h:outputText value="#{transportador.nome}" />
+					</p:column>
+
+					<p:column headerText="Documento"
+						filterBy="#{transportador.docReceitaFederal}"
+						sortBy="#{transportador.docReceitaFederal}">
+						<h:outputText value="#{transportador.docReceitaFederal}" />
+					</p:column>
+
+					<p:column headerText="Cidade/UF"
+						filterBy="#{transportador.docReceitaFederal}"
+						sortBy="#{transportador.docReceitaFederal}">
+						<h:outputText
+							value="#{transportador.enderecos[0].cidade} - #{transportador.enderecos[0].uf}" />
+					</p:column>
+
+				</p:dataTable>
+			</h:panelGroup>
+		</p:dialog>
+	</div>
+
+</ui:composition>

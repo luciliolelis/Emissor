@@ -1,0 +1,43 @@
+package com.amsoft.erp.converter;
+
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.convert.Converter;
+import javax.faces.convert.FacesConverter;
+
+import com.amsoft.erp.model.Empresa;
+import com.amsoft.erp.repository.Empresas;
+import com.amsoft.erp.util.cdi.CDIServiceLocator;
+
+@FacesConverter(forClass = Empresa.class, value="empresaConverter")
+public class EmitenteConverter implements Converter {
+
+	//@Inject
+	private Empresas empresas;
+	
+	public EmitenteConverter() {
+		this.empresas =  CDIServiceLocator.getBean(Empresas.class);
+	}
+	
+	@Override
+	public Object getAsObject(FacesContext context, UIComponent component, String value) {
+		Empresa retorno = null;
+
+		if (value != null) {
+			retorno = this.empresas.porId( new Integer(value));
+		}
+
+		return retorno;
+	}
+	
+	@Override
+	public String getAsString(FacesContext context, UIComponent component, Object value) {
+		if (value != null) {
+			Empresa empresa = (Empresa) value;
+			return empresa.getId() == null ? null : empresa.getId().toString();
+		}
+		
+		return "";
+	}
+
+}

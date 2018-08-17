@@ -1,0 +1,71 @@
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Log de acessos</ui:define>
+
+	<ui:define name="content">
+		<h1 class="aw-page-title">Log de acessos</h1>
+
+		<h:form id="frm" rendered="true">
+
+			<f:metadata>
+
+				<f:event listener="#{gestaoHomeBean.inicializar}"
+					type="preRenderView" />
+
+				<f:viewAction action="#{gestaoHomeBean.consultarLogAcesso}" />
+			</f:metadata>
+
+
+			<p:dataTable value="#{gestaoHomeBean.acessos}" var="acesso"
+				emptyMessage="Nenhum acesso encontrado." rows="10" paginator="true"
+				paginatorPosition="bottom" style="margin-top: 10px"
+				id="acessos-table" reflow="true">
+
+
+				<p:column headerText="Ação" sortBy="#{acesso.acao}">
+					<h:outputText value="#{acesso.acao}" />
+				</p:column>
+
+				<p:column headerText="Nome" sortBy="#{acesso.nome}">
+					<h:outputText value="#{acesso.nome}" />
+				</p:column>
+
+				<p:column headerText="Email" sortBy="#{acesso.email}">
+					<h:outputText value="#{acesso.email}" />
+				</p:column>
+
+				<p:column headerText="Data/hora" sortBy="#{acesso.data_hora}">
+
+
+					<h:outputText value="#{acesso.data_hora}">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" timeZone="GMT-3" />
+					</h:outputText>
+				</p:column>
+
+
+
+				<p:column headerText="IP" sortBy="#{acesso.ip_cliente}">
+					<h:outputText value="#{acesso.ip_cliente}" />
+				</p:column>
+
+
+				<p:column headerText="Empresa" sortBy="#{acesso.empresa}">
+					<h:outputText value="#{acesso.empresa}" />
+				</p:column>
+
+
+				<f:facet name="footer">
+									(#{gestaoHomeBean.acessos.size()}) registros
+				    			</f:facet>
+			</p:dataTable>
+
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,136 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+
+	<p:dataTable value="#{cadastroProdutoBean.produto.itensIcmsUf}"
+		var="item" style="margin-top: 25px" rowIndexVar="linha"
+		id="tabelaItens" reflow="true">
+
+
+
+		<p:column headerText="Estado">
+			<h:outputText value="#{item.uf.estado} - #{item.uf.uf}"
+				rendered="#{item.estadoAssociado}" />
+			<p:autoComplete styleClass="uf-tabela" placeholder="Digite o estado"
+				value="#{cadastroProdutoBean.estadoLinhaEditavel}"
+				completeMethod="#{cadastroProdutoBean.completarEstado}" var="uf"
+				dropdown="true" itemLabel="#{uf.estado}" itemValue="#{uf}"
+				forceSelection="true" rendered="#{not item.estadoAssociado}">
+
+				<p:ajax event="itemSelect" update="tabelaItens"
+					listener="#{cadastroProdutoBean.carregarEstadoLinhaEditavel}" />
+
+				<p:column>
+					<h:outputText value="#{uf.estado}" />
+				</p:column>
+
+				<p:column>
+					<h:outputText value="#{uf.uf}" />
+				</p:column>
+
+			</p:autoComplete>
+		</p:column>
+
+		<p:column headerText="CST"
+			rendered="#{seguranca.empresa.regimeTributario != 'SIMPLES'}">
+
+			<p:selectOneMenu id="cstIcms" required="true" autoWidth="false"
+				requiredMessage="Informe a CST" rendered="#{linha != 0}"
+				value="#{item.cstIcms}">
+				<f:selectItem itemLabel="Selecione" />
+				<f:selectItems value="#{cadastroProdutoBean.icmss}" var="cstIcms"
+					itemValue="#{cstIcms}"
+					itemLabel="#{cstIcms.codigo} - #{cstIcms.descricao}" />
+				<p:ajax event="change" process="@this" update="tabelaItens"
+					resetValues="true" />
+			</p:selectOneMenu>
+		</p:column>
+
+		<p:column headerText="CSOSN"
+			rendered="#{seguranca.empresa.regimeTributario eq 'SIMPLES'}">
+			<p:selectOneMenu id="csosn" required="true" autoWidth="false"
+				rendered="#{linha != 0}" value="#{item.csosn}">
+				<f:selectItem itemLabel="Selecione" />
+				<f:selectItems value="#{cadastroProdutoBean.csosns}" var="csosn"
+					itemValue="#{csosn}"
+					itemLabel="#{csosn.codigo} - #{csosn.descricao}" />
+				<p:ajax event="change" process="@this" update="tabelaItens"
+					resetValues="true" />
+			</p:selectOneMenu>
+		</p:column>
+
+		<p:column headerText="Aliquota">
+			<p:inputText
+				rendered="#{cadastroProdutoBean.habilitaAliquotaICMS(item, linha)}"
+				required="#{cadastroProdutoBean.obrigaAliquotaICMS(item, linha)}"
+				value="#{item.aliquotaIcms}">
+				<f:convertNumber type="percent" pattern="#0.00" />
+				<p:ajax event="change" process="@this" update="tabelaItens" />
+			</p:inputText>
+		</p:column>
+
+		<p:column headerText="Aliquota ST">
+			<p:inputText
+				rendered="#{cadastroProdutoBean.habilitaAliquotaICMSST(item, linha)}"
+				required="#{cadastroProdutoBean.obrigaAliquotaICMSST(item, linha)}"
+				value="#{item.aliquotaIcmsSt}">
+				<f:convertNumber type="percent" pattern="#0.00" />
+				<p:ajax event="change" process="@this" update="tabelaItens" />
+			</p:inputText>
+		</p:column>
+
+		<p:column headerText="Redução BC">
+			<p:inputText id="reducao-icms"
+				required="#{cadastroProdutoBean.obrigaReducao(item, linha)}"
+				rendered="#{cadastroProdutoBean.habilitaReducao(item, linha)}"
+				value="#{item.reducaoIcms}">
+				<f:convertNumber type="percent" pattern="#0.00" />
+				<p:ajax event="change" process="@this" update="tabelaItens" />
+			</p:inputText>
+		</p:column>
+
+		<p:column headerText="Redução BC ST">
+			<p:inputText id="reducao-icms-st"
+				rendered="#{cadastroProdutoBean.habilitaReducaoSt(item, linha)}"
+				value="#{item.reducaoIcmsSt}">
+				<f:convertNumber type="percent" pattern="#0.00" />
+				<p:ajax event="change" process="@this" update="tabelaItens" />
+			</p:inputText>
+		</p:column>
+
+		<p:column headerText="MVA">
+			<p:inputText id="mva"
+				rendered="#{cadastroProdutoBean.habilitaMVA(item, linha)}"
+				required="#{cadastroProdutoBean.obrigaMVA(item, linha)}"
+				value="#{item.mva}" disabled="#{item.usaPauta}">
+				<f:convertNumber type="percent" pattern="#0.00" />
+				<p:ajax event="change" process="@this" update="tabelaItens" />
+			</p:inputText>
+		</p:column>
+
+		<p:column headerText="Pauta">
+			<p:inputText id="valor-pauta" styleClass="moeda"
+				disabled="#{item.usaMva}"
+				rendered="#{cadastroProdutoBean.habilitaValorPauta(item, linha)}"
+				value="#{item.valorPauta}">
+				<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+				<p:ajax event="change" process="@this" update="tabelaItens" />
+			</p:inputText>
+		</p:column>
+
+		<p:column headerText="Opções" style="text-align: center">
+			<p:commandButton icon="ui-icon-trash" title="Remover estado"
+				style="width:40px" rendered="#{linha != 0}" process="@this">
+				<p:confirm icon="ui-icon-alert" header="Confirmação de exclusão"
+					message="Tem certeza que deseja remover este estado" />
+				<p:ajax event="click" process="@this" update="tabelaItens"
+					listener="#{cadastroProdutoBean.removerItem(item, linha)}" />
+			</p:commandButton>
+		</p:column>
+	</p:dataTable>
+
+</ui:composition>

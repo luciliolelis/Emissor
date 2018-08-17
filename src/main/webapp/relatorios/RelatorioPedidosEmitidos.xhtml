@@ -1,0 +1,134 @@
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
+
+	<ui:define name="titulo">Relatório de Notas Fiscais</ui:define>
+
+	<ui:define name="content">
+		<h:form id="frm">
+
+			<p:toolbar id="toolbar" style="position: fixed; margin-top:15px">
+				<p:toolbarGroup>
+
+
+					<p:commandButton value="Exportar para PDF" icon="fa fa-file-pdf-o"
+						action="#{relatorioPedidosEmitidosBean.emitir}" ajax="false" />
+					<p:separator />
+					<p:commandButton value="Exportar Arquivos XML para ZIP"
+						icon="fa fa-file-zip-o"
+						action="#{relatorioPedidosEmitidosBean.escreveArquivos}"
+						ajax="false" />
+				</p:toolbarGroup>
+			</p:toolbar>
+			<h1 class="aw-page-title"></h1>
+			<h1 class="aw-page-title">Relatório de Notas Fiscais</h1>
+
+			<div class="ui-fluid">
+				<p:messages autoUpdate="true" closable="true" />
+				<p:panelGrid columns="4" layout="grid" style="margin-top: 10px"
+					styleClass="panelgrid-noborder"
+					columnClasses="ui-grid-col-2, ui-grid-col-4,ui-grid-col-1, ui-grid-col-4">
+
+					<p:outputLabel value="Data inicial" />
+
+					<p:calendar value="#{relatorioPedidosEmitidosBean.dataInicio}"
+						label="Data inicial" pattern="dd/MM/yyyy" size="10" />
+					<h:outputText value="Data final" />
+
+					<p:calendar value="#{relatorioPedidosEmitidosBean.dataFim}"
+						label="Data final" pattern="dd/MM/yyyy" size="10" />
+
+					<p:outputLabel value="Tipo" for="tipoRelatorio" />
+					<p:selectOneMenu id="tipoRelatorio" effect="fold"
+						value="#{relatorioPedidosEmitidosBean.relatorio}">
+						<f:selectItems
+							value="#{relatorioPedidosEmitidosBean.tipoRelatorio}"
+							var="tipoRelatorio" itemValue="#{tipoRelatorio}"
+							itemLabel="#{tipoRelatorio.descricao}" />
+
+						<p:ajax event="change" process="@this" update="@this" />
+					</p:selectOneMenu>
+
+					<p:outputLabel value="Status" />
+					<p:selectCheckboxMenu id="status"
+						value="#{relatorioPedidosEmitidosBean.statuses}" label="status"
+						multiple="true" filterMatchMode="startsWith">
+						<f:selectItems value="#{relatorioPedidosEmitidosBean.status}"
+							var="status" itemValue="#{status}"
+							itemLabel="#{status.descricao}" />
+					</p:selectCheckboxMenu>
+					<p:spacer />
+					<p:spacer />
+					<p:spacer />
+					<p:commandButton value="Filtrar" icon="fa fa-search" 
+						action="#{relatorioPedidosEmitidosBean.pesquisa}" ajax="false" />
+
+				</p:panelGrid>
+
+
+				<p:dataTable value="#{relatorioPedidosEmitidosBean.filtrados}"
+					var="nfce" emptyMessage="Nenhuma Nota Fiscal encontrada"
+					style="margin-top: 10px" id="empresas-table">
+
+
+					<p:column headerText="Status">
+						<h:outputText value="#{nfce.status.descricao}" />
+					</p:column>
+
+					<p:column headerText="Emissão">
+						<h:outputText value="#{nfce.emissao}">
+							<f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="GMT-3" />
+						</h:outputText>
+					</p:column>
+
+
+					<p:column headerText="Número">
+						<h:outputText value="#{nfce.numero}" />
+					</p:column>
+
+					<p:column headerText="CFOP">
+						<h:outputText value="#{nfce.cfop.codigo}" />
+					</p:column>
+
+					<p:column headerText="Cliente">
+						<h:outputText value="#{nfce.cliente.nome}" />
+					</p:column>
+
+					<p:column headerText="Valor total">
+						<h:outputText value="#{nfce.valorTotal}">
+							<f:convertNumber type="currency" />
+						</h:outputText>
+					</p:column>
+
+
+
+					<p:columnGroup type="footer">
+						<p:row>
+							<p:column colspan="5" footerText="Total"
+								style="text-align: right" />
+
+							<p:column style="text-align: right">
+								<f:facet name="footer">
+									<h:outputText value="#{relatorioPedidosEmitidosBean.total}">
+										<f:convertNumber type="currency" />
+									</h:outputText>
+								</f:facet>
+							</p:column>
+
+
+						</p:row>
+					</p:columnGroup>
+
+				</p:dataTable>
+
+			</div>
+
+
+
+
+		</h:form>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,59 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:panelGrid columns="4" layout="grid" style="margin-top: 10px"
+		styleClass="panelgrid-noborder"
+		columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4">
+
+		<p:outputLabel value="Código postal" for="postal"
+			rendered="#{gestaoClientesBean.clienteEdicao.exterior eq true}" />
+		<p:inputText id="postal"
+			rendered="#{gestaoClientesBean.clienteEdicao.exterior eq true}"
+			value="#{gestaoClientesBean.clienteEdicao.codigoPostal}" />
+
+		<p:outputLabel value="País" for="pais" />
+		<p:autoComplete id="pais" size="30" dropdown="false"
+			placeholder="Digite o nome do pais" required="true"
+			value="#{gestaoClientesBean.clienteEdicao.pais}"
+			completeMethod="#{gestaoClientesBean.completarPais}" var="pais"
+			itemLabel="#{pais.nome}" itemValue="#{pais}" forceSelection="true">
+			<p:ajax event="itemSelect"
+				listener="#{gestaoClientesBean.paisSelecionado}" update="@this" />
+			<p:column>
+				<p:outputLabel value="#{pais.nome}" />
+			</p:column>
+			<p:column>
+				<p:outputLabel value="#{pais.codigo}" />
+			</p:column>
+		</p:autoComplete>
+
+		<p:outputLabel value="Cidade" for="cidade-exterior" />
+		<p:inputText id="cidade-exterior"
+			readonly="#{gestaoClientesBean.clienteEdicao.exterior eq false}"
+			value="#{gestaoClientesBean.clienteEdicao.cidadeExterior}" />
+
+		<p:outputLabel value="UF" for="estado-exterior" />
+		<p:inputText id="estado-exterior"
+			readonly="#{gestaoClientesBean.clienteEdicao.exterior eq false}"
+			value="#{gestaoClientesBean.clienteEdicao.ufExterior}" />
+
+		<p:outputLabel value="Logradouro" for="logradouro-exterior" />
+		<p:inputText id="logradouro-exterior"
+			value="#{gestaoClientesBean.clienteEdicao.logradouroExterior}" />
+
+		<p:outputLabel value="Bairro" for="bairro-exterior" />
+		<p:inputText id="bairro-exterior"
+			value="#{gestaoClientesBean.clienteEdicao.bairroExterior}" />
+
+		<p:outputLabel value="Número" for="numero-exterior" />
+		<p:inputText id="numero-exterior"
+			value="#{gestaoClientesBean.clienteEdicao.numeroExterior}" />
+
+
+
+	</p:panelGrid>
+
+</ui:composition>

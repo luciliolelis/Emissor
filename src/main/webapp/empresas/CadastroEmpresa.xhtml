@@ -1,0 +1,120 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
+	template="/WEB-INF/template/Layout.xhtml">
+
+	<ui:define name="content">
+
+		<script>
+			$(document).ready(function() {
+				// Sempre que um input Mudar
+				$(':input').change(function() {
+					setConfirmUnload(true);
+				});
+
+				// Sem mudança no form
+				$('form').submit(function() {
+					setConfirmUnload(false);
+				});
+			});
+
+			function setConfirmUnload(on) {
+				var message = "Você tem dados não salvos, deseja sair da tela?";
+				window.onbeforeunload = (on) ? function() {
+					return message;
+				} : null;
+			}
+		</script>
+
+		<h:form id="frm">
+			<f:metadata>
+				<o:viewParam name="empresa"
+					value="#{gestaoEmpresasBean.empresaEdicao}" />
+
+				<f:event listener="#{gestaoEmpresasBean.inicializar}"
+					type="preRenderView" />
+
+			</f:metadata>
+
+			<p:toolbar style="position: fixed; margin-top:15px">
+				<p:toolbarGroup>
+					<p:button title="Pesquisa" outcome="/empresas/PesquisaEmpresas"
+						icon="ui-icon-search" />
+					<p:separator />
+
+					<p:button icon="ui-icon-plus" title="Novo"
+						outcome="/empresas/CadastroEmpresa"
+						rendered="#{seguranca.incluirEmpresa}"
+						action="#{gestaoEmpresasBean.prepararNovoCadastro}"
+						process="@this">
+					</p:button>
+
+					<p:commandButton title="Salvar" icon="ui-icon-disk"
+						onsuccess="setConfirmUnload(false)"
+						rendered="#{seguranca.editarEmpresa or seguranca.incluirEmpresa}"
+						id="salvar-button" action="#{gestaoEmpresasBean.salvar}"
+						process="grupoCapa tab:grupoEndereco tab:grupoLogo @this tab:certificado tab:dadosAdicionais"
+						update="@form" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<h1 class="aw-page-title"></h1>
+
+			<h1 class="aw-page-title">#{gestaoEmpresasBean.editando ?
+				'Edição do emitente' : 'Novo emitente'}</h1>
+			<p:messages id="msgs" closable="true" autoUpdate="true" />
+
+			<p:defaultCommand target="salvar-button" />
+
+			<div class="ui-fluid">
+				<h:panelGroup>
+
+					<h:panelGroup id="grupoCapa">
+						<p:focus context="grupoCapa" />
+						<ui:include src="/WEB-INF/template/empresa/Capa.xhtml" />
+					</h:panelGroup>
+
+					<p:tabView style="margin-top:25px" id="tab">
+
+						<p:tab title="Endereço">
+							<h:panelGroup id="grupoEndereco">
+								<ui:include src="/WEB-INF/template/empresa/Endereco.xhtml" />
+							</h:panelGroup>
+						</p:tab>
+
+						<p:tab title="Logo marca">
+							<h:panelGroup id="grupoLogo">
+								<ui:include src="/WEB-INF/template/empresa/Logo.xhtml" />
+							</h:panelGroup>
+						</p:tab>
+
+						<p:tab title="IE ST">
+							<h:panelGroup id="grupoIe">
+								<ui:include
+									src="/WEB-INF/template/empresa/InscricaoEstadualST.xhtml" />
+							</h:panelGroup>
+						</p:tab>
+
+
+						<p:tab title="Segurança">
+							<h:panelGroup id="certificado">
+								<ui:include src="/WEB-INF/template/empresa/Certificados.xhtml" />
+							</h:panelGroup>
+						</p:tab>
+		
+						<p:tab title="Dados adicionais">
+
+							<p:inputTextarea id="dadosAdicionais"
+								value="#{gestaoEmpresasBean.empresaEdicao.dadosadicionais}" />
+
+						</p:tab>
+
+					</p:tabView>
+				</h:panelGroup>
+			</div>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

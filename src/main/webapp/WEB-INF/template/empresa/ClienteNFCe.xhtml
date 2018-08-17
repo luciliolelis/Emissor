@@ -1,0 +1,98 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<div class="ui-fluid">
+		<h1 class="aw-page-title"></h1>
+
+		<p:panelGrid columns="3" layout="grid" styleClass="panelgrid-noborder"
+			columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-4">
+
+			<p:outputLabel value="Cliente padrão" for="cliente" />
+			<p:panelGrid columns="2" styleClass="panelgrid-noborder"
+				style="width:105%;margin-left:-10px" layout="grid"
+				columnClasses="ui-grid-col-3, ui-grid-col-12,">
+
+				<p:commandButton icon="ui-icon-search" title="Pesquisar"
+					process="@this" update="clientes-dialog panel-clientes"
+					actionListener="#{gestaoEmpresasBean.pesquisaClientes}"
+					oncomplete="PF('clientesDialog').show()" ignoreAutoUpdate="true">
+				</p:commandButton>
+
+				<p:autoComplete id="cliente" size="30" dropdown="false"
+					minQueryLength="3"
+					placeholder="Digite o nome  do cliente, CPF ou CNPJ"
+					value="#{gestaoEmpresasBean.empresaEdicao.cliente}"
+					completeMethod="#{gestaoEmpresasBean.completarCliente}" var="cliente"
+					itemLabel="#{cliente.nome}" itemValue="#{cliente}"
+					forceSelection="true">
+
+					<p:ajax event="itemSelect"
+						listener="#{gestaoEmpresasBean.clienteSelecionado}"
+						update="cliente" />
+
+					<p:column>
+						<h:outputText value="#{cliente.nome}" />
+					</p:column>
+
+					<p:column>
+						<h:outputText value="#{cliente.docReceitaFederal}" />
+					</p:column>
+
+					<p:column>
+						<h:outputText
+							value="#{cliente.enderecos[0].cidade} - #{cliente.enderecos[0].uf}" />
+					</p:column>
+				</p:autoComplete>
+			</p:panelGrid>
+
+			<p:commandButton value="Limpar cliente" action="#{gestaoEmpresasBean.limparCliente}" process="@this" update=":frm:tab:cliente" />
+
+		</p:panelGrid>
+
+
+		<p:dialog header="Pesquisa de clientes" widgetVar="clientesDialog"
+			modal="true" id="clientes-dialog" showEffect="fade" hideEffect="fade"
+			resizable="true" closeOnEscape="true">
+
+			<h:panelGroup id="panel-clientes" style="margin-top:5px">
+				<p:dataTable value="#{gestaoEmpresasBean.clientesFiltrados}"
+					var="cliente" style="max-width:550px; max-higth:450px"
+					reflow="true" emptyMessage="Nenhum cliente encontrado." rows="6"
+					paginator="true" paginatorPosition="bottom"
+					paginatorAlwaysVisible="false">
+
+					<p:column style="width: 30px; text-align: center">
+						<p:commandButton icon="ui-icon-check" title="Selecionar"
+							oncomplete="if (!args.validationFailed) PF('clientesDialog').hide()"
+							process="@this"
+							action="#{gestaoEmpresasBean.clienteSelecionar(cliente)}"
+							update=":frm:tab:cliente :frm:tab:grupoEndereco" />
+					</p:column>
+
+					<p:column headerText="Nome" filterBy="#{cliente.nome}"
+						filterMatchMode="contains" sortBy="#{cliente.nome}">
+						<h:outputText value="#{cliente.nome}" />
+					</p:column>
+
+					<p:column headerText="Documento"
+						filterBy="#{cliente.docReceitaFederal}"
+						sortBy="#{cliente.docReceitaFederal}">
+						<h:outputText value="#{cliente.docReceitaFederal}" />
+					</p:column>
+
+					<p:column headerText="Cidade/UF"
+						filterBy="#{cliente.docReceitaFederal}"
+						sortBy="#{cliente.docReceitaFederal}">
+						<h:outputText
+							value="#{cliente.enderecos[0].cidade} - #{cliente.enderecos[0].uf}" />
+					</p:column>
+
+				</p:dataTable>
+			</h:panelGroup>
+		</p:dialog>
+	</div>
+
+</ui:composition>

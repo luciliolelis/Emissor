@@ -1,0 +1,103 @@
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
+
+	<ui:define name="titulo">#{cadastroProdutoBean.editando ? 'Edição de produto' : 'Novo produto'}</ui:define>
+
+	<ui:define name="content">
+
+		<script>
+			$(document).ready(function() {
+				// Sempre que um input Mudar
+				$(':input').change(function() {
+					setConfirmUnload(true);
+				});
+
+				// Sem mudança no form
+				$('form').submit(function() {
+					setConfirmUnload(false);
+				});
+			});
+
+			function setConfirmUnload(on) {
+				var message = "Você tem dados não salvos, deseja sair da tela?";
+				window.onbeforeunload = (on) ? function() {
+					return message;
+				} : null;
+			}
+		</script>
+
+		<f:metadata>
+			<o:viewParam name="produto" value="#{cadastroProdutoBean.produto}" />
+			<f:event listener="#{cadastroProdutoBean.inicializar}"
+				type="preRenderView" />
+		</f:metadata>
+
+		<h:form id="frm">
+			<p:toolbar style="position: fixed; margin-top:15px">
+				<p:toolbarGroup>
+					<p:button title="Pesquisa" outcome="/produtos/PesquisaProdutos"
+						icon="ui-icon-search" />
+					<p:separator />
+
+					<p:button title="Novo" icon="ui-icon-plus"
+						rendered="#{seguranca.incluirProduto}"
+						outcome="/produtos/CadastroProduto" />
+
+					<p:commandButton title="Salvar" id="botaoSalvar"
+						onsuccess="setConfirmUnload(false)"
+						rendered="#{seguranca.editarProduto or seguranca.incluirProduto}"
+						icon="ui-icon-disk" action="#{cadastroProdutoBean.salvar}"
+						update="@form" process="@this capa tab" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<h1 class="aw-page-title"></h1>
+
+			<p:messages id="msgs" closable="true" autoUpdate="true" />
+
+			<h1 class="aw-page-title">#{cadastroProdutoBean.editando ?
+				'Edição de produto' : 'Novo produto'}</h1>
+
+			<div class="ui-fluid">
+
+				<h:panelGroup id="capa">
+					<p:focus context="capa" />
+					<ui:include src="/WEB-INF/template/produtos/Capa.xhtml" />
+				</h:panelGroup>
+
+				<p:tabView id="tab" style="margin-top:25px">
+					<p:tab title="ICMS">
+						<ui:include src="/WEB-INF/template/produtos/Tributos.xhtml" />
+					</p:tab>
+
+					<p:tab title="ICMS Consumidor final">
+						<ui:include src="/WEB-INF/template/produtos/ConsumidorFinal.xhtml" />
+					</p:tab>
+
+					<p:tab title="ICMS exterior">
+						<ui:include src="/WEB-INF/template/produtos/Exterior.xhtml" />
+					</p:tab>
+
+					<p:tab title="IPI">
+						<ui:include src="/WEB-INF/template/produtos/Ipi.xhtml" />
+					</p:tab>
+
+					<p:tab title="Pis e Cofins">
+						<ui:include src="/WEB-INF/template/produtos/PisCofins.xhtml" />
+					</p:tab>
+
+					<p:tab title="Informações complementares">
+						<p:inputTextarea
+							value="#{cadastroProdutoBean.produto.complementos}" />
+					</p:tab>
+
+
+				</p:tabView>
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

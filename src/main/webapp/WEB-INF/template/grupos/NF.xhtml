@@ -1,0 +1,18 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h3>NFC-e</h3>
+	<p:selectManyCheckbox value="#{gestaoGruposBean.selectedNF}" layout="pageDirection">
+		<f:selectItem itemLabel="Incluir novas notas"
+			itemValue="NF_INCLUIR" />
+		<f:selectItem itemLabel="Editar notas existentes"
+			itemValue="NF_EDITAR" />
+		<f:selectItem itemLabel="Excluir notas" itemValue="NF_EXCLUIR" />
+		<f:selectItem itemLabel="Emitir notas" itemValue="NF_EMITIR" />
+		<f:selectItem itemLabel="Candelar notas" itemValue="NF_CANCELAR" />
+		<f:selectItem itemLabel="Gerar relatórios" itemValue="NF_RELATORIOS" />
+	</p:selectManyCheckbox>
+</ui:composition>

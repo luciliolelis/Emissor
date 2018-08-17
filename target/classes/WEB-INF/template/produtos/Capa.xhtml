@@ -1,0 +1,85 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<p:panelGrid columns="4" layout="grid" style="margin-top: 10px"
+		styleClass="panelgrid-noborder"
+		columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4">
+
+		<p:outputLabel value="Código" for="sku" />
+		<p:inputText id="sku" maxlength="20" required="true"
+			value="#{cadastroProdutoBean.produto.sku}" />
+
+		<p:outputLabel value="Nome" for="nome" />
+		<p:inputText id="nome" maxlength="80" required="true"
+			value="#{cadastroProdutoBean.produto.nome}" />
+
+		<p:outputLabel value="Valor unitário" for="valor-unitario" />
+		<p:inputText id="valor-unitario" styleClass="moeda"
+			value="#{cadastroProdutoBean.produto.valorUnitario}">
+			<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+		</p:inputText>
+
+		<p:outputLabel value="Unidade de medida" for="unidade" />
+		<p:autoComplete id="unidade" dropdown="true" minQueryLength="1"
+			value="#{cadastroProdutoBean.produto.unidadeMedida}" required="true"
+			completeMethod="#{cadastroProdutoBean.completarUnidade}"
+			var="unidade" itemLabel="#{unidade}" itemValue="#{unidade}"
+			forceSelection="false" />
+
+
+		<p:outputLabel value="Origem do produto" for="origem" />
+		<p:selectOneMenu id="origem" required="true" autoWidth="false"
+			immediate="" value="#{cadastroProdutoBean.produto.origemProduto}">
+			<f:selectItems value="#{cadastroProdutoBean.origemProdutos}"
+				var="origem" itemValue="#{origem}"
+				itemLabel="#{origem.codigo} - #{origem.descricao}" />
+
+			<p:ajax event="change" process="@this" />
+		</p:selectOneMenu>
+
+		<p:outputLabel value="Código de barras (EAN)" for="ean" />
+		<p:inputText id="ean" maxlength="14" required="false"
+			value="#{cadastroProdutoBean.produto.codigoBarras}" label="Number">
+		</p:inputText>
+
+
+		<p:outputLabel value="NCM" for="ncm" />
+
+		
+		
+		<p:panelGrid columns="2" styleClass="panelgrid-noborder"
+				style="width:105%;margin-left:-10px" layout="grid"
+				columnClasses="ui-grid-col-3, ui-grid-col-12">
+
+				<p:commandButton icon="ui-icon-search" title="Pesquisar"
+				style="margin-left: 3px" process="@this" update="@none"
+				action="#{selecaoNcmBean.abrirDialogo}" ignoreAutoUpdate="true">
+				<p:ajax event="dialogReturn"
+					listener="#{cadastroProdutoBean.ncmSelecionado}" update="ncm cest"
+					ignoreAutoUpdate="true" />
+			</p:commandButton>
+
+					<p:inputText id="ncm" value="#{cadastroProdutoBean.ncm}"
+				readonly="#{facesContext.currentPhaseId.name eq 'RENDER_RESPONSE'}" />
+			</p:panelGrid>
+
+
+		<p:outputLabel value="CEST" for="cest" />
+		<p:selectOneMenu id="cest" value="#{cadastroProdutoBean.produto.cest}">
+			<f:selectItems value="#{cadastroProdutoBean.listaCest}" var="cest"
+				itemValue="#{cest.cest}" itemLabel="#{cest.cest}" />
+		</p:selectOneMenu>
+
+
+
+		<p:spacer />
+		<p:spacer />
+
+	</p:panelGrid>
+
+
+</ui:composition>
