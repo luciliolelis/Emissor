@@ -13,14 +13,11 @@
 	</f:metadata>
 
 
-
 	<ui:define name="content">
 
 		<h1 class="aw-page-title">Dashboard</h1>
 
-
 		<p:messages autoUpdate="false" closable="true" id="msg">
-
 		</p:messages>
 
 		<div class="ui-g">
@@ -47,14 +44,6 @@
 				</div>
 			</div>
 
-			<!-- 			<div class="ui-g-5 ui-md-2"> -->
-			<!-- 				<div class="box"> -->
-			<!-- 					<span>#{graficoNfeEmitidasBean.numeroTransportadores}</span> -->
-			<!-- 					<h2>Transportadores</h2> -->
-			<!-- 				</div> -->
-			<!-- 			</div> -->
-
-
 			<div class="ui-g-6 ui-md-3">
 				<div class="box">
 					<span>#{graficoNfeEmitidasBean.numeroProdutos} </span>
@@ -62,20 +51,10 @@
 				</div>
 			</div>
 
-			<!-- 			<div class="ui-g-5 ui-md-2"> -->
-			<!-- 				<div class="box"> -->
-			<!-- 					<span>#{graficoNfeEmitidasBean.numeroUsuarios} </span> -->
-			<!-- 					<h2>usuários</h2> -->
-			<!-- 				</div> -->
-			<!-- 			</div> -->
-
-
 		</div>
 
 
-
 		<div class="ui-g">
-
 
 			<div class="ui-g-6 ui-md-4">
 				<div class="box">
@@ -84,7 +63,6 @@
 				</div>
 			</div>
 
-
 			<div class="ui-g-6 ui-md-4">
 				<div class="box">
 					<span>#{graficoNfeEmitidasBean.totalSaidaNFCe} </span>
@@ -92,14 +70,12 @@
 				</div>
 			</div>
 
-
 			<div class="ui-g-6 ui-md-4">
 				<div class="box">
 					<span>#{graficoNfeEmitidasBean.totalEntrada} </span>
 					<h2>Total entrada NF-e</h2>
 				</div>
 			</div>
-
 
 		</div>
 
@@ -113,10 +89,6 @@
 			<p:chart type="line" model="#{graficoNfeEmitidasBean.modelNFCe}"
 				responsive="true" style="height: 350px; margin-top:25px" />
 		</p:panelGrid>
-
-
-
-
 
 		<h5>#{graficoNfeEmitidasBean.dadosCertificado.descricao}</h5>
 		<h5>#{graficoNfeEmitidasBean.dadosCertificado.strDataInicial}</h5>
