@@ -13,6 +13,12 @@
 	<dependencies>
 
 		<dependency>
+			<groupId>com.chronos.calc</groupId>
+			<artifactId>ChronosCalcTribut</artifactId>
+			<version>1.0.21</version>
+		</dependency>
+
+		<dependency>
 			<groupId>br.com.samuelweb</groupId>
 			<artifactId>java_certificado</artifactId>
 			<version>1.9</version>
@@ -431,6 +437,14 @@
 			<id>Release</id>
 			<url>http://www.autocomsistemas.com.br:8081/nexus/content/repositories/autocom/</url>
 		</repository>
+
+
+		<repository>
+			<id>chronosinfo</id>
+			<name>chronos</name>
+			<url>http://66.70.177.7:8081/repository/chronos/</url>
+		</repository>
+
 	</repositories>
 
 </project>
