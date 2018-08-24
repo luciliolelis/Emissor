@@ -26,10 +26,10 @@ import com.amsoft.erp.util.CertificadoInit;
 import com.amsoft.erp.util.ChaveAcesso;
 import com.amsoft.erp.util.DestinatarioUtils;
 import com.amsoft.erp.util.EmitenteUtils;
-import com.amsoft.erp.util.ICMSTotalUtils;
 import com.amsoft.erp.util.IDUtils;
 import com.amsoft.erp.util.PagamentoUtils;
 import com.amsoft.erp.util.ProdutosUtils;
+import com.amsoft.erp.util.icms.ICMSTotalUtils;
 import com.amsoft.erp.util.jsf.FacesUtil;
 
 import br.com.samuelweb.certificado.exception.CertificadoException;

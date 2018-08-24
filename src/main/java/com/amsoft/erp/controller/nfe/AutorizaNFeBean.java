@@ -11,6 +11,7 @@ import javax.inject.Named;
 import com.amsoft.erp.model.nfe.Nfe;
 import com.amsoft.erp.service.emissao.EmissaoNFeService;
 import com.amsoft.erp.service.nfe.CadastroNFeService;
+import com.chronos.calc.TributacaoException;
 
 @Named
 @RequestScoped
@@ -31,7 +32,7 @@ public class AutorizaNFeBean implements Serializable {
 	@Inject
 	private EmissaoNFeService emissaoNFeService;
 
-	public void emitir() throws FileNotFoundException {
+	public void emitir() throws FileNotFoundException, TributacaoException {
 
 		this.nfe.removerItemVazio();
 

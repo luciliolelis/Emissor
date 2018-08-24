@@ -13,6 +13,10 @@ import com.amsoft.erp.model.nfe.ItemProduto;
 import com.amsoft.erp.model.nfe.Nfe;
 import com.amsoft.erp.model.nfe.fcp.FCPValidacoes;
 import com.amsoft.erp.model.nfe.ipi.IPIValidacoes;
+import com.amsoft.erp.util.icms.normal.NormalUtils;
+import com.amsoft.erp.util.icms.normal.TagNFe;
+import com.amsoft.erp.util.icms.simples.SimplesUtils;
+import com.chronos.calc.TributacaoException;
 
 import br.inf.portalfiscal.nfe.schema_4.enviNFe.ObjectFactory;
 import br.inf.portalfiscal.nfe.schema_4.enviNFe.TIpi;
@@ -27,7 +31,7 @@ import br.inf.portalfiscal.nfe.schema_4.enviNFe.TNFe.InfNFe.Det.Prod;
 public class ProdutosUtils {
 
 
-	private static Imposto getImpostos(ItemProduto item, Nfe nfe) {
+	private static Imposto getImpostos(ItemProduto item, Nfe nfe) throws TributacaoException {
 		Imposto imposto = new Imposto();
 
 		imposto.getContent().add(new ObjectFactory()
@@ -36,9 +40,9 @@ public class ProdutosUtils {
 		ICMS icms = new ICMS();
 
 		if (AmsoftUtils.isSimplesNacional(nfe.getEmpresa().getRegimeTributario())) {
-			icms = ICMSSNUtils.popularIcmsSN(item);
+			icms = SimplesUtils.popularIcmsSN(item);
 		} else {
-			icms = ICMSUtils.popularICMS(item);
+			icms = NormalUtils.popularICMS(item);
 		}
 
 		PIS pis = PISCOFINSUtils.popularPIS(item);
@@ -50,10 +54,10 @@ public class ProdutosUtils {
 		JAXBElement<ICMS> icmsElement = new JAXBElement<ICMS>(new QName("ICMS"), ICMS.class, icms);
 		imposto.getContent().add(icmsElement);
 
-		if (IPIValidacoes.isIpi(item)) {
-			JAXBElement<TIpi> ipiElement = new JAXBElement<TIpi>(new QName("IPI"), TIpi.class, ipi);
-			imposto.getContent().add(ipiElement);
-		}
+		//if (IPIValidacoes.isIpi(item)) {
+//			JAXBElement<TIpi> ipiElement = new JAXBElement<TIpi>(new QName("IPI"), TIpi.class, ipi);
+//			imposto.getContent().add(ipiElement);
+		//}
 
 		JAXBElement<PIS> pisElement = new JAXBElement<PIS>(new QName("PIS"), PIS.class, pis);
 		imposto.getContent().add(pisElement);
@@ -64,7 +68,7 @@ public class ProdutosUtils {
 		if (FCPValidacoes.isNotFCPUFDest(item)) {
 
 		} else {
-			ICMSUFDest icmsufdest = ICMSUtils.getICMSUFDest(item);
+			ICMSUFDest icmsufdest = TagNFe.getICMSUFDest(item);
 			JAXBElement<ICMSUFDest> icmsufdestElement = new JAXBElement<ICMSUFDest>(new QName("ICMSUFDest"),
 					ICMSUFDest.class, icmsufdest);
 			imposto.getContent().add(icmsufdestElement);
@@ -82,9 +86,9 @@ public class ProdutosUtils {
 		ICMS icms = new ICMS();
 
 		if (AmsoftUtils.isSimplesNacional(nfe.getEmpresa().getRegimeTributario())) {
-			icms = ICMSSNUtils.popularIcmsSN(item);
+			icms = SimplesUtils.popularIcmsSN(item);
 		} else {
-			//icms = ICMSUtils.popularICMS(item);
+			//icms = SimplesUtils.popularICMS(item);
 		}
 
 		PIS pis = PISCOFINSUtils.popularPIS(item);
@@ -110,7 +114,7 @@ public class ProdutosUtils {
 //		if (FCPValidacoes.isNotFCPUFDest(item)) {
 //
 //		} else {
-//			ICMSUFDest icmsufdest = ICMSUtils.getICMSUFDest(item);
+//			ICMSUFDest icmsufdest = SimplesUtils.getICMSUFDest(item);
 //			JAXBElement<ICMSUFDest> icmsufdestElement = new JAXBElement<ICMSUFDest>(new QName("ICMSUFDest"),
 //					ICMSUFDest.class, icmsufdest);
 //			imposto.getContent().add(icmsufdestElement);
@@ -243,7 +247,7 @@ public class ProdutosUtils {
 		return produto;
 	}
 	
-	public static ArrayList<Det> getProdutos(List<ItemProduto> produtos, Nfe nfe) {
+	public static ArrayList<Det> getProdutos(List<ItemProduto> produtos, Nfe nfe) throws TributacaoException {
 
 		ArrayList<Det> ret = new ArrayList<Det>();
 

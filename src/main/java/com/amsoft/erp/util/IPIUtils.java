@@ -3,6 +3,8 @@ package com.amsoft.erp.util;
 import com.amsoft.erp.model.nfce.ItemProdutoNFCe;
 import com.amsoft.erp.model.nfe.ItemProduto;
 import com.amsoft.erp.model.nfe.ipi.IPIValidacoes;
+import com.amsoft.erp.util.icms.CalculosUtils;
+import com.chronos.calc.resultados.IResultadoCalculoIpi;
 
 import br.inf.portalfiscal.nfe.schema_4.enviNFe.TIpi;
 import br.inf.portalfiscal.nfe.schema_4.enviNFe.TIpi.IPINT;
@@ -10,7 +12,8 @@ import br.inf.portalfiscal.nfe.schema_4.enviNFe.TIpi.IPITrib;
 
 public class IPIUtils {
 
-	
+
+
 	public static TIpi popularIPI(ItemProduto item) {
 
 		if (IPIValidacoes.isNT(item)) {
@@ -40,19 +43,18 @@ public class IPIUtils {
 		ipi.setCEnq("999");
 
 		IPITrib ipiTrib = new IPITrib();
-
+		
 		ipiTrib.setCST(item.getCstIpi());
-		ipiTrib.setVBC(item.getValorTotal().add(item.getValorDesconto()).setScale(2).toPlainString());
 		ipiTrib.setPIPI(item.getAliquotaIpi().toString());
-		ipiTrib.setVIPI(item.getValorIpi().toString());
-
+		
+		IResultadoCalculoIpi resultado = CalculosUtils.calcularIPI(item);
+		ipiTrib.setVBC(resultado.getBaseCalculo().toPlainString());
+		ipiTrib.setVIPI(resultado.getValor().setScale(2).toString());
 		ipi.setIPITrib(ipiTrib);
 
 		return ipi;
 	}
-	
-	
-	
+
 	public static TIpi popularIPI(ItemProdutoNFCe item) {
 
 		if (IPIValidacoes.isNT(item)) {
@@ -82,12 +84,13 @@ public class IPIUtils {
 		ipi.setCEnq("999");
 
 		IPITrib ipiTrib = new IPITrib();
-
+		
 		ipiTrib.setCST(item.getCstIpi());
-		ipiTrib.setVBC(item.getValorTotal().add(item.getValorDesconto()).setScale(2).toPlainString());
 		ipiTrib.setPIPI(item.getAliquotaIpi().toString());
-		ipiTrib.setVIPI(item.getValorIpi().toString());
-
+		
+		IResultadoCalculoIpi resultado = CalculosUtils.calcularIPI(item);
+		ipiTrib.setVBC(resultado.getBaseCalculo().toPlainString());
+		ipiTrib.setVIPI(resultado.getValor().setScale(2).toString());
 		ipi.setIPITrib(ipiTrib);
 
 		return ipi;
