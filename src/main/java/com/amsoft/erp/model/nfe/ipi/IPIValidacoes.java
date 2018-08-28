@@ -23,7 +23,7 @@ public class IPIValidacoes {
 		return itemProduto.getCstIpi().equals("01") || itemProduto.getCstIpi().equals("02")
 				|| itemProduto.getCstIpi().equals("03") || itemProduto.getCstIpi().equals("04")
 				|| itemProduto.getCstIpi().equals("51") || itemProduto.getCstIpi().equals("52")
-//				|| itemProduto.getCstIpi().equals("53") || itemProduto.getCstIpi().equals("54")
+				|| itemProduto.getCstIpi().equals("53") || itemProduto.getCstIpi().equals("54")
 				|| itemProduto.getCstIpi().equals("55");
 	}
 

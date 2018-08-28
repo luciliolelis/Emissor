@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import com.amsoft.erp.model.nfce.NFCe;
 import com.amsoft.erp.model.nfe.ItemProduto;
 import com.amsoft.erp.model.nfe.Nfe;
-import com.amsoft.erp.model.nfe.fcp.FCPValidacoes;
 import com.amsoft.erp.model.nfe.icms.ICMSDifal;
 import com.amsoft.erp.model.nfe.ipi.IPIValidacoes;
 import com.amsoft.erp.util.AmsoftUtils;
@@ -95,14 +94,12 @@ public class ICMSTotalUtils {
 				vOutro = vOutro.add(item.getValorDespesa());
 			}
 
-			// icmstot.setVICMSDeson("0.00");
-			// icmstot.setVBC("0.00");
-			// icmstot.setVICMS("0.00");
 		} else {
 			AmsoftUtils.info("REGIME NORMAL");
 
 			for (ItemProduto item : nfe.getItensProdutos()) {
 				if (AmsoftUtils.isProdutoValido(item)) {
+
 					ICMS icms = NormalUtils.popularICMS(item);
 
 					if (icms.getICMS00() != null) {
@@ -110,14 +107,18 @@ public class ICMSTotalUtils {
 						vbc = vbcst.add(new BigDecimal(icms.getICMS00().getVBC()));
 						vicms = vicmsst.add(new BigDecimal(icms.getICMS00().getVICMS()));
 						vfcp = vfcp.add(new BigDecimal(icms.getICMS00().getVFCP()));
-						
-						
 
 					} else if (icms.getICMS10() != null) {
 
 						vbc = vbcst.add(new BigDecimal(icms.getICMS10().getVBC()));
 						vicms = vicmsst.add(new BigDecimal(icms.getICMS10().getVICMS()));
 						vfcp = vfcp.add(new BigDecimal(icms.getICMS10().getVFCP()));
+
+						vbcst = vbcst.add(new BigDecimal(icms.getICMS10().getVBCST()));
+						vicmsst = vicmsst.add(new BigDecimal(icms.getICMS10().getVICMSST()));
+
+						vfcpst = vfcpst.add(new BigDecimal(icms.getICMS10().getVFCPST()));
+						vbcfcpst = vbcfcpst.add(new BigDecimal(icms.getICMS10().getVBCFCPST()));
 
 					} else if (icms.getICMS20() != null) {
 
@@ -156,6 +157,12 @@ public class ICMSTotalUtils {
 
 					}
 
+					if (IPIValidacoes.isNT(item)) {
+
+					} else if (IPIValidacoes.isTRIB(item)) {
+						vipi = vipi.add(new BigDecimal(IPIUtils.popularIPITrib(item).getIPITrib().getVIPI()));
+					}
+
 					vProd = vProd.add(item.getValorUnitario());
 					vDesc = vDesc.add(item.getValorDesconto());
 					vFrete = vFrete.add(item.getValorFrete());
@@ -163,69 +170,47 @@ public class ICMSTotalUtils {
 					vOutro = vOutro.add(item.getValorDespesa());
 				}
 			}
-
 		}
+
 		icmstot.setVICMSDeson("0.00");
 		icmstot.setVFCPUFDest("0.00");
 		icmstot.setVICMSUFDest(ICMSDifal.getTotalVICMSUFDest(nfe).toPlainString());
 		icmstot.setVICMSUFRemet(ICMSDifal.getTotalVICMSUFRemet(nfe).toPlainString());
 		icmstot.setVFCP(vfcp.toPlainString());
-		if (nfe.getValorFCP() != null) {
-			
-		}
-		//
-		// if (isDifal(nfe)) {
-		// icmstot.setVBC("0.00");
-		// icmstot.setVICMS("0.00");
-		// icmstot.setVFCP("0.00");
-		// icmstot.setVFCPUFDest(FCPCalculos.getTotalVFCPUFDest(nfe).toPlainString());
-		// icmstot.setVICMSUFDest(ICMSDifal.getTotalVICMSUFDest(nfe).toPlainString());
-		// icmstot.setVICMSUFRemet(ICMSDifal.getTotalVICMSUFRemet(nfe).toPlainString());
-		// }
-
 		icmstot.setVBC(vbc.toPlainString());
 		icmstot.setVICMS(vicms.toPlainString());
-
 		icmstot.setVFCPSTRet("0.00");
-
 		icmstot.setVBCST(vbcst.toPlainString());
 		icmstot.setVST(vicmsst.toEngineeringString());
-
 		icmstot.setVFCPST(vfcpst.toPlainString());
 		icmstot.setVProd(nfe.getValorTotalSemDesconto().setScale(2).toPlainString());
 		icmstot.setVFrete(nfe.getValorFrete().toString());
 		icmstot.setVSeg(nfe.getValorSeguro().setScale(2).toString());
 		icmstot.setVDesc(nfe.getValorDesconto().toString());
 		icmstot.setVII("0");
-
 		icmstot.setVIPI(vipi.toString());
-
 		icmstot.setVIPIDevol("0");
 		icmstot.setVPIS(vpis.toString());
 		icmstot.setVCOFINS(nfe.getValorTotalCOFINS().toString());
 		icmstot.setVOutro(nfe.getValorDespesas().setScale(2).toString());
 
-		//
-		// (+) vProd (Somatório do valor de todos os produtos da NF-e);
-		// (-) vDesc (Somatório do desconto de todos os produtos da NF-e);
-		// (+) vST (Somatório do valor do ICMS com Substituição Tributária de
-		// todos os produtos da NF-e);
-		// (+) vFrete (Somatório do valor do Frete de todos os produtos da
-		// NF-e);
-		// (+) vSeg (Somatório do valor do seguro de todos os produtos da NF-e);
-		// (+) vOutro (Somatório do valor de outras despesas de todos os
-		// produtos da NF-e);
-		// (+) vII (Somatório do valor do Imposto de Importação de todos os
-		// produtos da NF-e);
-		// (+) vIPI (Somatório do valor do IPI de todos os produtos da NF-e);
-		// (+) vServ (Somatório do valor do serviço de todos os itens da NF-e).
+		/*
+		 * (+) vProd (Somatório do valor de todos os produtos da NF-e); (-)
+		 * vDesc (Somatório do desconto de todos os produtos da NF-e); (+) vST
+		 * (Somatório do valor do ICMS com Substituição Tributária de todos os
+		 * produtos da NF-e); (+) vFrete (Somatório do valor do Frete de todos
+		 * os produtos da NF-e); (+) vSeg (Somatório do valor do seguro de todos
+		 * os produtos da NF-e); (+) vOutro (Somatório do valor de outras
+		 * despesas de todos os produtos da NF-e); (+) vII (Somatório do valor
+		 * do Imposto de Importação de todos os produtos da NF-e); (+) vIPI
+		 * (Somatório do valor do IPI de todos os produtos da NF-e); (+) vServ
+		 * (Somatório do valor do serviço de todos os itens da NF-e).
+		 */
 
 		vProd = vProd.subtract(vDesc).add(vFrete).add(vSeg).add(vOutro).add(vicmsst).add(vipi).add(vfcpst);
 
 		icmstot.setVNF(vProd.setScale(2).toPlainString());
-
 		icmstot.setVTotTrib(nfe.getValorTransparencia().setScale(2).toPlainString());
-
 		return icmstot;
 	}
 
@@ -236,33 +221,17 @@ public class ICMSTotalUtils {
 		icmstot.setVICMSDeson("0.00");
 		icmstot.setVBC(nfe.getValorBaseIcms().toString());
 		icmstot.setVICMS(nfe.getValorIcms().toString());
-
 		icmstot.setVFCP("0.00");
-
-		//
-		// if (isDifal(nfe)) {
-		// icmstot.setVBC("0.00");
-		// icmstot.setVICMS("0.00");
-		// icmstot.setVFCP("0.00");
-		// icmstot.setVFCPUFDest(FCPCalculos.getTotalVFCPUFDest(nfe).toPlainString());
-		// icmstot.setVICMSUFDest(ICMSDifal.getTotalVICMSUFDest(nfe).toPlainString());
-		// icmstot.setVICMSUFRemet(ICMSDifal.getTotalVICMSUFRemet(nfe).toPlainString());
-		// }
-
 		icmstot.setVFCPST("0.00");
 		icmstot.setVFCPSTRet("0.00");
-
 		icmstot.setVBCST("0.00");
 		icmstot.setVST("0.00");
-
 		icmstot.setVProd(nfe.getValorTotalProdutoSemDesconto().toEngineeringString());
 		icmstot.setVFrete(nfe.getValorFrete().toString());
 		icmstot.setVSeg(nfe.getValorSeguro().setScale(2).toString());
 		icmstot.setVDesc(nfe.getValorDesconto().toString());
 		icmstot.setVII("0");
-
 		icmstot.setVIPI("0.00");
-
 		icmstot.setVIPIDevol("0");
 		icmstot.setVPIS("0.00");
 		icmstot.setVCOFINS("0.00");
@@ -272,15 +241,4 @@ public class ICMSTotalUtils {
 
 		return icmstot;
 	}
-
-	private static boolean isDifal(Nfe nfe) {
-
-		for (ItemProduto itemProduto : nfe.getItensProdutos()) {
-			if (FCPValidacoes.isFCPUFDest(itemProduto)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 }

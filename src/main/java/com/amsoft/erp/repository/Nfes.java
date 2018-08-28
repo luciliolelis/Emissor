@@ -41,6 +41,7 @@ import com.amsoft.erp.model.StatusNFe;
 import com.amsoft.erp.model.StatusNotas;
 import com.amsoft.erp.model.Usuario;
 import com.amsoft.erp.model.emitente.Empresa;
+import com.amsoft.erp.model.emitente.FundoCombatePobreza;
 import com.amsoft.erp.model.nfce.NFCe;
 import com.amsoft.erp.model.nfe.ItemDuplicata;
 import com.amsoft.erp.model.nfe.Nfe;
@@ -83,9 +84,8 @@ public class Nfes implements Serializable {
 
 		return this.manager.createQuery("from ItemDuplicata where nfe_id = :nfe_id", ItemDuplicata.class)
 				.setParameter("nfe_id", nfe.getId()).getResultList();
-
 	}
-
+	
 	@SuppressWarnings({ "unchecked", "deprecation" })
 	public List<Nfe> pesquisa(NfeFilter filtro) {
 		Session session = manager.unwrap(Session.class);

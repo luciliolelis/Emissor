@@ -13,6 +13,8 @@ import org.hibernate.criterion.Restrictions;
 
 import com.amsoft.erp.model.StatusEmpresa;
 import com.amsoft.erp.model.emitente.Empresa;
+import com.amsoft.erp.model.emitente.FundoCombatePobreza;
+import com.amsoft.erp.model.nfe.Nfe;
 import com.amsoft.erp.security.UsuarioLogado;
 import com.amsoft.erp.security.UsuarioSistema;
 
@@ -48,6 +50,12 @@ public class Empresas implements Serializable {
 		manager.remove(empresa);
 	}
 
+	public List<FundoCombatePobreza> perquisaFcp(Empresa empresa) {
 
+		return this.manager
+				.createQuery("from FundoCombatePobreza where empresa_id = :empresa_id", FundoCombatePobreza.class)
+				.setParameter("empresa_id", empresa.getId()).getResultList();
+
+	}
 
 }

@@ -55,8 +55,8 @@ public class ProdutosUtils {
 		imposto.getContent().add(icmsElement);
 
 		//if (IPIValidacoes.isIpi(item)) {
-//			JAXBElement<TIpi> ipiElement = new JAXBElement<TIpi>(new QName("IPI"), TIpi.class, ipi);
-//			imposto.getContent().add(ipiElement);
+			JAXBElement<TIpi> ipiElement = new JAXBElement<TIpi>(new QName("IPI"), TIpi.class, ipi);
+			imposto.getContent().add(ipiElement);
 		//}
 
 		JAXBElement<PIS> pisElement = new JAXBElement<PIS>(new QName("PIS"), PIS.class, pis);
@@ -147,8 +147,6 @@ public class ProdutosUtils {
 			produto.setCEST(AmsoftUtils.removerMascara(itemProduto.getProduto().getCest()));
 		}
 
-
-		
 		produto.setCFOP(itemProduto.getCfop().toString());
 		produto.setUCom(itemProduto.getProduto().getUnidadeMedida());
 		produto.setUTrib(itemProduto.getProduto().getUnidadeMedida());

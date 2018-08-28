@@ -1,7 +1,6 @@
 package com.amsoft.erp.util;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.amsoft.erp.model.emitente.Empresa;
@@ -18,6 +17,7 @@ public class TributosUtils {
 	 * @param ItemProduto
 	 * @return ITributavel
 	 */
+
 	public static ITributavel getTtibutos(ItemProduto item) {
 		ITributavel tributos = new ITributavel();
 
@@ -31,9 +31,6 @@ public class TributosUtils {
 		tributos.setPercentualMva(item.getMva());
 		tributos.setPercentualReducaoSt(item.getReducaoBaseCalculoIcmsSt());
 		tributos.setPercentualReducao(item.getReducaoBaseCalculoIcms());
-
-		// CREDITO ICMS - OBS. este valor é temporário apenas para efeito de
-		// calculo até que a configuração no emitente esteja pronta
 		tributos.setPercentualCredito(item.getNfe().getEmpresa().getAliquotaCreditoIcms());
 
 		// DESPESAS
@@ -42,11 +39,16 @@ public class TributosUtils {
 		tributos.setSeguro(item.getValorSeguro());
 		tributos.setOutrasDespesas(item.getValorDespesa());
 
-		BigDecimal fcp = getFcp(item.getNfe().getEmpresa());
-
 		// FCP
-		tributos.setPercentualFcp(new BigDecimal(2.00));
-		tributos.setPercentualFcpSt(new BigDecimal(2.00));
+		FundoCombatePobreza fcp = getFcp(item.getNfe().getEmpresa());
+
+		if (fcp != null) {
+			tributos.setPercentualFcp(fcp.getAliquotaFcp());
+			tributos.setPercentualFcpSt(fcp.getAliquotaFcpSt());
+		} else {
+			tributos.setPercentualFcp(BigDecimal.ZERO);
+			tributos.setPercentualFcpSt(BigDecimal.ZERO);
+		}
 
 		tributos.setPercentualIpi(item.getAliquotaIpi());
 		tributos.setPercentualPis(item.getAliquotaPis());
@@ -55,20 +57,18 @@ public class TributosUtils {
 		return tributos;
 	}
 
-	private static BigDecimal getFcp(Empresa empresa) {
-
+	private static FundoCombatePobreza getFcp(Empresa empresa) {
 		String uf = empresa.getUf();
-
 		List<FundoCombatePobreza> lista = empresa.getFundoCombatePobrezaItens();
 
 		for (FundoCombatePobreza item : lista) {
 			if (uf.equals(item.getUf().getUf())) {
 				AmsoftUtils.info(item.getUf().getUf());
+				return item;
 			}
 		}
 
-		return BigDecimal.ONE;
-
+		return new FundoCombatePobreza();
 	}
 
 	/**
@@ -86,11 +86,11 @@ public class TributosUtils {
 
 		// ICMS
 		tributos.setPercentualIcms(item.getAliquotaIcms());
+		// tributos.setPercentualIcmsSt(item.getAliquotaIcmsSt());
 		tributos.setPercentualMva(item.getMva());
-
-		// CREDITO ICMS - OBS. este valor é temporário apenas para efeito de
-		// calculo até que a configuração no emitente esteja pronta
-		tributos.setPercentualCredito(BigDecimal.valueOf(1.47));
+		// tributos.setPercentualReducaoSt(item.getReducaoBaseCalculoIcmsSt());
+		// tributos.setPercentualReducao(item.getReducaoBaseCalculoIcms());
+		tributos.setPercentualCredito(item.getNfce().getEmpresa().getAliquotaCreditoIcms());
 
 		// DESPESAS
 		tributos.setDesconto(item.getValorDesconto());
@@ -99,8 +99,15 @@ public class TributosUtils {
 		tributos.setOutrasDespesas(item.getValorDespesa());
 
 		// FCP
-		tributos.setPercentualFcp(new BigDecimal(2));
-		tributos.setPercentualFcpSt(new BigDecimal(2));
+		FundoCombatePobreza fcp = getFcp(item.getNfce().getEmpresa());
+
+		if (fcp != null) {
+			tributos.setPercentualFcp(fcp.getAliquotaFcp());
+			tributos.setPercentualFcpSt(fcp.getAliquotaFcpSt());
+		} else {
+			tributos.setPercentualFcp(BigDecimal.ZERO);
+			tributos.setPercentualFcpSt(BigDecimal.ZERO);
+		}
 
 		tributos.setPercentualIpi(item.getAliquotaIpi());
 		tributos.setPercentualPis(item.getAliquotaPis());
