@@ -14,13 +14,11 @@ import org.primefaces.json.JSONObject;
 
 import com.amsoft.erp.controller.JsonReader;
 import com.amsoft.erp.model.Cliente;
-import com.amsoft.erp.model.Empresa;
+import com.amsoft.erp.model.emitente.Empresa;
+import com.amsoft.erp.util.AmsoftUtils;
 
 public class BuscaCNPJEmitente implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	@Inject
@@ -29,12 +27,10 @@ public class BuscaCNPJEmitente implements Serializable {
 	@SuppressWarnings("static-access")
 	public Empresa getCadastro(Empresa empresa) throws JAXBException, JSONException, IOException, ParseException {
 
-		String url = "https://www.receitaws.com.br/v1/cnpj/" + removerMascara(empresa.getCnpj());
-
+		String url = "https://www.receitaws.com.br/v1/cnpj/" + AmsoftUtils.removerMascara(empresa.getCnpj());
 		JSONObject json = jsonReader.readJsonFromUrl(url);
-
+		
 		return jsonToEmpresa(json, empresa);
-
 	}
 
 	private Empresa jsonToEmpresa(JSONObject json, Empresa empresa) throws JSONException, ParseException {
@@ -48,17 +44,14 @@ public class BuscaCNPJEmitente implements Serializable {
 
 		String cep = (String) json.get("cep");
 
-		empresa.setCep(this.removerMascara(cep));
-
+		empresa.setCep(AmsoftUtils.removerMascara(cep));
 		empresa.setUf((String) json.get("uf"));
 		empresa.setCidade((String) json.get("municipio"));
-
 		empresa.setBairro((String) json.get("bairro"));
 		empresa.setLogradouro((String) json.get("logradouro"));
 		empresa.setNumero((String) json.get("numero"));
 		empresa.setComplemento((String) json.get("complemento"));
 		empresa.setWsAmbiente(2);
-
 		empresa.setFone((String) json.get("telefone"));
 		empresa.setMail((String) json.get("email"));
 
@@ -74,16 +67,5 @@ public class BuscaCNPJEmitente implements Serializable {
 		return atividade_principal;
 	}
 
-	private String removerMascara(String str) {
-
-		if (str.equals("") || str == null)
-			return "";
-
-		str = str.replace(".", "");
-		str = str.replace("-", "");
-		str = str.replace("/", "");
-
-		return str;
-	}
 
 }

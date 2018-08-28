@@ -23,6 +23,7 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 
+import com.amsoft.erp.model.emitente.Empresa;
 import com.amsoft.erp.model.enun.TipoCliente;
 import com.amsoft.erp.model.enun.TipoPessoa;
 

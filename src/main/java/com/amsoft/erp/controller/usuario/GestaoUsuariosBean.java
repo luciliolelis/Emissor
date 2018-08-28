@@ -13,11 +13,11 @@ import javax.inject.Named;
 
 import org.primefaces.event.SelectEvent;
 
-import com.amsoft.erp.model.Empresa;
 import com.amsoft.erp.model.EmpresaGrupo;
 import com.amsoft.erp.model.Grupo;
 import com.amsoft.erp.model.LogAcesso;
 import com.amsoft.erp.model.Usuario;
+import com.amsoft.erp.model.emitente.Empresa;
 import com.amsoft.erp.repository.Empresas;
 import com.amsoft.erp.repository.Grupos;
 import com.amsoft.erp.repository.Usuarios;

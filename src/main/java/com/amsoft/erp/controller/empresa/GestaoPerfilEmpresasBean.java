@@ -18,10 +18,10 @@ import javax.servlet.ServletContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 
-import com.amsoft.erp.model.Empresa;
-import com.amsoft.erp.model.InscricaoEstadualST;
 import com.amsoft.erp.model.cep.CepCidade;
 import com.amsoft.erp.model.cep.CepEstado;
+import com.amsoft.erp.model.emitente.Empresa;
+import com.amsoft.erp.model.emitente.InscricaoEstadualST;
 import com.amsoft.erp.model.enun.RegimeTributario;
 import com.amsoft.erp.model.vo.Webservicecep;
 import com.amsoft.erp.repository.Cidades;

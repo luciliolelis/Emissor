@@ -81,6 +81,14 @@
 			title="1=produção/2=homologação" min="1" max="2" />
 		<p:tooltip id="toolTipFocus" for="ambiente" hideEvent="blur" />
 
+		<p:spacer />
+		<p:outputLabel value="Crédido ICMS" />
+		<p:inputText
+			value="#{gestaoEmpresasBean.empresaEdicao.aliquotaCreditoIcms}">
+			<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+		</p:inputText>
+
+
 	</p:panelGrid>
 
 

@@ -11,6 +11,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.amsoft.erp.model.emitente.Empresa;
+
 @Entity
 @Table(name = "empresa_grupo")
 public class EmpresaGrupo implements Serializable {

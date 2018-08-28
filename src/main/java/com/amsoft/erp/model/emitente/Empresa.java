@@ -1,6 +1,7 @@
-package com.amsoft.erp.model;
+package com.amsoft.erp.model.emitente;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +24,8 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import com.amsoft.erp.model.Cliente;
+import com.amsoft.erp.model.StatusEmpresa;
 import com.amsoft.erp.model.cep.CepEstado;
 import com.amsoft.erp.model.enun.RegimeTributario;
 import com.amsoft.erp.model.nfe.Cfop;
@@ -44,7 +47,10 @@ public class Empresa implements Serializable {
 	private String dadosadicionais;
 
 	private StatusEmpresa status = StatusEmpresa.CADASTRO;
-	
+
+	@Column(name = "aliquota_credito_icms", precision = 10, scale = 2)
+	private BigDecimal aliquotaCreditoIcms = BigDecimal.ZERO;
+
 	@NotEmpty
 	@Column(name = "razao_social", nullable = false, length = 120)
 	private String razao_social;
@@ -114,6 +120,9 @@ public class Empresa implements Serializable {
 	@OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private List<InscricaoEstadualST> inscricoesEstaduais = new ArrayList<>();
 
+	@OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	private List<FundoCombatePobreza> fundoCombatePobrezaItens = new ArrayList<>();
+
 	private String fone;
 	private Long ultima_alteracao;
 	private String inscricao_municipal;
@@ -130,7 +139,6 @@ public class Empresa implements Serializable {
 		this.certificado = certificado;
 	}
 
-	
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false, length = 20)
 	public StatusEmpresa getStatus() {
@@ -140,7 +148,7 @@ public class Empresa implements Serializable {
 	public void setStatus(StatusEmpresa status) {
 		this.status = status;
 	}
-	
+
 	public String getNomeCertificado() {
 		return nomeCertificado;
 	}
@@ -162,7 +170,6 @@ public class Empresa implements Serializable {
 
 	@Column(name = "ws_ambiente")
 	private Integer wsAmbiente;
-
 
 	@Column(name = "ws_qrcode")
 	private String wsQRCode;
@@ -232,7 +239,6 @@ public class Empresa implements Serializable {
 		this.wsQRCode = wsQRCode;
 	}
 
-	
 	public String getChaveNfeConculta() {
 		return chaveNfeConculta;
 	}
@@ -240,7 +246,6 @@ public class Empresa implements Serializable {
 	public void setChaveNfeConculta(String chaveNfeConculta) {
 		this.chaveNfeConculta = chaveNfeConculta;
 	}
-
 
 	public Integer getWsAmbiente() {
 		return wsAmbiente;
@@ -434,6 +439,22 @@ public class Empresa implements Serializable {
 		this.clientes = clientes;
 	}
 
+	public List<FundoCombatePobreza> getFundoCombatePobrezaItens() {
+		return fundoCombatePobrezaItens;
+	}
+
+	public void setFundoCombatePobrezaItens(List<FundoCombatePobreza> fundoCombatePobrezaItens) {
+		this.fundoCombatePobrezaItens = fundoCombatePobrezaItens;
+	}
+
+	
+	public BigDecimal getAliquotaCreditoIcms() {
+		return aliquotaCreditoIcms;
+	}
+
+	public void setAliquotaCreditoIcms(BigDecimal aliquotaCreditoIcms) {
+		this.aliquotaCreditoIcms = aliquotaCreditoIcms;
+	}
 
 	@Override
 	public int hashCode() {
@@ -475,7 +496,23 @@ public class Empresa implements Serializable {
 			item.setEmpresa(this);
 			this.getInscricoesEstaduais().add(0, item);
 		}
+	}
 
+	public void adicionarItemVazioFcp() {
+
+		if (this.getFundoCombatePobrezaItens().isEmpty()) {
+			CepEstado uf = new CepEstado();
+			FundoCombatePobreza item = new FundoCombatePobreza();
+			item.setUf(uf);
+			item.setEmpresa(this);
+			this.getFundoCombatePobrezaItens().add(0, item);
+		} else if (this.getFundoCombatePobrezaItens().get(0).getUf().getUf() != null) {
+			CepEstado uf = new CepEstado();
+			FundoCombatePobreza item = new FundoCombatePobreza();
+			item.setUf(uf);
+			item.setEmpresa(this);
+			this.getFundoCombatePobrezaItens().add(0, item);
+		}
 	}
 
 	public void removerItemVazio() {
@@ -483,6 +520,15 @@ public class Empresa implements Serializable {
 			InscricaoEstadualST primeiroItem = this.getInscricoesEstaduais().get(0);
 			if (primeiroItem != null && primeiroItem.getUf().getUf() == null) {
 				this.getInscricoesEstaduais().remove(0);
+			}
+		}
+	}
+
+	public void removerItemVazioFcp() {
+		if (!this.getFundoCombatePobrezaItens().isEmpty()) {
+			FundoCombatePobreza primeiroItem = this.getFundoCombatePobrezaItens().get(0);
+			if (primeiroItem != null && primeiroItem.getUf().getUf() == null) {
+				this.getFundoCombatePobrezaItens().remove(0);
 			}
 		}
 	}

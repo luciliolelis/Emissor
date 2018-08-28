@@ -8,8 +8,8 @@ import javax.inject.Inject;
 import javax.xml.bind.JAXBException;
 
 import com.amsoft.erp.model.Cliente;
-import com.amsoft.erp.model.Empresa;
 import com.amsoft.erp.model.Endereco;
+import com.amsoft.erp.model.emitente.Empresa;
 import com.amsoft.erp.model.nfe.EnderecoEntrega;
 import com.amsoft.erp.model.nfe.FormaPagamento;
 import com.amsoft.erp.model.nfe.Nfe;

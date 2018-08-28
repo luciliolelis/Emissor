@@ -31,12 +31,12 @@ import org.primefaces.event.SelectEvent;
 
 import com.amsoft.erp.cacerts.NFeBuildAllCacerts;
 import com.amsoft.erp.model.Cliente;
-import com.amsoft.erp.model.Empresa;
 import com.amsoft.erp.model.Endereco;
 import com.amsoft.erp.model.Ibpt;
 import com.amsoft.erp.model.UnidadesFederativas;
 import com.amsoft.erp.model.Veiculo;
 import com.amsoft.erp.model.cep.CepEstado;
+import com.amsoft.erp.model.emitente.Empresa;
 import com.amsoft.erp.model.enun.RegimeTributario;
 import com.amsoft.erp.model.enun.TipoPessoa;
 import com.amsoft.erp.model.nfe.Cfop;

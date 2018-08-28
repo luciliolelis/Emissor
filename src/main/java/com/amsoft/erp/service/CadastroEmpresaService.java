@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import javax.inject.Inject;
 
-import com.amsoft.erp.model.Empresa;
+import com.amsoft.erp.model.emitente.Empresa;
 import com.amsoft.erp.repository.Empresas;
 import com.amsoft.erp.util.jpa.Transactional;
 

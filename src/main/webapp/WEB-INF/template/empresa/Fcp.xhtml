@@ -7,23 +7,23 @@
 
 
 	<p:dataTable
-		value="#{gestaoEmpresasBean.empresaEdicao.inscricoesEstaduais}"
+		value="#{gestaoEmpresasBean.empresaEdicao.fundoCombatePobrezaItens}"
 		var="item" style="margin-top: 25px" rowIndexVar="linha"
-		id="tabelaItens" reflow="true">
+		id="tabelaItensFcp" reflow="true">
 
 		<p:column headerText="Estado">
 			<h:outputText value="#{item.uf.estado} - #{item.uf.uf}"
 				rendered="#{item.estadoAssociado}" />
 
-			<p:autoComplete id="uf-ie" dropdown="true" minQueryLength="1"
+			<p:autoComplete id="uf-fcp" dropdown="true" minQueryLength="1"
 				value="#{gestaoEmpresasBean.estadoLinhaEditavel}" required="true"
 				completeMethod="#{gestaoEmpresasBean.completarEstado}" var="estado"
 				itemLabel="#{estado.uf}" itemValue="#{estado}"
 				rendered="#{not item.estadoAssociado}" forceSelection="true">
 
 
-				<p:ajax event="itemSelect" update="tabelaItens"
-					listener="#{gestaoEmpresasBean.carregarEstadoLinhaEditavel}" />
+				<p:ajax event="itemSelect" update="tabelaItensFcp"
+					listener="#{gestaoEmpresasBean.carregarEstadoLinhaEditavelFcp}" />
 
 				<p:column>
 					<h:outputText value="#{estado.estado}" />
@@ -35,26 +35,39 @@
 
 			</p:autoComplete>
 		</p:column>
-
-
-		<p:column headerText="IE">
-			<p:inputText value="#{item.numero}" rendered="#{linha != 0}" required="true">
-				<p:ajax event="change" process="@this" update="frm:tab:tabelaItens"
-					listener="#{gestaoEmpresasBean.atualizarIE(item, linha)}" />
+		
+		<p:column headerText="Alíquota FCP ST">
+			<p:inputText value="#{item.aliquotaFcpSt}" rendered="#{linha != 0}"
+				required="false">
+				<p:ajax event="change" process="@this"
+					update="frm:tab:tabelaItensFcp"
+					listener="#{gestaoEmpresasBean.atualizarFcp(item, linha)}" />
 			</p:inputText>
 		</p:column>
 
+		<p:column headerText="Alíquota FCP">
+			<p:inputText value="#{item.aliquotaFcp}" rendered="#{linha != 0}"
+				required="false">
+				<p:ajax event="change" process="@this"
+					update="frm:tab:tabelaItensFcp"
+					listener="#{gestaoEmpresasBean.atualizarFcp(item, linha)}" />
+			</p:inputText>
+		</p:column>
+
+
 		<p:column headerText="Opções" style="width:100px">
 
-			<p:commandButton icon="ui-icon-trash" update="frm:tab:tabelaItens"
+			<p:commandButton icon="ui-icon-trash" update="frm:tab:tabelaItensFcp"
 				rendered="#{linha != 0}" process="@this">
 				<p:confirm icon="ui-icon-alert" header="Confirmação de exclusão"
-					message="Tem certeza que deseja remover esta inscrição" />
+					message="Tem certeza que deseja remover esta estado da lista?" />
 				<p:collector value="#{item}"
-					removeFrom="#{gestaoEmpresasBean.empresaEdicao.inscricoesEstaduais}" />
+					removeFrom="#{gestaoEmpresasBean.empresaEdicao.fundoCombatePobrezaItens}" />
 			</p:commandButton>
 
 		</p:column>
+		
+		
 	</p:dataTable>
 
 </ui:composition>

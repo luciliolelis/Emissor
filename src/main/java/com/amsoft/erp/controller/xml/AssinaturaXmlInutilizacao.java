@@ -45,7 +45,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.amsoft.erp.model.Empresa;  
+import com.amsoft.erp.model.emitente.Empresa;  
   
 public class AssinaturaXmlInutilizacao {  
     private static final String INFINUT = "infInut";  

@@ -26,9 +26,9 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-import com.amsoft.erp.model.Empresa;
 import com.amsoft.erp.model.StatusProduto;
 import com.amsoft.erp.model.cep.CepEstado;
+import com.amsoft.erp.model.emitente.Empresa;
 
 @Entity
 @Table(name = "produto")

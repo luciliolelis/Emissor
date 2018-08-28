@@ -20,11 +20,12 @@ import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 
 import com.amsoft.erp.model.Cliente;
-import com.amsoft.erp.model.Empresa;
-import com.amsoft.erp.model.InscricaoEstadualST;
 import com.amsoft.erp.model.StatusEmpresa;
 import com.amsoft.erp.model.cep.CepCidade;
 import com.amsoft.erp.model.cep.CepEstado;
+import com.amsoft.erp.model.emitente.Empresa;
+import com.amsoft.erp.model.emitente.FundoCombatePobreza;
+import com.amsoft.erp.model.emitente.InscricaoEstadualST;
 import com.amsoft.erp.model.enun.RegimeTributario;
 import com.amsoft.erp.model.nfe.Cfop;
 import com.amsoft.erp.model.vo.Webservicecep;
@@ -61,7 +62,7 @@ public class GestaoEmpresasBean implements Serializable {
 
 	@Inject
 	private BuscaCep cepService;
-	
+
 	@Inject
 	private CadastroEmpresaService cadastroEmpresa;
 
@@ -89,6 +90,17 @@ public class GestaoEmpresasBean implements Serializable {
 	private ClienteFilter filtroCliente;
 	private List<Cliente> clientesFiltrados;
 
+	private List<Empresa> todasEmpresas;
+	private Empresa empresaEdicao = new Empresa();
+	private Empresa empresaSelecionada;
+	private InscricaoEstadualST inscricaoEstadualSTSelecionada = new InscricaoEstadualST();
+
+	private List<CepEstado> listaEstados = new ArrayList<>();
+	private List<CepCidade> listaCidades = new ArrayList<>();
+
+	@Inject
+	private Clientes clientes;
+
 	public ClienteFilter getFiltroCliente() {
 		return filtroCliente;
 	}
@@ -109,6 +121,24 @@ public class GestaoEmpresasBean implements Serializable {
 		return this.estados.porEstadoNomeObj(nome);
 	}
 
+	public void carregarEstadoLinhaEditavelFcp() {
+
+		try {
+			FundoCombatePobreza item = this.empresaEdicao.getFundoCombatePobrezaItens().get(0);
+			if (this.estadoLinhaEditavel != null) {
+				if (this.existeEstadoFcp(this.estadoLinhaEditavel)) {
+					FacesUtil.addErrorMessage("Já existem alíquotas de Fundo de combate a pobreza para este estado");
+				} else {
+					item.setUf(this.estadoLinhaEditavel);
+					this.empresaEdicao.adicionarItemVazioFcp();
+					this.estadoLinhaEditavel = null;
+				}
+			}
+		} catch (Exception e) {
+			System.out.println(e.getCause() + " - " + e.getMessage());
+		}
+	}
+
 	public void carregarEstadoLinhaEditavel() {
 
 		try {
@@ -127,9 +157,22 @@ public class GestaoEmpresasBean implements Serializable {
 		}
 	}
 
+	public void atualizarFcp(FundoCombatePobreza item, int linha) {
+
+		if (linha == 0) {
+			item.setUf(null);
+		}
+	}
+
+	public void atualizarFcpSt(FundoCombatePobreza item, int linha) {
+		if (linha == 0) {
+			item.setUf(null);
+		}
+	}
+
 	public void atualizarIE(InscricaoEstadualST item, int linha) {
 		if (linha == 0) {
-			item.setNumero("");
+			item.setUf(null);
 		}
 	}
 
@@ -146,16 +189,18 @@ public class GestaoEmpresasBean implements Serializable {
 		return existeItem;
 	}
 
-	private List<Empresa> todasEmpresas;
-	private Empresa empresaEdicao = new Empresa();
-	private Empresa empresaSelecionada;
-	private InscricaoEstadualST inscricaoEstadualSTSelecionada = new InscricaoEstadualST();
+	private boolean existeEstadoFcp(CepEstado estado) {
+		boolean existeItem = false;
 
-	private List<CepEstado> listaEstados = new ArrayList<>();
-	private List<CepCidade> listaCidades = new ArrayList<>();
+		for (FundoCombatePobreza item : this.getEmpresaEdicao().getFundoCombatePobrezaItens()) {
+			if (estado.equals(item.getUf())) {
+				existeItem = true;
+				break;
+			}
+		}
 
-	@Inject
-	private Clientes clientes;
+		return existeItem;
+	}
 
 	public List<Cliente> completarCliente(String nome) {
 		return this.clientes.porNome(nome);
@@ -172,12 +217,15 @@ public class GestaoEmpresasBean implements Serializable {
 			}
 
 			this.empresaEdicao.adicionarItemVazio();
+			this.empresaEdicao.adicionarItemVazioFcp();
+			;
 		}
 	}
 
 	public void salvar() {
 
 		this.empresaEdicao.removerItemVazio();
+		this.empresaEdicao.removerItemVazioFcp();
 		this.empresaEdicao = cadastroEmpresa.salvar(empresaEdicao);
 
 		usuarioLogado.getUsuario().setEmpresa(this.empresaEdicao);
@@ -185,6 +233,7 @@ public class GestaoEmpresasBean implements Serializable {
 		consultar();
 		FacesUtil.addInfoMessage("Empresa salva com sucesso!");
 		this.empresaEdicao.adicionarItemVazio();
+		this.empresaEdicao.adicionarItemVazioFcp();
 	}
 
 	public String getFoto() {

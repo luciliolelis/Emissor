@@ -1,7 +1,11 @@
 package com.amsoft.erp.util;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.amsoft.erp.model.emitente.Empresa;
+import com.amsoft.erp.model.emitente.FundoCombatePobreza;
 import com.amsoft.erp.model.nfce.ItemProdutoNFCe;
 import com.amsoft.erp.model.nfe.ItemProduto;
 import com.chronos.calc.dto.ITributavel;
@@ -18,8 +22,8 @@ public class TributosUtils {
 		ITributavel tributos = new ITributavel();
 
 		// PRODUTO
-		tributos.setValorProduto(item.getValorUnitario().setScale(2));
-		tributos.setQuantidadeProduto(item.getQuantidade().setScale(2));
+		tributos.setValorProduto(item.getValorUnitario());
+		tributos.setQuantidadeProduto(item.getQuantidade());
 
 		// ICMS
 		tributos.setPercentualIcms(item.getAliquotaIcms());
@@ -30,23 +34,41 @@ public class TributosUtils {
 
 		// CREDITO ICMS - OBS. este valor é temporário apenas para efeito de
 		// calculo até que a configuração no emitente esteja pronta
-		tributos.setPercentualCredito(BigDecimal.valueOf(1.47));
+		tributos.setPercentualCredito(item.getNfe().getEmpresa().getAliquotaCreditoIcms());
 
 		// DESPESAS
-		tributos.setDesconto(item.getValorDesconto().setScale(2));
-		tributos.setFrete(item.getValorFrete().setScale(2));
-		tributos.setSeguro(item.getValorSeguro().setScale(2));
-		tributos.setOutrasDespesas(item.getValorDespesa().setScale(2));
+		tributos.setDesconto(item.getValorDesconto());
+		tributos.setFrete(item.getValorFrete());
+		tributos.setSeguro(item.getValorSeguro());
+		tributos.setOutrasDespesas(item.getValorDespesa());
+
+		BigDecimal fcp = getFcp(item.getNfe().getEmpresa());
 
 		// FCP
-		tributos.setPercentualFcp(new BigDecimal(2));
-		tributos.setPercentualFcpSt(new BigDecimal(2));
+		tributos.setPercentualFcp(new BigDecimal(2.00));
+		tributos.setPercentualFcpSt(new BigDecimal(2.00));
 
 		tributos.setPercentualIpi(item.getAliquotaIpi());
 		tributos.setPercentualPis(item.getAliquotaPis());
 		tributos.setPercentualCofins(item.getAliquotaCofins());
 
 		return tributos;
+	}
+
+	private static BigDecimal getFcp(Empresa empresa) {
+
+		String uf = empresa.getUf();
+
+		List<FundoCombatePobreza> lista = empresa.getFundoCombatePobrezaItens();
+
+		for (FundoCombatePobreza item : lista) {
+			if (uf.equals(item.getUf().getUf())) {
+				AmsoftUtils.info(item.getUf().getUf());
+			}
+		}
+
+		return BigDecimal.ONE;
+
 	}
 
 	/**

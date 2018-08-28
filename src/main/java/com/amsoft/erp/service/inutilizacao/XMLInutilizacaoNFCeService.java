@@ -6,8 +6,8 @@ import java.util.Date;
 import javax.inject.Inject;
 import javax.xml.bind.JAXBException;
 
-import com.amsoft.erp.model.Empresa;
 import com.amsoft.erp.model.StatusNFe;
+import com.amsoft.erp.model.emitente.Empresa;
 import com.amsoft.erp.model.nfce.NFCe;
 import com.amsoft.erp.repository.NFCes;
 import com.amsoft.erp.security.UsuarioLogado;

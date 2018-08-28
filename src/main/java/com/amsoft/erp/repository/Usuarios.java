@@ -16,10 +16,10 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
-import com.amsoft.erp.model.Empresa;
 import com.amsoft.erp.model.EmpresaGrupo;
 import com.amsoft.erp.model.LogAcesso;
 import com.amsoft.erp.model.Usuario;
+import com.amsoft.erp.model.emitente.Empresa;
 import com.amsoft.erp.repository.filter.UsuarioFilter;
 import com.amsoft.erp.security.UsuarioLogado;
 import com.amsoft.erp.security.UsuarioSistema;

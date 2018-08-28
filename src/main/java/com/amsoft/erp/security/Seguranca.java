@@ -9,7 +9,7 @@ import javax.inject.Named;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
-import com.amsoft.erp.model.Empresa;
+import com.amsoft.erp.model.emitente.Empresa;
 
 @Named
 @RequestScoped

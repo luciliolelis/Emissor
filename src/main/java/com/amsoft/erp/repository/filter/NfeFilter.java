@@ -3,8 +3,8 @@ package com.amsoft.erp.repository.filter;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.amsoft.erp.model.Empresa;
 import com.amsoft.erp.model.StatusNFe;
+import com.amsoft.erp.model.emitente.Empresa;
 
 public class NfeFilter implements Serializable {
 

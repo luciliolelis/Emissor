@@ -1,6 +1,6 @@
 package com.amsoft.erp.util;
 
-import com.amsoft.erp.model.Empresa;
+import com.amsoft.erp.model.emitente.Empresa;
 
 import br.inf.portalfiscal.nfe.schema_4.enviNFe.TEnderEmi;
 import br.inf.portalfiscal.nfe.schema_4.enviNFe.TUfEmi;

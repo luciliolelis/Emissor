@@ -16,6 +16,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.amsoft.erp.model.emitente.Empresa;
+
 @Entity
 @Table(name = "usuario")
 public class Usuario implements Serializable {

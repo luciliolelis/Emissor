@@ -54,7 +54,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import com.amsoft.erp.model.Empresa;
+import com.amsoft.erp.model.emitente.Empresa;
 import com.amsoft.erp.model.nfe.Nfe;
 
 public class AssinaturaXml implements Serializable {

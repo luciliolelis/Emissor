@@ -2,8 +2,6 @@ package com.amsoft.erp.util.icms.normal;
 
 import java.math.BigDecimal;
 
-import org.junit.Assert;
-
 import com.amsoft.erp.model.nfe.ItemProduto;
 import com.amsoft.erp.model.nfe.fcp.FCPCalculos;
 import com.amsoft.erp.model.nfe.fcp.FCPValidacoes;
@@ -12,6 +10,7 @@ import com.amsoft.erp.util.TributosUtils;
 import com.amsoft.erp.util.icms.CalculosUtils;
 import com.chronos.calc.TributacaoException;
 import com.chronos.calc.cst.Cst00;
+import com.chronos.calc.cst.Cst10;
 import com.chronos.calc.dto.ITributavel;
 import com.chronos.calc.resultados.IResultadoCalculoFcp;
 import com.chronos.calc.resultados.IResultadoCalculoFcpSt;
@@ -54,31 +53,39 @@ public class TagNFe {
 		return icms;
 	}
 
-	public static ICMS10 getICMS10(ItemProduto itemProduto) {
+	public static ICMS10 getICMS10(ItemProduto itemProduto) throws TributacaoException {
 
 		ICMS10 icms = new ICMS10();
 		icms.setOrig(itemProduto.getProduto().getOrigemProduto().getCodigo());
 		icms.setCST(itemProduto.getCstIcms());
 		icms.setModBC("3");
-		icms.setPICMS(itemProduto.getAliquotaIcms().toPlainString());
-		icms.setVBC(itemProduto.getBaseIcms().setScale(2).toPlainString());
-		icms.setVICMS(itemProduto.getValorIcms().setScale(2).toPlainString());
-		icms.setPICMSST(itemProduto.getAliquotaIcmsSt().toPlainString());
-		icms.setVBCST(itemProduto.getBaseIcmsSt().setScale(2).toPlainString());
-		icms.setVICMSST(itemProduto.getValorIcmsSt().setScale(2).toPlainString());
-		icms.setPRedBCST(itemProduto.getReducaoBaseCalculoIcmsSt().toPlainString());
+		
+		IResultadoCalculoFcp fcp = CalculosUtils.calcularFcp(itemProduto);
+		IResultadoCalculoFcpSt fcpst = CalculosUtils.calcularFcpSt(itemProduto);
+		
+		ITributavel tributos = TributosUtils.getTtibutos(itemProduto);
+		Cst10 cst = new Cst10();
+		cst.calcular(tributos);
+		
+		icms.setPICMS(tributos.getPercentualIcms().toPlainString());
+		icms.setVBC(cst.getValorBcIcms().toPlainString());
+		icms.setVICMS(cst.getValorIcms().toPlainString());
+		
+		icms.setPICMSST(tributos.getPercentualIcmsSt().toPlainString());
+		icms.setVBCST(cst.getValorBcIcmsSt().toPlainString());
+		icms.setVICMSST(cst.getValorIcmsSt().toPlainString());
+		
+		icms.setPRedBCST(tributos.getPercentualReducaoSt().toPlainString());
 		icms.setModBCST("4");
 		icms.setPMVAST("0.00");
 
-		if (FCPValidacoes.isNotFCPUFDest(itemProduto)) {
-			// icms.setPFCP(itemProduto.getAliquotaFcp().toPlainString());
-			// icms.setVFCP(itemProduto.getValorFcp().toPlainString());
-			icms.setVBCFCP(itemProduto.getValorIcms().setScale(2).toPlainString());
-		}
+		icms.setPFCP(tributos.getPercentualFcp().toPlainString());
+		icms.setVFCP(fcp.getValor().toPlainString());
+		icms.setVBCFCP(fcp.getBaseCalculo().toPlainString());
 
-		icms.setPFCPST(null);
-		icms.setVFCPST(null);
-		icms.setVBCFCPST(null);
+		icms.setPFCPST(tributos.getPercentualFcpSt().toPlainString());
+		icms.setVFCPST(fcpst.getValor().toPlainString());
+		icms.setVBCFCPST(fcpst.getBaseCalculo().toPlainString());
 
 		return icms;
 	}

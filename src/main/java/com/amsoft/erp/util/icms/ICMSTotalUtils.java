@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import com.amsoft.erp.model.nfce.NFCe;
 import com.amsoft.erp.model.nfe.ItemProduto;
 import com.amsoft.erp.model.nfe.Nfe;
-import com.amsoft.erp.model.nfe.fcp.FCPCalculos;
 import com.amsoft.erp.model.nfe.fcp.FCPValidacoes;
 import com.amsoft.erp.model.nfe.icms.ICMSDifal;
 import com.amsoft.erp.model.nfe.ipi.IPIValidacoes;
@@ -30,7 +29,6 @@ public class ICMSTotalUtils {
 		BigDecimal vFrete = BigDecimal.ZERO;
 		BigDecimal vSeg = BigDecimal.ZERO;
 		BigDecimal vOutro = BigDecimal.ZERO;
-
 		BigDecimal vbcst = BigDecimal.ZERO;
 		BigDecimal vicmsst = BigDecimal.ZERO;
 		BigDecimal vbc = BigDecimal.ZERO;

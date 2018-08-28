@@ -20,7 +20,7 @@ import java.util.List;
 
 import javax.faces.context.FacesContext;
 
-import com.amsoft.erp.model.Empresa;
+import com.amsoft.erp.model.emitente.Empresa;
 import com.amsoft.erp.model.vo.DadosCertificado;
 
 public class Certificado implements Serializable {

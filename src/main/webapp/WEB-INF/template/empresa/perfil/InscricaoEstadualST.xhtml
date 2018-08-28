@@ -7,7 +7,7 @@
 
 
 	<p:dataTable
-		value="#{gestaoPerfilEmpresasBean.empresaEdicao.inscricoesEstaduais}"
+		value="#{gestaoEmpresasBean.empresaEdicao.inscricoesEstaduais}"
 		var="item" style="margin-top: 25px" rowIndexVar="linha"
 		id="tabelaItens" reflow="true">
 
@@ -16,14 +16,14 @@
 				rendered="#{item.estadoAssociado}" />
 
 			<p:autoComplete id="uf-ie" dropdown="true" minQueryLength="1"
-				value="#{gestaoPerfilEmpresasBean.estadoLinhaEditavel}" required="true"
-				completeMethod="#{selecaoCepBean.completarEstado}" var="estado"
+				value="#{gestaoEmpresasBean.estadoLinhaEditavel}" required="true"
+				completeMethod="#{gestaoEmpresasBean.completarEstado}" var="estado"
 				itemLabel="#{estado.uf}" itemValue="#{estado}"
 				rendered="#{not item.estadoAssociado}" forceSelection="true">
 
 
 				<p:ajax event="itemSelect" update="tabelaItens"
-					listener="#{gestaoPerfilEmpresasBean.carregarEstadoLinhaEditavel}" />
+					listener="#{gestaoEmpresasBean.carregarEstadoLinhaEditavel}" />
 
 				<p:column>
 					<h:outputText value="#{estado.estado}" />
@@ -40,7 +40,7 @@
 		<p:column headerText="IE">
 			<p:inputText value="#{item.numero}" rendered="#{linha != 0}" required="true">
 				<p:ajax event="change" process="@this" update="frm:tab:tabelaItens"
-					listener="#{gestaoPerfilEmpresasBean.atualizarIE(item, linha)}" />
+					listener="#{gestaoEmpresasBean.atualizarIE(item, linha)}" />
 			</p:inputText>
 		</p:column>
 
@@ -51,7 +51,7 @@
 				<p:confirm icon="ui-icon-alert" header="Confirmação de exclusão"
 					message="Tem certeza que deseja remover esta inscrição" />
 				<p:collector value="#{item}"
-					removeFrom="#{gestaoPerfilEmpresasBean.empresaEdicao.inscricoesEstaduais}" />
+					removeFrom="#{gestaoEmpresasBean.empresaEdicao.inscricoesEstaduais}" />
 			</p:commandButton>
 
 		</p:column>

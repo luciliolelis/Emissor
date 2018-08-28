@@ -1,6 +1,6 @@
 package com.amsoft.erp.util;
 
-import com.amsoft.erp.model.Empresa;
+import com.amsoft.erp.model.emitente.Empresa;
 import com.amsoft.erp.model.nfce.NFCe;
 import com.amsoft.erp.model.nfe.Nfe;
 

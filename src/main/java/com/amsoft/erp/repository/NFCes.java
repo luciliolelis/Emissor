@@ -28,9 +28,9 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import com.amsoft.erp.model.Cliente;
-import com.amsoft.erp.model.Empresa;
 import com.amsoft.erp.model.StatusNFe;
 import com.amsoft.erp.model.StatusNotas;
+import com.amsoft.erp.model.emitente.Empresa;
 import com.amsoft.erp.model.nfce.NFCe;
 import com.amsoft.erp.repository.filter.NfceFilter;
 import com.amsoft.erp.security.UsuarioLogado;

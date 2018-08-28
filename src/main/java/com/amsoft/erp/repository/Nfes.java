@@ -37,10 +37,10 @@ import org.hibernate.type.StandardBasicTypes;
 import org.hibernate.type.Type;
 
 import com.amsoft.erp.model.Cliente;
-import com.amsoft.erp.model.Empresa;
 import com.amsoft.erp.model.StatusNFe;
 import com.amsoft.erp.model.StatusNotas;
 import com.amsoft.erp.model.Usuario;
+import com.amsoft.erp.model.emitente.Empresa;
 import com.amsoft.erp.model.nfce.NFCe;
 import com.amsoft.erp.model.nfe.ItemDuplicata;
 import com.amsoft.erp.model.nfe.Nfe;

@@ -19,10 +19,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.amsoft.erp.controller.usuario.GestaoUsuariosBean;
-import com.amsoft.erp.model.Empresa;
 import com.amsoft.erp.model.EmpresaGrupo;
 import com.amsoft.erp.model.LogAcesso;
 import com.amsoft.erp.model.Usuario;
+import com.amsoft.erp.model.emitente.Empresa;
 import com.amsoft.erp.repository.Empresas;
 import com.amsoft.erp.repository.Usuarios;
 import com.amsoft.erp.security.UsuarioLogado;

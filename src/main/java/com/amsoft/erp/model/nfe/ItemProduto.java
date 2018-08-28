@@ -14,7 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import com.amsoft.erp.model.Empresa;
+import com.amsoft.erp.model.emitente.Empresa;
 import com.amsoft.erp.model.enun.RegimeTributario;
 import com.amsoft.erp.model.produto.ItemIcmsUf;
 import com.amsoft.erp.model.produto.Produto;

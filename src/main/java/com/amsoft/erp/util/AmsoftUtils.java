@@ -20,7 +20,7 @@ import org.w3c.dom.ls.LSSerializer;
 import org.xml.sax.InputSource;
 
 import com.amsoft.erp.model.Cliente;
-import com.amsoft.erp.model.Empresa;
+import com.amsoft.erp.model.emitente.Empresa;
 import com.amsoft.erp.model.enun.RegimeTributario;
 import com.amsoft.erp.model.enun.TipoPessoa;
 import com.amsoft.erp.model.nfce.NFCe;

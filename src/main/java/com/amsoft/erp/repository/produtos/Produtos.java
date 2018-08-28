@@ -23,8 +23,8 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
-import com.amsoft.erp.model.Empresa;
 import com.amsoft.erp.model.StatusProduto;
+import com.amsoft.erp.model.emitente.Empresa;
 import com.amsoft.erp.model.produto.Produto;
 import com.amsoft.erp.repository.filter.ProdutoFilter;
 import com.amsoft.erp.security.UsuarioLogado;

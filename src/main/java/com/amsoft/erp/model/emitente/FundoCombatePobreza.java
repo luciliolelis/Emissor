@@ -1,6 +1,7 @@
 package com.amsoft.erp.model.emitente;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,13 +12,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.validation.constraints.Size;
 
 import com.amsoft.erp.model.cep.CepEstado;
 
 @Entity
-@Table(name = "inscricao_estadual_st")
-public class InscricaoEstadualST implements Serializable {
+@Table(name = "fundo_combate_pobreza")
+public class FundoCombatePobreza implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -25,18 +25,19 @@ public class InscricaoEstadualST implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Size(max = 14)
-	@Column(name = "numero", length = 14)
-	private String numero;
-	
+	@Column(name = "aliquota_fcp", precision = 10, scale = 2)
+	private BigDecimal aliquotaFcp = BigDecimal.ZERO;
+
+	@Column(name = "aliquota_fcp_st", precision = 10, scale = 2)
+	private BigDecimal aliquotaFcpSt = BigDecimal.ZERO;
+
 	@ManyToOne
 	@JoinColumn(name = "uf_id", nullable = false)
 	private CepEstado uf;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "empresa_id", nullable = false)
 	private Empresa empresa;
-	
 
 	public Long getId() {
 		return id;
@@ -46,12 +47,20 @@ public class InscricaoEstadualST implements Serializable {
 		this.id = id;
 	}
 
-	public String getNumero() {
-		return numero;
+	public BigDecimal getAliquotaFcp() {
+		return aliquotaFcp;
 	}
 
-	public void setNumero(String numero) {
-		this.numero = numero;
+	public void setAliquotaFcp(BigDecimal aliquotaFcp) {
+		this.aliquotaFcp = aliquotaFcp;
+	}
+
+	public BigDecimal getAliquotaFcpSt() {
+		return aliquotaFcpSt;
+	}
+
+	public void setAliquotaFcpSt(BigDecimal aliquotaFcpSt) {
+		this.aliquotaFcpSt = aliquotaFcpSt;
 	}
 
 	public CepEstado getUf() {
@@ -69,6 +78,8 @@ public class InscricaoEstadualST implements Serializable {
 	public void setEmpresa(Empresa empresa) {
 		this.empresa = empresa;
 	}
+	
+	
 
 	@Override
 	public int hashCode() {
@@ -86,7 +97,7 @@ public class InscricaoEstadualST implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		InscricaoEstadualST other = (InscricaoEstadualST) obj;
+		FundoCombatePobreza other = (FundoCombatePobreza) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;

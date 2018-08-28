@@ -28,9 +28,9 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import com.amsoft.erp.model.Cliente;
-import com.amsoft.erp.model.Empresa;
 import com.amsoft.erp.model.StatusNFe;
 import com.amsoft.erp.model.Usuario;
+import com.amsoft.erp.model.emitente.Empresa;
 import com.amsoft.erp.model.produto.Produto;
 
 @Entity

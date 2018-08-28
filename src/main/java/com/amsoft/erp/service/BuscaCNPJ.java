@@ -16,28 +16,22 @@ import com.amsoft.erp.controller.JsonReader;
 import com.amsoft.erp.model.Cliente;
 import com.amsoft.erp.model.Endereco;
 import com.amsoft.erp.model.enun.TipoPessoa;
+import com.amsoft.erp.util.AmsoftUtils;
 
 public class BuscaCNPJ implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	@Inject
 	private JsonReader jsonReader;
-	
-
 
 	@SuppressWarnings("static-access")
 	public Cliente getCadastro(Cliente cliente) throws JAXBException, JSONException, IOException, ParseException {
 
-		String url = "https://www.receitaws.com.br/v1/cnpj/" + removerMascara(cliente.getDocReceitaFederal());
-
+		String url = "https://www.receitaws.com.br/v1/cnpj/" + AmsoftUtils.removerMascara(cliente.getDocReceitaFederal());
 		JSONObject json = jsonReader.readJsonFromUrl(url);
 
 		return jsonToCliente(json, cliente);
-
 	}
 
 	private Cliente jsonToCliente(JSONObject json, Cliente cliente) throws JSONException, ParseException {
@@ -50,14 +44,10 @@ public class BuscaCNPJ implements Serializable {
 			cliente.setNomeFantasia(cliente.getNome());
 		}
 
-
 		cliente.getEnderecos().add(getEndereco(json, cliente));
-		
-
 		cliente.setTelefone((String) json.get("telefone"));
 		cliente.setEmail((String) json.get("email"));
 
-	
 		return cliente;
 	}
 
@@ -70,31 +60,23 @@ public class BuscaCNPJ implements Serializable {
 		return atividade_principal;
 	}
 
-	@SuppressWarnings("static-access")
 	private Endereco getEndereco(JSONObject json, Cliente cliente) {
 
 		Endereco endereco = new Endereco();
 
 		String cep = (String) json.get("cep");
-		endereco.setCep(this.removerMascara(cep));
-		
-		
+
+		endereco.setCep(AmsoftUtils.removerMascara(cep));
 		endereco.setUf((String) json.get("uf"));
 		endereco.setCidade((String) json.get("municipio"));
-	
-		
-		
 		endereco.setBairro((String) json.get("bairro"));
 		endereco.setLogradouro((String) json.get("logradouro"));
 		endereco.setNumero((String) json.get("numero"));
 		endereco.setComplemento((String) json.get("complemento"));
-
 		endereco.setCliente(cliente);
 
 		return endereco;
 	}
-
-	
 
 	@SuppressWarnings("unused")
 	private List<Object> getAtividadesSecundarias(JSONObject json, Cliente cliente) {
@@ -119,23 +101,5 @@ public class BuscaCNPJ implements Serializable {
 		return new ArrayList<>();
 
 	}
-
-	
-
-	
-
-	static String removerMascara(String str) {
-
-		if (str.equals("") || str == null)
-			return "";
-
-		str = str.replace(".", "");
-		str = str.replace("-", "");
-		str = str.replace("/", "");
-
-		return str;
-	}
-
-	
 
 }
