@@ -38,9 +38,13 @@ public class ICMSTotalUtils {
 		// BigDecimal vbcfcp = BigDecimal.ZERO;
 		BigDecimal vpis = BigDecimal.ZERO;
 		BigDecimal vipi = BigDecimal.ZERO;
+		BigDecimal vicmsdeson = BigDecimal.ZERO;
+		
+		
 
 		if (AmsoftUtils.isSimplesNacional(nfe.getEmpresa().getRegimeTributario())) {
-
+			AmsoftUtils.info("SIMPLES NACIONAL");
+			
 			for (ItemProduto item : nfe.getItensProdutos()) {
 				if (AmsoftUtils.isProdutoValido(item)) {
 
@@ -95,6 +99,7 @@ public class ICMSTotalUtils {
 			}
 
 		} else {
+			
 			AmsoftUtils.info("REGIME NORMAL");
 
 			for (ItemProduto item : nfe.getItensProdutos()) {
@@ -113,10 +118,8 @@ public class ICMSTotalUtils {
 						vbc = vbcst.add(new BigDecimal(icms.getICMS10().getVBC()));
 						vicms = vicmsst.add(new BigDecimal(icms.getICMS10().getVICMS()));
 						vfcp = vfcp.add(new BigDecimal(icms.getICMS10().getVFCP()));
-
 						vbcst = vbcst.add(new BigDecimal(icms.getICMS10().getVBCST()));
 						vicmsst = vicmsst.add(new BigDecimal(icms.getICMS10().getVICMSST()));
-
 						vfcpst = vfcpst.add(new BigDecimal(icms.getICMS10().getVFCPST()));
 						vbcfcpst = vbcfcpst.add(new BigDecimal(icms.getICMS10().getVBCFCPST()));
 
@@ -149,12 +152,18 @@ public class ICMSTotalUtils {
 						vbc = vbcst.add(new BigDecimal(icms.getICMS90().getVBC()));
 						vicms = vicmsst.add(new BigDecimal(icms.getICMS90().getVICMS()));
 						vfcp = vfcp.add(new BigDecimal(icms.getICMS90().getVFCP()));
-
+						vbcst = vbcst.add(new BigDecimal(icms.getICMS90().getVBCST()));
+						vicmsst = vicmsst.add(new BigDecimal(icms.getICMS90().getVICMSST()));
+						vfcpst = vfcpst.add(new BigDecimal(icms.getICMS90().getVFCPST()));
+						vbcfcpst = vbcfcpst.add(new BigDecimal(icms.getICMS90().getVBCFCPST()));
+						vicmsdeson = vicmsdeson.add(new BigDecimal(icms.getICMS90().getVICMSDeson()));
+						
 					} else if (icms.getICMSPart() != null) {
 
 						vbc = vbcst.add(new BigDecimal(icms.getICMSPart().getVBC()));
 						vicms = vicmsst.add(new BigDecimal(icms.getICMSPart().getVICMS()));
-
+						vbcst = vbcst.add(new BigDecimal(icms.getICMSPart().getVBCST()));
+						vicmsst = vicmsst.add(new BigDecimal(icms.getICMSPart().getVICMSST()));
 					}
 
 					if (IPIValidacoes.isNT(item)) {
@@ -172,7 +181,7 @@ public class ICMSTotalUtils {
 			}
 		}
 
-		icmstot.setVICMSDeson("0.00");
+		icmstot.setVICMSDeson(vicmsdeson.toPlainString());
 		icmstot.setVFCPUFDest("0.00");
 		icmstot.setVICMSUFDest(ICMSDifal.getTotalVICMSUFDest(nfe).toPlainString());
 		icmstot.setVICMSUFRemet(ICMSDifal.getTotalVICMSUFRemet(nfe).toPlainString());

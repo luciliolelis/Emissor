@@ -4,8 +4,6 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 
-
-
 	<p:dataTable
 		value="#{gestaoEmpresasBean.empresaEdicao.fundoCombatePobrezaItens}"
 		var="item" style="margin-top: 25px" rowIndexVar="linha"
@@ -21,7 +19,6 @@
 				itemLabel="#{estado.uf}" itemValue="#{estado}"
 				rendered="#{not item.estadoAssociado}" forceSelection="true">
 
-
 				<p:ajax event="itemSelect" update="tabelaItensFcp"
 					listener="#{gestaoEmpresasBean.carregarEstadoLinhaEditavelFcp}" />
 
@@ -35,7 +32,7 @@
 
 			</p:autoComplete>
 		</p:column>
-		
+
 		<p:column headerText="Alíquota FCP ST">
 			<p:inputText value="#{item.aliquotaFcpSt}" rendered="#{linha != 0}"
 				required="false">
@@ -54,9 +51,7 @@
 			</p:inputText>
 		</p:column>
 
-
 		<p:column headerText="Opções" style="width:100px">
-
 			<p:commandButton icon="ui-icon-trash" update="frm:tab:tabelaItensFcp"
 				rendered="#{linha != 0}" process="@this">
 				<p:confirm icon="ui-icon-alert" header="Confirmação de exclusão"
@@ -64,10 +59,7 @@
 				<p:collector value="#{item}"
 					removeFrom="#{gestaoEmpresasBean.empresaEdicao.fundoCombatePobrezaItens}" />
 			</p:commandButton>
-
 		</p:column>
-		
-		
 	</p:dataTable>
 
 </ui:composition>

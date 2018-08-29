@@ -86,10 +86,10 @@ public class TributosUtils {
 
 		// ICMS
 		tributos.setPercentualIcms(item.getAliquotaIcms());
-		// tributos.setPercentualIcmsSt(item.getAliquotaIcmsSt());
+		tributos.setPercentualIcmsSt(item.getAliquotaIcmsSt());
 		tributos.setPercentualMva(item.getMva());
-		// tributos.setPercentualReducaoSt(item.getReducaoBaseCalculoIcmsSt());
-		// tributos.setPercentualReducao(item.getReducaoBaseCalculoIcms());
+		tributos.setPercentualReducaoSt(item.getReducaoBaseCalculoIcmsSt());
+		tributos.setPercentualReducao(item.getReducaoBaseCalculoIcms());
 		tributos.setPercentualCredito(item.getNfce().getEmpresa().getAliquotaCreditoIcms());
 
 		// DESPESAS

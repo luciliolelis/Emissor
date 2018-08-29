@@ -3,16 +3,15 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
+
 	<p:panelGrid columns="4" layout="grid" style="margin-top: 10px"
 		styleClass="panelgrid-noborder"
 		columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4">
-
 
 		<p:outputLabel value="CNPJ" for="cnpj" />
 		<p:inputMask id="cnpj" maxlength="18" required="true"
 			value="#{gestaoEmpresasBean.empresaEdicao.cnpj}"
 			mask="99.999.999/9999-99" />
-
 		<p:outputLabel />
 
 		<p:commandButton value="Buscar cliente por CNPJ" icon="ui-icon-search"
@@ -46,7 +45,6 @@
 				itemValue="#{tributacao}" />
 		</p:selectOneMenu>
 
-
 		<p:outputLabel value="Telefone" for="telefone" />
 		<p:inputMask id="telefone" mask="(99)9999-9999"
 			value="#{gestaoEmpresasBean.empresaEdicao.fone}" />
@@ -54,23 +52,19 @@
 		<p:outputLabel value="E-mail" for="fax" />
 		<p:inputMask id="fax" value="#{gestaoEmpresasBean.empresaEdicao.mail}" />
 
-
-
 		<p:spacer />
+		
 		<p:fileUpload
 			fileUploadListener="#{gestaoEmpresasBean.uploadCertificado}"
 			label="Encotrar Certificado .pfx" mode="advanced"
 			update="frm:tab:certificado" auto="true" sizeLimit="100000"
 			allowTypes="/(\.|\/)(pfx)$/" />
 
-
-
 		<p:outputLabel value="Certificado" />
 		<p:inputText readonly="true"
 			value="#{gestaoEmpresasBean.empresaEdicao.nomeCertificado}" />
 
 		<p:outputLabel value="Senha" for="senhaCertificado" />
-
 		<p:password id="senhaCertificado" required="true"
 			value="#{gestaoEmpresasBean.empresaEdicao.senhaCertificado}"
 			promptLabel="Informe uma senha" inline="true" redisplay="true" />
@@ -82,18 +76,12 @@
 		<p:tooltip id="toolTipFocus" for="ambiente" hideEvent="blur" />
 
 		<p:spacer />
+
 		<p:outputLabel value="Crédido ICMS" />
 		<p:inputText
 			value="#{gestaoEmpresasBean.empresaEdicao.aliquotaCreditoIcms}">
 			<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
 		</p:inputText>
-
-
 	</p:panelGrid>
-
-
-
-
-
 
 </ui:composition>

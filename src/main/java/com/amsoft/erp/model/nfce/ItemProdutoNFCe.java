@@ -45,6 +45,15 @@ public class ItemProdutoNFCe implements Serializable {
 
 	@Column(name = "valor_seguro", nullable = false, precision = 10, scale = 4)
 	private BigDecimal valorSeguro = BigDecimal.ZERO;
+	
+	@Column(name = "reducao_base_calculo_icms", precision = 10, scale = 2)
+	private BigDecimal reducaoBaseCalculoIcms = BigDecimal.ZERO;
+
+	@Column(name = "reducao_base_calculo_icms_st", precision = 10, scale = 2)
+	private BigDecimal reducaoBaseCalculoIcmsSt = BigDecimal.ZERO;
+
+	@Column(name = "aliquota_icms_st", precision = 10, scale = 2)
+	private BigDecimal aliquotaIcmsSt = BigDecimal.ZERO;
 
 	@ManyToOne
 	@JoinColumn(name = "produto_id", nullable = false)
@@ -292,6 +301,30 @@ public class ItemProdutoNFCe implements Serializable {
 
 	public void setValorTransparencia(BigDecimal valorTransparencia) {
 		this.valorTransparencia = valorTransparencia;
+	}
+	
+	public BigDecimal getReducaoBaseCalculoIcms() {
+		return reducaoBaseCalculoIcms;
+	}
+
+	public void setReducaoBaseCalculoIcms(BigDecimal reducaoBaseCalculoIcms) {
+		this.reducaoBaseCalculoIcms = reducaoBaseCalculoIcms;
+	}
+
+	public BigDecimal getReducaoBaseCalculoIcmsSt() {
+		return reducaoBaseCalculoIcmsSt;
+	}
+
+	public void setReducaoBaseCalculoIcmsSt(BigDecimal reducaoBaseCalculoIcmsSt) {
+		this.reducaoBaseCalculoIcmsSt = reducaoBaseCalculoIcmsSt;
+	}
+
+	public BigDecimal getAliquotaIcmsSt() {
+		return aliquotaIcmsSt;
+	}
+
+	public void setAliquotaIcmsSt(BigDecimal aliquotaIcmsSt) {
+		this.aliquotaIcmsSt = aliquotaIcmsSt;
 	}
 
 	@Override

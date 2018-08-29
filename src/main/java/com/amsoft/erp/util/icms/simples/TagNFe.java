@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import com.amsoft.erp.model.nfe.ItemProduto;
 import com.amsoft.erp.util.TributosUtils;
 import com.amsoft.erp.util.icms.CalculosUtils;
-import com.chronos.calc.CalcTributacao;
 import com.chronos.calc.csosn.Csosn101;
 import com.chronos.calc.csosn.Csosn201;
 import com.chronos.calc.csosn.Csosn202;
@@ -24,9 +23,7 @@ import br.inf.portalfiscal.nfe.schema_4.enviNFe.TNFe.InfNFe.Det.Imposto.ICMS.ICM
 public class TagNFe {
 
 	public static ICMSSN101 getICMSST101(ItemProduto item) {
-
 		Csosn101 csosn = new Csosn101();
-
 		csosn.calcular(TributosUtils.getTtibutos(item));
 
 		ICMSSN101 icmsSN101 = new ICMSSN101();
@@ -48,10 +45,10 @@ public class TagNFe {
 
 	
 	public static ICMSSN201 getICMSST201(ItemProduto item) {
-		ITributavel tributos = TributosUtils.getTtibutos(item);
-		Csosn201 csosn = new Csosn201();
 
 		// CALCULOS
+		ITributavel tributos = TributosUtils.getTtibutos(item);
+		Csosn201 csosn = new Csosn201();
 		csosn.calcular(tributos);
 		IResultadoCalculoFcpSt fcpst = CalculosUtils.calcularFcpSt(item);
 
@@ -72,9 +69,8 @@ public class TagNFe {
 		icmsSN201.setPCredSN(csosn.getPercentualCredito().toPlainString());
 		icmsSN201.setVCredICMSSN(csosn.getValorCredito().toPlainString());
 
-		// FCP ST - OBS. Este valor é temporário até que a conf. no emitente
-		// esteja pronta.
-		icmsSN201.setPFCPST(new BigDecimal(2).toPlainString());
+	
+		icmsSN201.setPFCPST(tributos.getPercentualFcpSt().toPlainString());
 		icmsSN201.setVBCFCPST(fcpst.getBaseCalculo().toPlainString());
 		icmsSN201.setVFCPST(fcpst.getValor().toPlainString());
 
@@ -83,10 +79,9 @@ public class TagNFe {
 
 	
 	public static ICMSSN202 getICMSST202(ItemProduto item) {
-
+		
 		ITributavel tributos = TributosUtils.getTtibutos(item);
 		Csosn202 csosn = new Csosn202();
-
 		csosn.calcular(tributos);
 		IResultadoCalculoFcpSt fcp = CalculosUtils.calcularFcpSt(item);
 
@@ -104,7 +99,7 @@ public class TagNFe {
 		icmsSN202.setVICMSST(csosn.getValorIcmsSt().toPlainString());
 
 		// FCP ST
-		icmsSN202.setPFCPST(new BigDecimal(2).toPlainString());
+		icmsSN202.setPFCPST(tributos.getPercentualFcpSt().toPlainString());
 		icmsSN202.setVBCFCPST(fcp.getBaseCalculo().toPlainString());
 		icmsSN202.setVFCPST(fcp.getValor().toPlainString());
 
@@ -128,11 +123,10 @@ public class TagNFe {
 	}
 
 	public static ICMSSN900 getICMSST900(ItemProduto item) {
-
+		
+		// CALCULOS
 		ITributavel tributos = TributosUtils.getTtibutos(item);
 		Csosn900 csosn = new Csosn900();
-
-		// CALCULOS
 		csosn.calcular(tributos);
 		IResultadoCalculoFcpSt fcp = CalculosUtils.calcularFcpSt(item);
 		
@@ -160,7 +154,7 @@ public class TagNFe {
 
 		// FCP ST - OBS. Este valor é temporário até que a conf. no emitente
 		// esteja pronta.
-		icmsSN900.setPFCPST(new BigDecimal(2).toPlainString());
+		icmsSN900.setPFCPST(tributos.getPercentualFcpSt().toPlainString());
 		icmsSN900.setVBCFCPST(fcp.getBaseCalculo().toPlainString());
 		icmsSN900.setVFCPST(fcp.getValor().toPlainString());
 

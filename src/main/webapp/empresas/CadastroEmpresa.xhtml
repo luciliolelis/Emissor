@@ -35,7 +35,6 @@
 
 				<f:event listener="#{gestaoEmpresasBean.inicializar}"
 					type="preRenderView" />
-
 			</f:metadata>
 
 			<p:toolbar style="position: fixed; margin-top:15px">
@@ -64,6 +63,7 @@
 
 			<h1 class="aw-page-title">#{gestaoEmpresasBean.editando ?
 				'Edição do emitente' : 'Novo emitente'}</h1>
+
 			<p:messages id="msgs" closable="true" autoUpdate="true" />
 
 			<p:defaultCommand target="salvar-button" />
@@ -77,7 +77,6 @@
 					</h:panelGroup>
 
 					<p:tabView style="margin-top:25px" id="tab">
-
 						<p:tab title="Endereço">
 							<h:panelGroup id="grupoEndereco">
 								<ui:include src="/WEB-INF/template/empresa/Endereco.xhtml" />
@@ -96,15 +95,12 @@
 							</h:panelGroup>
 						</p:tab>
 
-
-
 						<p:tab title="IE ST">
 							<h:panelGroup id="grupoIe">
 								<ui:include
 									src="/WEB-INF/template/empresa/InscricaoEstadualST.xhtml" />
 							</h:panelGroup>
 						</p:tab>
-
 
 						<p:tab title="Segurança">
 							<h:panelGroup id="certificado">
@@ -113,14 +109,10 @@
 						</p:tab>
 
 						<p:tab title="Dados adicionais">
-
 							<p:inputTextarea id="dadosAdicionais"
 								value="#{gestaoEmpresasBean.empresaEdicao.dadosadicionais}" />
-
 						</p:tab>
-
 					</p:tabView>
-
 
 				</h:panelGroup>
 			</div>

@@ -11,6 +11,7 @@ import com.amsoft.erp.util.icms.CalculosUtils;
 import com.chronos.calc.TributacaoException;
 import com.chronos.calc.cst.Cst00;
 import com.chronos.calc.cst.Cst10;
+import com.chronos.calc.cst.Cst90;
 import com.chronos.calc.dto.ITributavel;
 import com.chronos.calc.resultados.IResultadoCalculoFcp;
 import com.chronos.calc.resultados.IResultadoCalculoFcpSt;
@@ -59,22 +60,22 @@ public class TagNFe {
 		icms.setOrig(itemProduto.getProduto().getOrigemProduto().getCodigo());
 		icms.setCST(itemProduto.getCstIcms());
 		icms.setModBC("3");
-		
+
 		IResultadoCalculoFcp fcp = CalculosUtils.calcularFcp(itemProduto);
 		IResultadoCalculoFcpSt fcpst = CalculosUtils.calcularFcpSt(itemProduto);
-		
+
 		ITributavel tributos = TributosUtils.getTtibutos(itemProduto);
 		Cst10 cst = new Cst10();
 		cst.calcular(tributos);
-		
+
 		icms.setPICMS(tributos.getPercentualIcms().toPlainString());
 		icms.setVBC(cst.getValorBcIcms().toPlainString());
 		icms.setVICMS(cst.getValorIcms().toPlainString());
-		
+
 		icms.setPICMSST(tributos.getPercentualIcmsSt().toPlainString());
 		icms.setVBCST(cst.getValorBcIcmsSt().toPlainString());
 		icms.setVICMSST(cst.getValorIcmsSt().toPlainString());
-		
+
 		icms.setPRedBCST(tributos.getPercentualReducaoSt().toPlainString());
 		icms.setModBCST("4");
 		icms.setPMVAST("0.00");
@@ -224,28 +225,36 @@ public class TagNFe {
 		icms.setOrig(itemProduto.getProduto().getOrigemProduto().getCodigo());
 		icms.setCST(itemProduto.getCstIcms());
 		icms.setModBC("3");
-		icms.setPICMS(itemProduto.getAliquotaIcms().toPlainString());
-		icms.setVBC(itemProduto.getBaseIcms().setScale(2).toPlainString());
-		icms.setVICMS(itemProduto.getValorIcms().setScale(2).toPlainString());
-		icms.setPRedBC(itemProduto.getReducaoBaseCalculoIcms().toPlainString());
-		icms.setPICMSST(itemProduto.getAliquotaIcmsSt().toPlainString());
-		icms.setVBCST(itemProduto.getBaseIcmsSt().setScale(2).toPlainString());
-		icms.setVICMSST(itemProduto.getValorIcmsSt().setScale(2).toPlainString());
-		icms.setPRedBCST(itemProduto.getReducaoBaseCalculoIcmsSt().toPlainString());
 		icms.setModBCST("4");
-		icms.setPMVAST("0.00");
 
-		if (FCPValidacoes.isNotFCPUFDest(itemProduto)) {
-			// icms.setPFCP(itemProduto.getAliquotaFcp().toPlainString());
-			// icms.setVFCP(itemProduto.getValorFcp().toPlainString());
-			icms.setVBCFCP(itemProduto.getValorIcms().setScale(2).toPlainString());
-		}
+		IResultadoCalculoFcp fcp = CalculosUtils.calcularFcp(itemProduto);
+		IResultadoCalculoFcpSt fcpst = CalculosUtils.calcularFcpSt(itemProduto);
 
-		icms.setPFCPST(null);
-		icms.setVFCPST(null);
-		icms.setVBCFCPST(null);
-		icms.setVICMSDeson(null);
-		icms.setMotDesICMS(null);
+		ITributavel tributos = TributosUtils.getTtibutos(itemProduto);
+		Cst90 cst = new Cst90();
+		cst.calcular(tributos);
+
+		icms.setPRedBC(tributos.getPercentualReducao().toPlainString());
+		icms.setPICMS(tributos.getPercentualIcms().toPlainString());
+		icms.setVBC(cst.getValorBcIcms().toPlainString());
+		icms.setVICMS(cst.getValorIcms().toPlainString());
+		
+		icms.setPRedBCST(tributos.getPercentualReducaoSt().toPlainString());
+		icms.setPICMSST(tributos.getPercentualIcmsSt().toPlainString());
+		icms.setVBCST(cst.getValorBcIcmsSt().toPlainString());
+		icms.setVICMSST(cst.getValorIcmsSt().setScale(2).toPlainString());
+	
+		icms.setPMVAST(tributos.getPercentualMva().toPlainString());
+		icms.setPFCPST(tributos.getPercentualFcpSt().toPlainString());
+		icms.setVFCPST(fcpst.getValor().toPlainString());
+		icms.setVBCFCPST(fcpst.getBaseCalculo().toPlainString());
+
+		icms.setPFCP(tributos.getPercentualFcp().toPlainString());
+		icms.setVFCP(fcp.getValor().toPlainString());
+		icms.setVBCFCP(fcp.getBaseCalculo().toPlainString());
+
+		icms.setVICMSDeson(icms.getVICMS());
+		icms.setMotDesICMS("9");
 
 		return icms;
 	}

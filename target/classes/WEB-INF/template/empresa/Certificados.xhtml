@@ -4,12 +4,9 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 
-
 	<p:panelGrid columns="4" layout="grid" style="margin-top: 10px"
 		styleClass="panelgrid-noborder"
 		columnClasses="ui-grid-col-2, ui-grid-col-6,ui-grid-col-2, ui-grid-col-6">
-
-		
 
 		<p:outputLabel value="CSC produção" for="csc" />
 		<p:inputText id="csc" value="#{gestaoEmpresasBean.empresaEdicao.csc}" />
@@ -24,8 +21,6 @@
 
 		<p:outputLabel value="Consulta QRCode" />
 		<p:inputText value="#{gestaoEmpresasBean.empresaEdicao.wsQRCode}" />
-
 	</p:panelGrid>
-
 
 </ui:composition>

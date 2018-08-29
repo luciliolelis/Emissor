@@ -76,9 +76,7 @@ public class TagNFCe {
 		icmsSN201.setPCredSN(csosn.getPercentualCredito().toPlainString());
 		icmsSN201.setVCredICMSSN(csosn.getValorCredito().toPlainString());
 
-		// FCP ST - OBS. Este valor é temporário até que a conf. no emitente
-		// esteja pronta.
-		icmsSN201.setPFCPST(new BigDecimal(2).toPlainString());
+		icmsSN201.setPFCPST(tributos.getPercentualFcpSt().toPlainString());
 		icmsSN201.setVBCFCPST(fcpst.getBaseCalculo().toPlainString());
 		icmsSN201.setVFCPST(fcpst.getValor().toPlainString());
 
@@ -109,7 +107,7 @@ public class TagNFCe {
 		icmsSN202.setVICMSST(csosn.getValorIcmsSt().toPlainString());
 
 		// FCP ST
-		icmsSN202.setPFCPST(new BigDecimal(2).toPlainString());
+		icmsSN202.setPFCPST(tributos.getPercentualFcpSt().toPlainString());
 		icmsSN202.setVBCFCPST(fcp.getBaseCalculo().toPlainString());
 		icmsSN202.setVFCPST(fcp.getValor().toPlainString());
 
@@ -154,7 +152,6 @@ public class TagNFCe {
 		
 		// ICMS
 		icmsSN900.setPMVAST(csosn.getPercentualMva().toPlainString());
-	
 		icmsSN900.setPRedBCST(csosn.getPercentualReducaoSt().toPlainString());
 		icmsSN900.setVBCST(csosn.getValorBcIcmsSt().toPlainString());
 		icmsSN900.setPICMSST(csosn.getPercentualIcmsSt().toPlainString());
@@ -164,9 +161,7 @@ public class TagNFCe {
 		icmsSN900.setPCredSN(csosn.getPercentualCredito().toPlainString());
 		icmsSN900.setVCredICMSSN(csosn.getValorCredito().toPlainString());
 
-		// FCP ST - OBS. Este valor é temporário até que a conf. no emitente
-		// esteja pronta.
-		icmsSN900.setPFCPST(new BigDecimal(2).toPlainString());
+		icmsSN900.setPFCPST(tributos.getPercentualFcpSt().toPlainString());
 		icmsSN900.setVBCFCPST(fcp.getBaseCalculo().toPlainString());
 		icmsSN900.setVFCPST(fcp.getValor().toPlainString());
 
