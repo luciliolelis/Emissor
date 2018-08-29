@@ -377,7 +377,6 @@ public class ItemProduto implements Serializable {
 
 		try {
 			return this.getValorUnitario().multiply(this.getQuantidade());
-
 		} catch (Exception e) {
 			error(e.getCause() + " - " + e.getMessage());
 		}
