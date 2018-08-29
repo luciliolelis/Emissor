@@ -1,7 +1,5 @@
 package com.amsoft.erp.util.icms.simples;
 
-import java.math.BigDecimal;
-
 import com.amsoft.erp.model.nfe.ItemProduto;
 import com.amsoft.erp.util.TributosUtils;
 import com.amsoft.erp.util.icms.CalculosUtils;

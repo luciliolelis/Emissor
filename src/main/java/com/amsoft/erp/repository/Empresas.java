@@ -14,7 +14,6 @@ import org.hibernate.criterion.Restrictions;
 import com.amsoft.erp.model.StatusEmpresa;
 import com.amsoft.erp.model.emitente.Empresa;
 import com.amsoft.erp.model.emitente.FundoCombatePobreza;
-import com.amsoft.erp.model.nfe.Nfe;
 import com.amsoft.erp.security.UsuarioLogado;
 import com.amsoft.erp.security.UsuarioSistema;
 
