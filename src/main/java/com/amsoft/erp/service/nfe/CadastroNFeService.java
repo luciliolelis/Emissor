@@ -64,7 +64,7 @@ public class CadastroNFeService implements Serializable {
 		if (nfe.getValorTotalNota().equals(BigDecimal.ZERO.setScale(2))) {
 			return "O valor total da nota fiscal deve ser maior que zero";
 		}
-		
+
 		if (AmsoftUtils.isMenorQZero(nfe.getValorTotalNota())) {
 			throw new NegocioException("O valor total da nota fiscal deve ser maior que zero");
 		}

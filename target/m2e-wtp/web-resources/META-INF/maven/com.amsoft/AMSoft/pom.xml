@@ -13,7 +13,6 @@
 	<dependencies>
 
 
-
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -24,7 +23,7 @@
 		<dependency>
 			<groupId>com.chronos.calc</groupId>
 			<artifactId>ChronosCalcTribut</artifactId>
-			<version>1.0.21</version>
+			<version>1.0.26</version>
 		</dependency>
 
 		<dependency>
@@ -36,7 +35,7 @@
 		<dependency>
 			<groupId>br.com.samuelweb</groupId>
 			<artifactId>java-nfe</artifactId>
-			<version>4.00.6</version>
+			<version>4.00.8</version>
 		</dependency>
 
 		<!-- Implementacao do Bean Validation -->

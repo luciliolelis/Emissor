@@ -7,8 +7,8 @@
 
 
 	<p:dataTable value="#{cadastroProdutoBean.produto.itensIcmsUf}"
-		var="item" style="margin-top: 25px" rowIndexVar="linha"
-		id="tabelaItens" reflow="true">
+		styleClass="myTable" var="item" style="margin-top: 25px"
+		rowIndexVar="linha" id="tabelaItens" reflow="true">
 
 
 
@@ -123,8 +123,9 @@
 		</p:column>
 
 		<p:column headerText="Opções" style="text-align: center">
-			<p:commandButton icon="ui-icon-trash" title="Remover estado"
-				style="width:40px" rendered="#{linha != 0}" process="@this">
+			<p:commandButton icon="fa far fa-trash-alt" title="Excluir"
+				class="button-pesquisa" style="width:40px" rendered="#{linha != 0}"
+				process="@this">
 				<p:confirm icon="ui-icon-alert" header="Confirmação de exclusão"
 					message="Tem certeza que deseja remover este estado" />
 				<p:ajax event="click" process="@this" update="tabelaItens"

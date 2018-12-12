@@ -5,6 +5,13 @@
 	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
 	template="/WEB-INF/template/Layout.xhtml">
 
+
+	<f:metadata>
+		<o:viewParam name="nfce" value="#{cadastroNFCeBean.nfce}" />
+		<f:event listener="#{cadastroNFCeBean.inicializar}"
+			type="preRenderView" />
+	</f:metadata>
+
 	<ui:define name="content">
 
 		<script>
@@ -29,50 +36,68 @@
 		</script>
 
 
-		<f:metadata>
-			<o:viewParam name="nfce" value="#{cadastroNFCeBean.nfce}" />
-			<f:event listener="#{cadastroNFCeBean.inicializar}"
-				type="preRenderView" />
-		</f:metadata>
+		<h:form id="frm" styleClass="form-principal">
 
-		<h:form id="frm">
-			<ui:include src="/WEB-INF/template/nfce/BotoesNFCe.xhtml" />
-			<h1 class="aw-page-title"></h1>
+			<h:panelGrid columns="1" styleClass="grid-titulos">
+				<h:outputLabel value="Cadastro" styleClass="titulo1"></h:outputLabel>
+				<h:outputLabel value="NFC-e" styleClass="titulo2"></h:outputLabel>
+			</h:panelGrid>
+			
+			
+			
+			<p:fieldset class="grupo-geral">
 
-			<h1 class="aw-page-title">#{cadastroNFCeBean.editando ? 'Edição
-				da NFC-e' : 'Nova NFC-e'} #{cadastroNFCeBean.producao ? '
-				(Produção)' : ' (Homologação)'}</h1>
-
-			<p:messages autoUpdate="false" closable="true" id="msg" />
-
-			<ui:include src="/WEB-INF/template/nfce/DadosIniciais.xhtml" />
-
-			<p:tabView style="margin-top:10px" id="tab">
+				<h:panelGrid columns="2" styleClass="grid-titulo-pesquisa">
+					<div class="barra-vertical"></div>
+					<h:outputLabel
+						value="#{cadastroNFeBean.editando ? 'Edição de NFC-e': 'Nova NFC-e'}"
+						styleClass="titulo-pesquisa"></h:outputLabel>
+				</h:panelGrid>
 
 
-				<p:tab title="Produtos">
-					<ui:include src="/WEB-INF/template/nfce/ProdutosNfe.xhtml" />
-					<ui:include src="/WEB-INF/template/nfce/FormaPagamentoNfe.xhtml" />
-					<ui:include src="/WEB-INF/template/nfce/TransparenciaNfe.xhtml" />
-					<ui:include src="/WEB-INF/template/nfce/CompementosNfe.xhtml" />
-
-				</p:tab>
-
-				<p:tab title="Endereço">
-					<h:panelGroup id="grupoEndereco">
-						<ui:include src="/WEB-INF/template/nfce/Enderecos.xhtml" />
-					</h:panelGroup>
-				</p:tab>
-
-				<p:tab title="XML NFC-e">
-
-					<p:inputTextarea id="enviNFe" style="margin-top:15px"
-						value="#{cadastroNFCeBean.nfce.enviNFe}" cols="80000"
-						readonly="true" />
-				</p:tab>
-			</p:tabView>
+				<ui:include src="/WEB-INF/template/nfce/BotoesNFCe.xhtml" />
 
 
+				<p:messages autoUpdate="false" closable="true" id="msg" />
+
+				<ui:include src="/WEB-INF/template/nfce/DadosIniciais.xhtml" />
+
+				<p:tabView style="margin-top:10px" id="tab">
+
+
+					<p:tab title="Produtos">
+						<ui:include src="/WEB-INF/template/nfce/ProdutosNfe.xhtml" />
+						<ui:include src="/WEB-INF/template/nfce/FormaPagamentoNfe.xhtml" />
+						<ui:include src="/WEB-INF/template/nfce/TransparenciaNfe.xhtml" />
+						<ui:include src="/WEB-INF/template/nfce/CompementosNfe.xhtml" />
+
+					</p:tab>
+
+					<p:tab title="Endereço">
+						<h:panelGroup id="grupoEndereco">
+							<ui:include src="/WEB-INF/template/nfce/Enderecos.xhtml" />
+						</h:panelGroup>
+					</p:tab>
+
+					<p:tab title="XML NFC-e">
+
+						<p:inputTextarea id="enviNFe" style="margin-top:15px"
+							value="#{cadastroNFCeBean.nfce.enviNFe}" cols="170"
+							readonly="true" />
+					</p:tab>
+				</p:tabView>
+
+				<center>
+					<p:commandButton value="Salvar" class="button-salvar"
+						onsuccess="setConfirmUnload(false)" id="salvar-button"
+						disabled="#{cadastroNFCeBean.nfce.naoAlteravel}"
+						action="#{cadastroNFCeBean.salvar}" update="frm" process="frm" />
+					<p:separator />
+
+				</center>
+
+
+			</p:fieldset>
 		</h:form>
 
 

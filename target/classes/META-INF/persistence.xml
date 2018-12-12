@@ -9,7 +9,7 @@
 
 			<property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />
 <!-- 			<property name="javax.persistence.jdbc.url" value="jdbc:postgresql://200.98.161.226/amsoft"></property> -->
-			<property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost/amsoftteste"></property>
+			<property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost/amsoft"></property>
 			<property name="javax.persistence.jdbc.user" value="postgres" />
 			<property name="javax.persistence.jdbc.password" value="postgres" />
 			<property name="hibernate.connection.shutdown" value="true" />

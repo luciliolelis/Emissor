@@ -92,14 +92,6 @@ public class CadastroNFCeBean implements Serializable {
 	private Produto produtoLinhaEditavel;
 	private FormaPagamentoNFCe formaPagamentoLinhaEditavel;
 
-	public FormaPagamentoNFCe getFormaPagamentoLinhaEditavel() {
-		return formaPagamentoLinhaEditavel;
-	}
-
-	public void setFormaPagamentoLinhaEditavel(FormaPagamentoNFCe formaPagamentoLinhaEditavel) {
-		this.formaPagamentoLinhaEditavel = formaPagamentoLinhaEditavel;
-	}
-
 	@Inject
 	private Produtos produtos;
 
@@ -137,6 +129,7 @@ public class CadastroNFCeBean implements Serializable {
 	public void inicializar() {
 
 		if (FacesUtil.isNotPostback()) {
+			
 			if (this.isnfceNova()) {
 				this.incremetarNumeronfce();
 				this.nfce.setEmpresa(usuarioLogado.getUsuario().getEmpresa());
@@ -149,7 +142,6 @@ public class CadastroNFCeBean implements Serializable {
 			this.carregarCliente();
 			this.nfce.adicionarItemVazio();
 			this.nfce.adicionarItemVazioFormaPagamento();
-
 		}
 	}
 
@@ -758,7 +750,10 @@ public class CadastroNFCeBean implements Serializable {
 					item.setAliquotaIpi(this.produtoLinhaEditavel.getAliquotaIpi());
 					item.setNcm(this.produtoLinhaEditavel.getNcm());
 					item.setSomarIpiBcIcms(this.produtoLinhaEditavel.getSomarIpiBcIcms());
-
+					item.setAliquotaIcmsSt(this.produtoLinhaEditavel.getAliquotaIcmsSt());
+					item.setReducaoBaseCalculoIcms(this.produtoLinhaEditavel.getReducaoBaseCalculoIcms());
+					item.setReducaoBaseCalculoIcmsSt(this.produtoLinhaEditavel.getReducaoBaseCalculoIcmsSt());
+					
 					item.setAliquotaIcms(this.produtoLinhaEditavel.getAliquotaIcms());
 					item.setMva(this.produtoLinhaEditavel.getMva());
 					item.setPauta(this.produtoLinhaEditavel.getPauta());
@@ -942,7 +937,12 @@ public class CadastroNFCeBean implements Serializable {
 		}
 	}
 
-	
+	public FormaPagamentoNFCe getFormaPagamentoLinhaEditavel() {
+		return formaPagamentoLinhaEditavel;
+	}
 
+	public void setFormaPagamentoLinhaEditavel(FormaPagamentoNFCe formaPagamentoLinhaEditavel) {
+		this.formaPagamentoLinhaEditavel = formaPagamentoLinhaEditavel;
+	}
 
 }

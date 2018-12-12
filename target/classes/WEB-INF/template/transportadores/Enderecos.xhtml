@@ -6,18 +6,36 @@
 
 	<h:panelGrid columns="2" cellpadding="5" style="margin-top:5px"
 		id="panel-grupos">
-		<p:commandButton value="Adicionar endereço" process="@this"
-			icon="fa fa-map-marker" update=":frm:tab:endereco-dialog"
+		<p:commandButton value="Adicionar endereço" 
+			 process="@this" class="button-pesquisa"
+			icon="fa fas fa-plus-circle" update=":frm:tab:endereco-dialog"
 			oncomplete="PF('enderecoDialog').show()"
 			actionListener="#{gestaoTransportadorBean.novoEndereco}">
 			<p:resetInput target="endereco-dialog" />
 		</p:commandButton>
 	</h:panelGrid>
 
-	<p:dataTable value="#{gestaoTransportadorBean.clienteEdicao.enderecos}"
+	<p:dataTable value="#{gestaoTransportadorBean.clienteEdicao.enderecos}" styleClass="myTable"
 		reflow="true" id="tableEnderecos" var="endereco"
 		emptyMessage="Nenhum endereço cadastrado." style="margin-top:10px">
 
+		<p:column headerText="Opções" style="width:100px">
+			<p:commandButton update=":frm:tab:endereco-dialog" style="width:45px"
+				oncomplete="PF('enderecoDialog').show()" icon="fa far fa-pencil-alt"
+				title="Editar" class="button-pesquisa" process="@this">
+				<f:setPropertyActionListener value="#{endereco}"
+					target="#{gestaoTransportadorBean.enderecoSelecionado}" />
+			</p:commandButton>
+
+			<p:commandButton icon="fa far fa-trash-alt" title="Excluir"
+				class="button-pesquisa" update="tableEnderecos" style="width:45px"
+				process="tableEnderecos">
+				<p:confirm icon="ui-icon-alert" header="Confirmação de exclusão"
+					message="Tem certeza que deseja remover este endereço" />
+				<p:collector value="#{endereco}"
+					removeFrom="#{gestaoTransportadorBean.clienteEdicao.enderecos}" />
+			</p:commandButton>
+		</p:column>
 
 		<p:column headerText="CEP">
 			<h:outputText value="#{endereco.cep}" />
@@ -39,22 +57,6 @@
 			<h:outputText value="#{endereco.complemento}" />
 		</p:column>
 
-		<p:column headerText="Opções" style="width:100px">
-			<p:commandButton update=":frm:tab:endereco-dialog" style="width:45px"
-				oncomplete="PF('enderecoDialog').show()" icon="ui-icon-pencil"
-				process="@this" title="Editar">
-				<f:setPropertyActionListener value="#{endereco}"
-					target="#{gestaoTransportadorBean.enderecoSelecionado}" />
-			</p:commandButton>
-
-			<p:commandButton icon="ui-icon-trash" update="tableEnderecos"
-				style="width:45px" process="tableEnderecos">
-				<p:confirm icon="ui-icon-alert" header="Confirmação de exclusão"
-					message="Tem certeza que deseja remover este endereço" />
-				<p:collector value="#{endereco}"
-					removeFrom="#{gestaoTransportadorBean.clienteEdicao.enderecos}" />
-			</p:commandButton>
-		</p:column>
 
 	</p:dataTable>
 

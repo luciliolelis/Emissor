@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,7 +56,6 @@ import com.amsoft.erp.repository.Cfops;
 import com.amsoft.erp.repository.Clientes;
 import com.amsoft.erp.repository.Empresas;
 import com.amsoft.erp.repository.Estados;
-import com.amsoft.erp.repository.Ibpts;
 import com.amsoft.erp.repository.Nfes;
 import com.amsoft.erp.repository.filter.ClienteFilter;
 import com.amsoft.erp.repository.filter.NfeFilter;
@@ -73,7 +71,6 @@ import com.amsoft.erp.util.jsf.FacesUtil;
 @Named
 @ViewScoped
 public class CadastroNFeBean implements Serializable {
-
 	private static final long serialVersionUID = 1L;
 
 	@Produces
@@ -82,6 +79,7 @@ public class CadastroNFeBean implements Serializable {
 
 	@Inject
 	private Empresas empresas;
+	
 
 	@Inject
 	@UsuarioLogado
@@ -117,9 +115,6 @@ public class CadastroNFeBean implements Serializable {
 
 	@Inject
 	private Nfes nfes;
-
-	@Inject
-	private Ibpts ibpts;
 
 	@Inject
 	private NFeBuildAllCacerts allCacerts;
@@ -1155,85 +1150,34 @@ public class CadastroNFeBean implements Serializable {
 
 		if (this.nfe != null) {
 
-			this.nfe.recalcularValorTotalDesconto();
-			this.nfe.recalcularValorTotal();
-
-			this.nfe.rateiaDespesas();
-			this.nfe.rateiaSeguro();
-			this.nfe.rateiaFrete();
-
-			this.nfe.ajustaDespesas();
-			this.nfe.ajustaSeguro();
-			this.nfe.ajustaFrete();
-
-			this.nfe.recalcularTotalIpi();
-			this.nfe.recalcularTotalBaseIcms();
-			this.nfe.recalcularTotalBaseIcmsSt();
-			this.nfe.recalcularTotalIcms();
-			this.nfe.recalcularTotalIcmsSt();
-
-			this.nfe.recalcularTotalPis();
-			this.nfe.recalcularTotalCofins();
-			this.calcularImpostoLeiTransparencia();
+			// this.nfe.recalcularValorTotalDesconto();
+			// this.nfe.recalcularValorTotal();
+			//
+			// this.nfe.rateiaDespesas();
+			// this.nfe.rateiaSeguro();
+			// this.nfe.rateiaFrete();
+			//
+			// this.nfe.ajustaDespesas();
+			// this.nfe.ajustaSeguro();
+			// this.nfe.ajustaFrete();
+			//
+			// this.nfe.recalcularTotalIpi();
+			// this.nfe.recalcularTotalBaseIcms();
+			// this.nfe.recalcularTotalBaseIcmsSt();
+			// this.nfe.recalcularTotalIcms();
+			// this.nfe.recalcularTotalIcmsSt();
+			//
+			// this.nfe.recalcularTotalPis();
+			// this.nfe.recalcularTotalCofins();
+			// this.calcularImpostoLeiTransparencia();
 
 			FacesUtil.addInfoMessage("Valores atualizados!");
 
 		}
 	}
 
-	public void calcularImpostoLeiTransparencia() {
-
-		BigDecimal total = BigDecimal.ZERO;
-
-		if (isCalcularIBPT()) {
-			for (ItemProduto item : this.nfe.getItensProdutos()) {
-				if (isProdutoValido(item)) {
-
-					Ibpt ibpt = ibpts.porNcm(item.getProduto().getNcm());
-
-					if (ibpt != null) {
-						String origem = item.getProduto().getOrigemProduto().getCodigo();
-
-						BigDecimal imposto = BigDecimal.ZERO;
-
-						if (this.isOrigemNacional(origem)) {
-							imposto = this.onCalcularImpostoNacional(item, ibpt);
-						} else {
-							imposto = this.onCalcularImpostoImportado(item, ibpt);
-						}
-
-						item.setValorTransparencia(imposto);
-						total = total.add(imposto);
-					}
-				}
-			}
-		}
-
-		this.nfe.setValorTransparencia(total);
-	}
-
-	private boolean isCalcularIBPT() {
-		return (this.nfe.getCalcularConformeIBPT() != null) ? this.nfe.getCalcularConformeIBPT() : false;
-	}
-
 	private boolean isProdutoValido(ItemProduto item) {
 		return item.getProduto() != null && item.getProduto().getId() != null;
-	}
-
-	private boolean isOrigemNacional(String origem) {
-		return origem.equals("0") || origem.equals("3") || origem.equals("4") || origem.equals("5");
-	}
-
-	private BigDecimal onCalcularImpostoNacional(ItemProduto item, Ibpt ibpt) {
-
-		BigDecimal impostos = ibpt.getNacionalfederal().add(ibpt.getEstadual().add(ibpt.getMunicipal()));
-
-		return item.getValorTotal().multiply(impostos).divide(new BigDecimal(100)).setScale(2, RoundingMode.HALF_UP);
-	}
-
-	private BigDecimal onCalcularImpostoImportado(ItemProduto item, Ibpt ibpt) {
-		BigDecimal impostos = ibpt.getImportadosfederal().add(ibpt.getEstadual().add(ibpt.getMunicipal()));
-		return item.getValorTotal().multiply(impostos).divide(new BigDecimal(100)).setScale(2, RoundingMode.HALF_UP);
 	}
 
 	public void atualizarQuantidade(ItemProduto item, int linha) {
@@ -1497,7 +1441,6 @@ public class CadastroNFeBean implements Serializable {
 			this.loadEnderecoEntrega(this.enderecoSelecionado);
 		}
 
-		
 		if (cliente.getTipoPessoa().equals(TipoPessoa.FISICA)) {
 			this.nfe.setVendaConsumidorFinal(true);
 		}
@@ -1674,7 +1617,6 @@ public class CadastroNFeBean implements Serializable {
 
 					AmsoftUtils.info(item.getProduto().getNome());
 
-				
 					this.nfe.setCliente(this.nfe.getCliente());
 
 					if (this.isEstrangeiro(this.nfe.getCliente())) {
@@ -1683,7 +1625,7 @@ public class CadastroNFeBean implements Serializable {
 						this.loadEnderecoSelecionado(this.nfe.getCliente());
 						this.loadEnderecoEntrega(this.enderecoSelecionado);
 					}
-					
+
 					Produto produto = produtos.porId(item.getProduto().getId());
 
 					ItemIcmsUf icms = this.getConfiguracaoIcmsDestino(produto);

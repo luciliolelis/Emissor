@@ -15,6 +15,7 @@ import javax.xml.bind.JAXBException;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 
+import com.amsoft.erp.controller.xml.ValidadorXml;
 import com.amsoft.erp.model.StatusNFe;
 import com.amsoft.erp.model.nfe.Nfe;
 import com.amsoft.erp.repository.Nfes;
@@ -32,6 +33,7 @@ import com.amsoft.erp.util.icms.ICMSTotalUtils;
 import com.amsoft.erp.util.jsf.FacesUtil;
 import com.chronos.calc.TributacaoException;
 
+import br.inf.portalfiscal.nfe.schema_4.enviNFe.TNFe.InfNFe.Ide.NFref;
 import br.com.samuelweb.certificado.exception.CertificadoException;
 import br.com.samuelweb.nfe.dom.Enum.StatusEnum;
 import br.com.samuelweb.nfe.exception.NfeException;
@@ -94,7 +96,16 @@ public class XMLEnvioNFeService implements Serializable {
 			Ide ide = new Ide();
 			ide.setCUF(nfe.getUsuario().getEmpresa().getIbgeEstado());
 			ide.setCNF(ChaveAcesso.getCodigoChave(infNFe.getId()));
-			ide.setNatOp(nfe.getCfop() == null ? "" : nfe.getCfop().getCodigo().toString());
+
+			String cfop = AmsoftUtils.removeCaracteresEspeciais(nfe.getCfop().getDescricao());
+
+			if (cfop.length() > 49) {
+				cfop = AmsoftUtils.removeEspacoFinal(cfop.substring(0, 49));
+			}
+			
+
+			ide.setNatOp(nfe.getCfop() == null ? "" : nfe.getCfop().getCodigo().toString() + " - " + cfop);
+
 			ide.setMod("55");
 			ide.setSerie("1");
 			ide.setNNF(nfe.getNumero() == null ? "1" : nfe.getNumero().toString());
@@ -111,12 +122,19 @@ public class XMLEnvioNFeService implements Serializable {
 			ide.setIndPres(IDUtils.getInficadorPresenca(nfe));
 			ide.setProcEmi(IDUtils.getProcessoEmissao(nfe));
 			ide.setVerProc("002");
+
+			if (ValidadorXml.isDevolucao(nfe)) {
+				NFref nfRef = new NFref();
+				nfRef.setRefNFe(nfe.getChaveRef());
+				ide.getNFref().add(nfRef);
+			}
+
 			infNFe.setIde(ide);
 
 			// Emitente
 			Emit emit = new Emit();
 			emit.setCNPJ(AmsoftUtils.removerMascara(nfe.getUsuario().getEmpresa().getCnpj()));
-			emit.setXNome(nfe.getUsuario().getEmpresa().getRazao_social());
+			emit.setXNome(AmsoftUtils.removeCaracteresEspeciais(nfe.getUsuario().getEmpresa().getRazao_social()));
 
 			if (amsoftUtils.isHomologacao()) {
 				emit.setXNome("NF-E EMITIDA EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL");
@@ -136,7 +154,7 @@ public class XMLEnvioNFeService implements Serializable {
 				dest.setCNPJ(AmsoftUtils.removerMascara(nfe.getCliente().getDocReceitaFederal()));
 			}
 
-			dest.setXNome(nfe.getCliente().getNome());
+			dest.setXNome(AmsoftUtils.removeCaracteresEspeciais(nfe.getCliente().getNome()));
 
 			if (amsoftUtils.isHomologacao()) {
 				dest.setXNome("NF-E EMITIDA EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL");

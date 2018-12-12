@@ -4,7 +4,6 @@ import com.amsoft.erp.model.nfce.ItemProdutoNFCe;
 import com.amsoft.erp.util.TributosUtils;
 import com.chronos.calc.CalcTributacao;
 import com.chronos.calc.csosn.Csosn101;
-import com.chronos.calc.csosn.Csosn102;
 import com.chronos.calc.csosn.Csosn201;
 import com.chronos.calc.csosn.Csosn202;
 import com.chronos.calc.csosn.Csosn500;
@@ -38,9 +37,6 @@ public class TagNFCe {
 	}
 
 	public static ICMSSN102 getICMSST102(ItemProdutoNFCe item) {
-
-		Csosn102 csosn = new Csosn102();
-		csosn.calcular(TributosUtils.getTtibutos(item));
 
 		ICMSSN102 icmsSN102 = new ICMSSN102();
 		icmsSN102.setOrig(item.getProduto().getOrigemProduto().getCodigo());

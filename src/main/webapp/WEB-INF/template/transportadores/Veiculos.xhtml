@@ -7,7 +7,8 @@
 
 	<h:panelGrid columns="2" cellpadding="5" style="margin-top:5px">
 		<p:commandButton value="Adicionar veículo" process="@this"
-			icon="fa fa-truck" update=":frm:tab:inclusaoPanel"
+			class="button-pesquisa" icon="fa fas fa-plus-circle"
+			update=":frm:tab:inclusaoPanel"
 			actionListener="#{gestaoTransportadorBean.incluirVeiculo}"
 			onclick="PF('inclusaoVeiculoDialog').show()">
 			<p:resetInput target="inclusaoPanel" />
@@ -16,9 +17,26 @@
 
 
 	<p:dataTable value="#{gestaoTransportadorBean.clienteEdicao.veiculos}"
-		style="margin-top:10px" var="veiculo" id="veiculoTable" reflow="true"
-		emptyMessage="Não existem veículos">
+		styleClass="myTable" style="margin-top:10px" var="veiculo"
+		id="veiculoTable" reflow="true" emptyMessage="Não existem veículos">
 
+		<p:column headerText="Opções" style="width:100px">
+			<p:commandButton update=":frm:tab:inclusaoPanel" style="width:45px"
+				oncomplete="PF('inclusaoVeiculoDialog').show()" process="@this"
+				class="button-pesquisa"
+				actionListener="#{gestaoTransportadorBean.carregarCidadesVeiculos}"
+				icon="fa far fa-pencil-alt" title="Editar">
+				<f:setPropertyActionListener value="#{veiculo}"
+					target="#{gestaoTransportadorBean.veiculoSelecionado}" />
+			</p:commandButton>
+			<p:commandButton icon="fa far fa-trash-alt" update="veiculoTable"
+				class="button-pesquisa" style="width:45px" process="veiculoTable">
+				<p:confirm icon="ui-icon-alert" header="Confirmação de exclusão"
+					message="Tem certeza que deseja remover este veículo" />
+				<p:collector value="#{veiculo}"
+					removeFrom="#{gestaoTransportadorBean.clienteEdicao.veiculos}" />
+			</p:commandButton>
+		</p:column>
 
 		<p:column headerText="Placa">
 			<h:outputText value="#{veiculo.placa}" />
@@ -35,22 +53,7 @@
 			<h:outputText value="#{veiculo.cidade} - #{veiculo.uf}" />
 		</p:column>
 
-		<p:column headerText="Opções" style="width:100px">
-			<p:commandButton update=":frm:tab:inclusaoPanel" style="width:45px"
-				oncomplete="PF('inclusaoVeiculoDialog').show()" process="@this"
-				actionListener="#{gestaoTransportadorBean.carregarCidadesVeiculos}"
-				icon="ui-icon-pencil" title="Editar">
-				<f:setPropertyActionListener value="#{veiculo}"
-					target="#{gestaoTransportadorBean.veiculoSelecionado}" />
-			</p:commandButton>
-			<p:commandButton icon="ui-icon-trash" update="veiculoTable"
-				style="width:45px" process="veiculoTable">
-				<p:confirm icon="ui-icon-alert" header="Confirmação de exclusão"
-					message="Tem certeza que deseja remover este veículo" />
-				<p:collector value="#{veiculo}"
-					removeFrom="#{gestaoTransportadorBean.clienteEdicao.veiculos}" />
-			</p:commandButton>
-		</p:column>
+
 	</p:dataTable>
 
 	<p:dialog header="Veículo" widgetVar="inclusaoVeiculoDialog"

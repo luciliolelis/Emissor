@@ -4,7 +4,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 
-	<p:panelGrid columns="4" layout="grid" style="margin-top: 10px"
+	<p:panelGrid columns="4" layout="grid" style="margin-top: 15px"
 		styleClass="panelgrid-noborder"
 		columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4">
 
@@ -36,16 +36,11 @@
 
 
 		<h:panelGroup id="grupo-cnpj-campo">
-
-
-
+ 
 			<p:inputMask id="cnpj" size="18" maxlength="18" required="true"
 				rendered="#{gestaoTransportadorBean.clienteEdicao.tipoPessoa eq 'JURIDICA'}"
 				value="#{gestaoTransportadorBean.clienteEdicao.docReceitaFederal}"
 				mask="99.999.999/9999-99" />
-
-
-
 
 			<p:inputMask id="cpf" size="18" maxlength="18" required="true"
 				rendered="#{gestaoTransportadorBean.clienteEdicao.tipoPessoa eq 'FISICA'}"
@@ -55,8 +50,10 @@
 
 		<p:outputLabel
 			rendered="#{gestaoTransportadorBean.clienteEdicao.tipoPessoa eq 'JURIDICA'}" />
-		<p:commandButton value="Buscar transportador por CNPJ" icon="ui-icon-search"
-			actionListener="#{gestaoTransportadorBean.concultarCadastro}" styleClass="ui-priority-primary"
+		
+		<p:commandButton value="Buscar por CNPJ"
+			styleClass="button-filtro" icon="fa fas fa-search"
+			actionListener="#{gestaoTransportadorBean.concultarCadastro}"
 			rendered="#{gestaoTransportadorBean.clienteEdicao.tipoPessoa eq 'JURIDICA'}"
 			process="@this cnpj" update="@form" />
 

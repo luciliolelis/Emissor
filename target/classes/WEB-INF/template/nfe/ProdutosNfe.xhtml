@@ -10,8 +10,8 @@
 			style="margin-top:15px; margin-left:-10px"
 			columnClasses="ui-grid-col-3, ui-grid-col-12">
 
-			<p:commandButton icon="ui-icon-search" title="Pesquisar"
-				value="Pesquisar produtos" process="@this"
+			<p:commandButton class="button-pesquisa" icon="fa fas fa-plus-circle"
+				value="Adicionar produtos" process="@this"
 				rendered="#{(cadastroNFeBean.nfe.status != 'AUTORIZADA' and cadastroNFeBean.nfe.status != 'AUTORIZADACORRECAO' and cadastroNFeBean.nfe.status != 'CANCELADA')}"
 				update="produtos-dialog panel-produtos"
 				actionListener="#{cadastroNFeBean.pesquisaProdutos}"
@@ -20,8 +20,8 @@
 		</p:panelGrid>
 
 		<p:dataTable value="#{cadastroNFeBean.nfe.itensProdutos}" var="item"
-			style="margin-top:5px" sortBy="#{item.cfop}" rowIndexVar="linha"
-			id="tabelaItens" reflow="true">
+			styleClass="myTable" style="margin-top:5px" sortBy="#{item.cfop}"
+			rowIndexVar="linha" id="tabelaItens" reflow="true">
 
 			<p:summaryRow>
 				<p:column rendered="#{linha != 0}" colspan="11">
@@ -137,7 +137,6 @@
 			</p:column>
 
 			<p:column headerText="Qtd.">
-
 				<h:outputText value=" #{item.quantidade}"
 					rendered="#{item.produtoAssociado and linha eq 0 or (cadastroNFeBean.nfe.status eq 'AUTORIZADA' or cadastroNFeBean.nfe.status eq 'AUTORIZADACORRECAO' or cadastroNFeBean.nfe.status eq 'CANCELADA')}" />
 				<p:inputText size="8" value="#{item.quantidade}"
@@ -155,13 +154,12 @@
 					<f:convertNumber type="currency" />
 				</h:outputText>
 
-				<p:inputText value="#{item.valorUnitario}" styleClass="moeda"
+				<p:inputNumber value="#{item.valorUnitario}" decimalPlaces="4"
 					rendered="#{linha != 0 and (cadastroNFeBean.nfe.status != 'AUTORIZADA' and cadastroNFeBean.nfe.status != 'AUTORIZADACORRECAO' and cadastroNFeBean.nfe.status != 'CANCELADA')}">
-					<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
 					<p:ajax event="change" process="@this"
 						update="tabelaItens frm:tab:totalPedido frm:tab:subtotal frm:tab:base-icms frm:tab:valor-icms frm:tab:base-icms-st frm:tab:valor-icms-st frm:tab:valor-ipi frm:tab:valor-total-pis frm:tab:valor-total-cofins"
 						listener="#{cadastroNFeBean.atualizarValorProduto(item, linha)}" />
-				</p:inputText>
+				</p:inputNumber>
 			</p:column>
 
 			<p:column headerText="Desconto">
@@ -307,29 +305,6 @@
 						<f:convertNumber type="currency" />
 					</h:outputText>
 
-					<h:outputText value="BC" />
-					<h:outputText
-						value="#{cadastroNFeBean.produtoSelecionado.baseIcms}">
-						<f:convertNumber type="currency" />
-					</h:outputText>
-
-					<h:outputText value="ICMS" />
-					<h:outputText
-						value="#{cadastroNFeBean.produtoSelecionado.valorIcms}">
-						<f:convertNumber type="currency" />
-					</h:outputText>
-
-					<h:outputText value="BC ST" />
-					<h:outputText
-						value="#{cadastroNFeBean.produtoSelecionado.baseIcmsSt}">
-						<f:convertNumber type="currency" />
-					</h:outputText>
-
-					<h:outputText value="ICMS ST" />
-					<h:outputText
-						value="#{cadastroNFeBean.produtoSelecionado.valorIcmsSt}">
-						<f:convertNumber type="currency" />
-					</h:outputText>
 				</p:panelGrid>
 
 				<h1 class="aw-table-title">IPI</h1>
@@ -348,11 +323,6 @@
 						value="#{cadastroNFeBean.produtoSelecionado.aliquotaIpi}">
 					</h:outputText>
 
-					<h:outputText value="IPI" />
-					<h:outputText
-						value="#{cadastroNFeBean.produtoSelecionado.valorIpi}">
-						<f:convertNumber type="currency" />
-					</h:outputText>
 
 				</p:panelGrid>
 
@@ -374,19 +344,9 @@
 						value="#{cadastroNFeBean.produtoSelecionado.aliquotaPis}">
 					</h:outputText>
 
-					<h:outputText value="PIS" />
-					<h:outputText value="#{cadastroNFeBean.produtoSelecionado.pis}">
-						<f:convertNumber type="currency" />
-					</h:outputText>
-
 					<h:outputText value="Alíquota COFINS" />
 					<h:outputText
 						value="#{cadastroNFeBean.produtoSelecionado.aliquotaCofins}">
-					</h:outputText>
-
-					<h:outputText value="COFINS" />
-					<h:outputText value="#{cadastroNFeBean.produtoSelecionado.cofins}">
-						<f:convertNumber type="currency" />
 					</h:outputText>
 
 				</p:panelGrid>
@@ -515,7 +475,7 @@
 
 
 			<p:outputLabel value="Total dos produtos" />
-			<h:outputText value="#{cadastroNFeBean.nfe.valorTotalSemDesconto}"
+			<h:outputText value="#{cadastroNFeBean.nfe.valorTotal}"
 				style="font-weight: bold; font-size: 1.1em" id="subtotal">
 				<f:convertNumber type="currency" />
 			</h:outputText>
@@ -531,7 +491,8 @@
 
 
 		<p:dialog header="Pesquisa de produtos" widgetVar="produtosDialog"
-			modal="true" id="produtos-dialog"  closeOnEscape="true" resizable="true">
+			modal="true" id="produtos-dialog" closeOnEscape="true"
+			resizable="true">
 
 			<h:panelGroup id="panel-produtos" style="margin-top:5px">
 				<p:dataTable id="produtosTable" widgetVar="table-produtos"

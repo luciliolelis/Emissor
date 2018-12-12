@@ -10,8 +10,8 @@
 			style="margin-top:15px; margin-left:-10px"
 			columnClasses="ui-grid-col-3, ui-grid-col-12">
 
-			<p:commandButton icon="ui-icon-search" title="Pesquisar"
-				value="Pesquisar produtos" process="@this"
+			<p:commandButton class="button-pesquisa" icon="fa fas fa-plus-circle"
+				value="Adicionar produtos" process="@this"
 				rendered="#{(cadastroNFCeBean.nfce.status != 'AUTORIZADA' and cadastroNFCeBean.nfce.status != 'CANCELADA')}"
 				update="produtos-dialog panel-produtos"
 				actionListener="#{cadastroNFCeBean.pesquisaProdutos}"
@@ -20,8 +20,8 @@
 		</p:panelGrid>
 
 		<p:dataTable value="#{cadastroNFCeBean.nfce.itensProdutos}" var="item"
-			style="margin-top:5px" sortBy="#{item.cfop}" rowIndexVar="linha"
-			id="tabelaItens" reflow="true">
+			styleClass="myTable" style="margin-top:5px" sortBy="#{item.cfop}"
+			rowIndexVar="linha" id="tabelaItens" reflow="true">
 
 			<p:summaryRow>
 				<p:column rendered="#{linha != 0}" colspan="11">
@@ -141,12 +141,11 @@
 					<f:convertNumber type="currency" />
 				</h:outputText>
 
-				<p:inputText value="#{item.valorUnitario}" styleClass="moeda"
+				<p:inputNumber value="#{item.valorUnitario}" decimalPlaces="4"
 					rendered="#{linha != 0 and (cadastroNFCeBean.nfce.status != 'AUTORIZADA' and cadastroNFCeBean.nfce.status != 'CANCELADA')}">
-					<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
 					<p:ajax event="change" process="@this" update="tabelaItens"
 						listener="#{cadastroNFCeBean.atualizarValorProduto(item, linha)}" />
-				</p:inputText>
+				</p:inputNumber>
 			</p:column>
 
 			<p:column headerText="Desconto">
@@ -225,7 +224,8 @@
 
 
 		<p:dialog header="Pesquisa de produtos" widgetVar="produtosDialog"
-			modal="true" id="produtos-dialog" closeOnEscape="true" resizable="true">
+			modal="true" id="produtos-dialog" closeOnEscape="true"
+			resizable="true">
 
 			<h:panelGroup id="panel-produtos" style="margin-top:5px">
 				<p:dataTable id="produtosTable" widgetVar="table-produtos"

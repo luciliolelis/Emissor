@@ -79,6 +79,7 @@
 				columnClasses="ui-grid-col-3, ui-grid-col-12">
 
 				<p:commandButton value="Limpar transportador"
+					styleClass="button-filtro"
 					rendered="#{cadastroNFeBean.nfe.transportador != null}"
 					actionListener="#{cadastroNFeBean.limparTransportador}"
 					process="@this"

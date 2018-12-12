@@ -7,11 +7,11 @@
 	<h1 class="aw-page-title"></h1>
 
 	<p:dataTable var="endereco" value="#{cadastroNFCeBean.todosEnderecos}"
-	rendered="#{cadastroNFCeBean.nfce.cliente.estrangeiro eq false and cadastroNFCeBean.nfce.cliente.exterior eq false}"
-		reflow="true"
-		selection="#{cadastroNFCeBean.enderecoSelecionado}"
-		selectionMode="single"
-		emptyMessage="Nenhum endereço encontrado" rowKey="#{endereco.cep}">
+		styleClass="myTable"
+		rendered="#{cadastroNFCeBean.nfce.cliente.estrangeiro eq false and cadastroNFCeBean.nfce.cliente.exterior eq false}"
+		reflow="true" selection="#{cadastroNFCeBean.enderecoSelecionado}"
+		selectionMode="single" emptyMessage="Nenhum endereço encontrado"
+		rowKey="#{endereco.cep}">
 
 		<p:ajax event="rowSelect"
 			listener="#{cadastroNFCeBean.selecionaEndereco}" update="@this">

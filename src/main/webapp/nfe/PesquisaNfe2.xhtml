@@ -9,134 +9,172 @@
 
 	<ui:define name="content">
 
-		<h:form id="frm">
+		<h:form id="frm" styleClass="form-principal">
 
-			<p:toolbar id="toolbar" style="position: fixed; margin-top:15px">
-				<p:toolbarGroup>
-					<p:button icon="ui-icon-plus" value="Nova NF-e"
-						outcome="/nfe/CadastroNfe2" process="@this">
-					</p:button>
+			<h:panelGrid columns="1" styleClass="grid-titulos">
+				<h:outputLabel value="Pesquisa" styleClass="titulo1"></h:outputLabel>
+				<h:outputLabel value="NF-e" styleClass="titulo2"></h:outputLabel>
+			</h:panelGrid>
 
-					<p:separator />
+			<p:fieldset class="grupo-geral">
+				<h:panelGrid columns="2" styleClass="grid-titulo-pesquisa">
+					<div class="barra-vertical"></div>
+					<h:outputLabel value="Pesquisar" styleClass="titulo-pesquisa"></h:outputLabel>
+				</h:panelGrid>
 
-					<p:commandButton value="Pesquisar" update="@form"
-						icon="ui-icon-search" />
-				</p:toolbarGroup>
-			</p:toolbar>
+				<p:panelGrid columns="4" layout="grid"
+					styleClass="panelgrid-noborder"
+					columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4">
 
-			<h1 class="aw-page-title"></h1>
-			<h1 class="aw-page-title">Pesquisa de NF-e</h1>
-
-
-
-			<p:panelGrid columns="4" layout="grid"
-				styleClass="panelgrid-noborder"
-				columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4">
-
-				<p:outputLabel value="Número" />
-				<h:panelGroup>
-					<p:inputText size="10" value="#{pesquisaNFeBean.filtro.numeroDe}" />
+					<p:outputLabel value="Número" />
+					<h:panelGroup>
+						<p:inputText size="10" value="#{pesquisaNFeBean.filtro.numeroDe}" />
 	    			a
 	    			<p:inputText size="10"
-						value="#{pesquisaNFeBean.filtro.numeroAte}" />
-				</h:panelGroup>
+							value="#{pesquisaNFeBean.filtro.numeroAte}" />
+					</h:panelGroup>
 
-				<p:outputLabel value="Data de emissão" />
-				<h:panelGroup>
-					<p:calendar size="10" pattern="dd/MM/yyyy"
-						value="#{pesquisaNFeBean.filtro.dataCriacaoDe}" />
+					<p:outputLabel value="Data de emissão" />
+					<h:panelGroup>
+						<p:calendar size="10" pattern="dd/MM/yyyy"
+							value="#{pesquisaNFeBean.filtro.dataCriacaoDe}" />
 	    			a
 	    			<p:calendar size="10" pattern="dd/MM/yyyy"
-						value="#{pesquisaNFeBean.filtro.dataCriacaoAte}" />
-				</h:panelGroup>
+							value="#{pesquisaNFeBean.filtro.dataCriacaoAte}" />
+					</h:panelGroup>
 
-				<p:outputLabel value="Cliente" />
-				<p:inputText value="#{pesquisaNFeBean.filtro.nomeCliente}" />
+					<p:outputLabel value="Cliente" />
+					<p:inputText value="#{pesquisaNFeBean.filtro.nomeCliente}" />
 
-				<p:outputLabel value="Status" />
-				<p:selectCheckboxMenu id="status"
-					value="#{pesquisaNFeBean.filtro.statuses}" label="status"
-					multiple="true" filter="true" filterMatchMode="startsWith"
-					panelStyle="width:250px">
-					<f:selectItems value="#{pesquisaNFeBean.statuses}" var="status"
-						itemValue="#{status}" itemLabel="#{status.descricao}" />
-				</p:selectCheckboxMenu>
+					<p:outputLabel value="Status" />
+					<p:selectCheckboxMenu id="status"
+						value="#{pesquisaNFeBean.filtro.statuses}" label="status"
+						multiple="true" filter="true" filterMatchMode="startsWith"
+						panelStyle="width:250px">
+						<f:selectItems value="#{pesquisaNFeBean.statuses}" var="status"
+							itemValue="#{status}" itemLabel="#{status.descricao}" />
+					</p:selectCheckboxMenu>
 
-			</p:panelGrid>
+				</p:panelGrid>
 
-			<p:messages id="msgs" closable="true" autoUpdate="true" />
+				<p:toolbar id="toolbar" style="margin-top:15px">
+					<p:toolbarGroup>
+						<p:button class="button-pesquisa" icon="fa fas fa-plus-circle"
+							value="Nova NF-e" outcome="/nfe/CadastroNfe2" process="@this">
+						</p:button>
 
-			<p:dataTable id="empresas-table" value="#{pesquisaNFeBean.model}"
-				var="nfe" style="margin-top: 10px" reflow="true"
-				emptyMessage="Nenhuma NFC-e encontrada." rows="8" paginator="true"
-				paginatorAlwaysVisible="false" paginatorPosition="bottom"
-				lazy="true">
+						<p:separator />
 
-				<p:column style="text-align: center; width: 120px"
-					exportable="false" headerText="Opções">
+						<p:commandButton value="Pesquisar" update="@form"
+							styleClass="button-filtro" icon="fa fas fa-search" />
+					</p:toolbarGroup>
+				</p:toolbar>
 
-					<p:button icon="ui-icon-pencil" title="Editar"
-						disabled="#{nfe.status == 'INUTILIZADA'}"
-						outcome="/nfe/CadastroNfe2">
-						<f:param name="nfe" value="#{nfe.id}" />
-					</p:button>
+				<p:messages id="msgs" closable="true" autoUpdate="true" />
 
-					<p:commandButton icon="ui-icon-trash" title="Excluir"
-						process="@this"
-						disabled="#{nfe.status == 'INUTILIZADA' or nfe.status == 'AUTORIZADA' or nfe.status == 'AUTORIZADACORRECAO' or nfe.status == 'CANCELADA' or nfe.status == 'EMPROCESSAMENTO'}"
-						update=":frm:empresas-table :frm:toolbar :frm:msgs"
-						action="#{pesquisaNFeBean.excluir(nfe)}">
-						<p:confirm icon="ui-icon-alert" header="Confirmação de exclusão"
-							message="Tem certeza que deseja excluir a NF-e" />
-					</p:commandButton>
+				<p:dataTable id="empresas-table" value="#{pesquisaNFeBean.model}"
+					styleClass="myTable" var="nfe" style="margin-top: 10px"
+					reflow="true" emptyMessage="Nenhuma NFC-e encontrada." rows="8"
+					paginator="true" paginatorAlwaysVisible="false"
+					paginatorPosition="bottom" lazy="true">
 
+					<p:column style="text-align: center" exportable="false"
+						headerText="Opções">
 
+						<p:button icon="fa far fa-pencil-alt" title="Editar"
+							class="button-pesquisa" disabled="#{nfe.status == 'INUTILIZADA'}"
+							outcome="/nfe/CadastroNfe2">
+							<f:param name="nfe" value="#{nfe.id}" />
+						</p:button>
 
-					<p:commandButton title="Gerar danfe" ajax="false"
-						icon="fa fa-file-pdf-o"
-						disabled="#{nfe.status != 'AUTORIZADA' and nfe.status != 'AUTORIZADACORRECAO'}"
-						actionListener="#{gestaoDanfeBean.upload(nfe)}">
-						<p:fileDownload value="#{gestaoDanfeBean.filePdf}" />
-					</p:commandButton>
-
-				</p:column>
-
-
-				<p:column headerText="Status"
-					style="#{(nfe.status == 'INUTILIZADA') ? 'background-color: #FFFF00': (nfe.status == 'AUTORIZADA' || nfe.status == 'AUTORIZADACORRECAO') ? 'background-color: #8FBC8F': (nfe.status == 'EMPROCESSAMENTO' ? 'background-color: orange' : (nfe.status == 'FALHA' ? 'background-color:red' : (nfe.status == 'CANCELADA' ? 'background-color:#6495ED' : '')))}">
-					<h:outputText value="#{nfe.status.descricao}" />
-
-				</p:column>
-
-				<p:column headerText="Cliente">
-					<h:outputText
-						value="#{nfe.cliente.nome} - #{nfe.enderecoEntrega.uf}" />
-				</p:column>
+						<p:commandButton icon="fa far fa-trash-alt" title="Excluir"
+							class="button-pesquisa" process="@this"
+							disabled="#{nfe.status == 'INUTILIZADA' or nfe.status == 'AUTORIZADA' or nfe.status == 'AUTORIZADACORRECAO' or nfe.status == 'CANCELADA' or nfe.status == 'EMPROCESSAMENTO'}"
+							update=":frm:empresas-table :frm:toolbar :frm:msgs"
+							action="#{pesquisaNFeBean.excluir(nfe)}">
+							<p:confirm icon="ui-icon-alert" header="Confirmação de exclusão"
+								message="Tem certeza que deseja excluir a NF-e" />
+						</p:commandButton>
 
 
-				<p:column headerText="Número">
-					<h:outputText value="#{nfe.numero}" />
-				</p:column>
+
+						<p:commandButton title="Gerar danfe" ajax="false"
+							icon="fa far fa-file-pdf" class="button-pesquisa"
+							disabled="#{nfe.status != 'AUTORIZADA' and nfe.status != 'AUTORIZADACORRECAO'}"
+							actionListener="#{gestaoDanfeBean.upload(nfe)}">
+							<p:fileDownload value="#{gestaoDanfeBean.filePdf}" />
+						</p:commandButton>
+
+					</p:column>
 
 
-				<p:column headerText="Emissão">
-					<h:outputText value="#{nfe.emissao}">
-						<f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="GMT-3" />
-					</h:outputText>
-				</p:column>
 
 
-				<p:column headerText="Valor total">
-					<h:outputText value="#{nfe.valorTotal}">
-						<f:convertNumber type="currency" />
-					</h:outputText>
-				</p:column>
+					<p:column headerText="Cliente">
+						<h:outputText
+							value="#{nfe.cliente.nome} - #{nfe.enderecoEntrega.uf}" />
+					</p:column>
 
-				<p:column headerText="Forma de pagamento">
-					<h:outputText value="#{nfe.formaPagamento.descricao}" />
-				</p:column>
 
-			</p:dataTable>
+					<p:column headerText="Número">
+						<h:outputText value="#{nfe.numero}" />
+					</p:column>
+
+
+					<p:column headerText="Emissão">
+						<h:outputText value="#{nfe.emissao}">
+							<f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="GMT-3" />
+						</h:outputText>
+					</p:column>
+
+
+					<p:column headerText="Valor total">
+						<h:outputText value="#{nfe.valorTotal}">
+							<f:convertNumber type="currency" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Forma de pagamento">
+						<h:outputText value="#{nfe.formaPagamento.descricao}" />
+					</p:column>
+
+					<p:column headerText="Status">
+
+						<h:panelGroup rendered="#{nfe.status == 'FALHA'}">
+							<div class="div-falha">
+								<h:outputText value="#{nfe.status.descricao}" />
+							</div>
+						</h:panelGroup>
+
+						<h:panelGroup rendered="#{nfe.status == 'AUTORIZADA'}">
+							<div class="div-autorizada">
+								<h:outputText value="#{nfe.status.descricao}" />
+							</div>
+						</h:panelGroup>
+
+						<h:panelGroup rendered="#{nfe.status == 'AUTORIZADACORRECAO'}">
+							<div class="div-autorizada">
+								<h:outputText value="#{nfe.status.descricao}" />
+							</div>
+						</h:panelGroup>
+
+						<h:panelGroup rendered="#{nfe.status == 'CANCELADA'}">
+							<div class="div-cancelada">
+								<h:outputText value="#{nfe.status.descricao}" />
+							</div>
+						</h:panelGroup>
+
+						<h:panelGroup rendered="#{nfe.status == 'CADASTRO'}">
+							<div class="div-cadastro">
+								<h:outputText value="#{nfe.status.descricao}" />
+							</div>
+						</h:panelGroup>
+
+					</p:column>
+
+				</p:dataTable>
+
+			</p:fieldset>
 		</h:form>
 	</ui:define>
 </ui:composition>

@@ -5,6 +5,15 @@
 	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
 	template="/WEB-INF/template/Layout.xhtml">
 
+
+	<f:metadata>
+		<o:viewParam name="cliente"
+			value="#{gestaoTransportadorBean.clienteEdicao}" />
+		<f:event listener="#{gestaoTransportadorBean.inicializar}"
+			type="preRenderView" />
+		<f:event listener="#{loginEmpresaBean.preRender}" type="preRenderView" />
+	</f:metadata>
+
 	<ui:define name="content">
 
 		<script>
@@ -29,84 +38,99 @@
 		</script>
 
 
-		<h:form id="frm">
+		<h:form id="frm" styleClass="form-principal">
 
-			<f:metadata>
-				<o:viewParam name="cliente"
-					value="#{gestaoTransportadorBean.clienteEdicao}" />
-				<f:event listener="#{gestaoTransportadorBean.inicializar}"
-					type="preRenderView" />
-				<f:event listener="#{loginEmpresaBean.preRender}"
-					type="preRenderView" />
-			</f:metadata>
+			<h:panelGrid columns="1" styleClass="grid-titulos">
+				<h:outputLabel value="Cadastro" styleClass="titulo1"></h:outputLabel>
+				<h:outputLabel value="Transportador" styleClass="titulo2"></h:outputLabel>
+			</h:panelGrid>
 
-			<p:toolbar style="position: fixed; margin-top:15px">
-				<p:toolbarGroup>
-					<p:button title="Pesquisa"
-						outcome="/transportador/PesquisaTransportadores"
-						icon="ui-icon-search" />
-					<p:separator />
-					<p:commandButton icon="ui-icon-plus" title="Novo"
-						rendered="#{seguranca.incluirCliente}" update="@form"
-						action="#{gestaoTransportadorBean.prepararNovoCadastro}"
-						process="@this">
-					</p:commandButton>
-					<p:commandButton title="Salvar" icon="ui-icon-disk"
+			<p:fieldset class="grupo-geral">
+
+
+				<h:panelGrid columns="2" styleClass="grid-titulo-pesquisa">
+					<div class="barra-vertical"></div>
+					<h:outputLabel
+						value="#{gestaoTransportadorBean.editando ? 'Edição de transportador': 'Novo transportador'}"
+						styleClass="titulo-pesquisa"></h:outputLabel>
+				</h:panelGrid>
+
+				<p:toolbar style=" margin-top:15px">
+					<p:toolbarGroup>
+						<p:button value="Pesquisa" styleClass="button-filtro"
+							outcome="/transportador/PesquisaTransportadores"
+							icon="fa fas fa-search" />
+						<p:separator />
+						<p:commandButton class="button-pesquisa"
+							icon="fa fas fa-plus-circle" value="Novo transportador"
+							rendered="#{seguranca.incluirCliente}" update="@form"
+							action="#{gestaoTransportadorBean.prepararNovoCadastro}"
+							process="@this">
+						</p:commandButton>
+
+					</p:toolbarGroup>
+				</p:toolbar>
+
+
+				<p:messages id="msgs" closable="true" />
+
+				<p:defaultCommand target="salvar-button" />
+
+				<div class="ui-fluid">
+
+					<h:panelGroup id="grupoCapa">
+						<p:focus context="grupoCapa" />
+						<ui:include src="/WEB-INF/template/transportadores/Capa.xhtml" />
+					</h:panelGroup>
+
+					<p:tabView style="margin-top:25px" id="tab">
+						<p:tab title="Endereço">
+							<h:panelGroup id="grupoEndereco">
+								<ui:include
+									src="/WEB-INF/template/transportadores/Enderecos.xhtml" />
+							</h:panelGroup>
+						</p:tab>
+
+						<p:tab title="Contato">
+
+							<h:panelGroup id="grupoContato">
+
+								<ui:include
+									src="/WEB-INF/template/transportadores/Contato.xhtml" />
+							</h:panelGroup>
+
+
+						</p:tab>
+
+						<p:tab title="Veículos">
+							<h:panelGroup id="grupoVeiculo">
+								<ui:include
+									src="/WEB-INF/template/transportadores/Veiculos.xhtml" />
+							</h:panelGroup>
+						</p:tab>
+
+						<p:tab title="Emitentes">
+							<h:panelGroup id="grupoCompartilhar">
+								<ui:include
+									src="/WEB-INF/template/transportadores/Compartilhar.xhtml" />
+							</h:panelGroup>
+						</p:tab>
+					</p:tabView>
+
+				</div>
+
+				<center>
+
+
+					<p:commandButton value="Salvar" class="button-salvar"
 						onsuccess="setConfirmUnload(false)" id="salvar-button"
 						process="grupoCapa @this tab:grupoCompartilhar tab:grupoContato"
 						rendered="#{seguranca.editarCliente or seguranca.incluirCliente}"
 						action="#{gestaoTransportadorBean.salvar}" update="@form" />
-				</p:toolbarGroup>
-			</p:toolbar>
 
-			<h1 class="aw-page-title"></h1>
-			<p:messages id="msgs" closable="true" />
+				</center>
 
-			<p:defaultCommand target="salvar-button" />
-
-			<div class="ui-fluid">
-				<h1 class="aw-page-title">#{gestaoTransportadorBean.editando ?
-					'Edição do transportador' : 'Novo transportador'}</h1>
-
-				<h:panelGroup id="grupoCapa">
-					<p:focus context="grupoCapa" />
-					<ui:include src="/WEB-INF/template/transportadores/Capa.xhtml" />
-				</h:panelGroup>
-
-				<p:tabView style="margin-top:25px" id="tab">
-					<p:tab title="Endereço">
-						<h:panelGroup id="grupoEndereco">
-							<ui:include
-								src="/WEB-INF/template/transportadores/Enderecos.xhtml" />
-						</h:panelGroup>
-					</p:tab>
-
-					<p:tab title="Contato">
-
-						<h:panelGroup id="grupoContato">
-
-							<ui:include src="/WEB-INF/template/transportadores/Contato.xhtml" />
-						</h:panelGroup>
-
-
-					</p:tab>
-
-					<p:tab title="Veículos">
-						<h:panelGroup id="grupoVeiculo">
-							<ui:include
-								src="/WEB-INF/template/transportadores/Veiculos.xhtml" />
-						</h:panelGroup>
-					</p:tab>
-
-					<p:tab title="Emitentes">
-						<h:panelGroup id="grupoCompartilhar">
-							<ui:include
-								src="/WEB-INF/template/transportadores/Compartilhar.xhtml" />
-						</h:panelGroup>
-					</p:tab>
-				</p:tabView>
-
-			</div>
+			</p:fieldset>
 		</h:form>
 
 

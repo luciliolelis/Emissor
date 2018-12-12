@@ -10,6 +10,12 @@
 	<!-- 	<link rel="icon" href="images/icon.ico" type="image/x-icon" /> -->
 	<!-- 	<link rel="shortcut icon" href="images/icon.ico" type="image/x-icon" /> -->
 
+
+	<link rel="stylesheet"
+		href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+		integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU"
+		crossorigin="anonymous"></link>
+
 	<f:facet name="first">
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -28,8 +34,6 @@
 	<h:outputScript target="body" library="amsoft"
 		name="javascripts/app.js" />
 	<h:outputScript library="js" name="jquery.maskMoney.js" />
-
-
 
 	<script>
 		PrimeFaces.locales['pt'] = {
@@ -94,27 +98,27 @@
 
 		<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
 			closable="false" resizable="false" showHeader="false">
-			<h:graphicImage library="images" name="InternetSlowdown_Day.gif" />
+			<h:graphicImage library="images" name="ajax-loader.gif" width="110"
+				height="110" />
 		</p:dialog>
 
 		<a href="#" class="aw-toggle  js-toggle"><i class="fa  fa-bars"></i></a>
 
-		<div style="float: left; margin-top: 10px">
+		<div style="float: left; margin-left: 15px; margin-top: 5px">
 			<h:link outcome="/Home">
-				<h:graphicImage library="images" name="Logo 1.png" height="30"
-					width="120" />
+				<h:graphicImage library="images" name="amsof.png" height="60"
+					width="175" />
 			</h:link>
 
 		</div>
 
 		<div style="float: right; margin-top: 10px; margin-right: 10px">
 
-
 			<h:form style="display: inline-block">
 
-
-				<p:menubar styleClass="menu-sistema">
-					<p:submenu label="Olá #{seguranca.nomeUsuario}">
+				<p:menubar>
+					<p:submenu label="Olá #{seguranca.nomeUsuario}"
+						icon="fa far fa-user">
 
 						<p:menuitem value="Perfil" outcome="/perfil/PerfilUsuario"
 							icon="fa fa-user" />
@@ -152,7 +156,6 @@
 				styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
 		</p:confirmDialog>
 	</h:form>
-
 
 </h:body>
 

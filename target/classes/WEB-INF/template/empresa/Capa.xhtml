@@ -14,9 +14,8 @@
 			mask="99.999.999/9999-99" />
 		<p:outputLabel />
 
-		<p:commandButton value="Buscar cliente por CNPJ" icon="ui-icon-search"
+		<p:commandButton value="Buscar por CNPJ" styleClass="button-filtro" icon="fa fas fa-search"
 			disabled="#{gestaoEmpresasBean.editando}"
-			styleClass="ui-priority-primary"
 			actionListener="#{gestaoEmpresasBean.concultarCadastro}"
 			process="@this cnpj" update="@form" />
 

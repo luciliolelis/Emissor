@@ -5,22 +5,19 @@
 	xmlns:p="http://primefaces.org/ui">
 
 
-	<p:toolbar style="position: fixed; margin-top:15px" id="tool">
+	<p:toolbar id="tool">
 		<p:toolbarGroup>
-			<p:button title="Pesquisa" icon="ui-icon-search"
-				outcome="/nfce/PesquisaNFCe" />
+
+			<p:button value="Pesquisa" styleClass="button-filtro"
+				icon="fa fas fa-search" outcome="/nfce/PesquisaNFCe" />
 			<p:separator />
-			<p:button icon="ui-icon-plus" title="Novo"
-				outcome="/nfce/CadastroNFCe"
+
+			<p:button class="button-pesquisa" icon="fa fas fa-plus-circle"
+				value="Nova NFC-e" outcome="/nfce/CadastroNFCe"
 				action="#{cadastroNFCeBean.prepararNovoCadastro}" process="@this">
 			</p:button>
 
 
-			<p:commandButton title="Salvar" icon="ui-icon-disk"
-				onsuccess="setConfirmUnload(false)" id="salvar-button"
-				disabled="#{cadastroNFCeBean.nfce.naoAlteravel}"
-				action="#{cadastroNFCeBean.salvar}" update="frm" process="frm" />
-			<p:separator />
 
 
 

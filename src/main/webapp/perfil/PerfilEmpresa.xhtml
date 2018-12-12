@@ -5,6 +5,17 @@
 	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
 	template="/WEB-INF/template/Layout.xhtml">
 
+
+	<f:metadata>
+		<o:viewParam name="empresa"
+			value="#{gestaoPerfilEmpresasBean.empresaEdicao}" />
+
+		<f:event listener="#{gestaoPerfilEmpresasBean.inicializar}"
+			type="preRenderView" />
+
+	</f:metadata>
+
+
 	<ui:define name="content">
 
 		<script>
@@ -28,69 +39,80 @@
 			}
 		</script>
 
-		<h:form id="frm">
-			<f:metadata>
-				<o:viewParam name="empresa"
-					value="#{gestaoPerfilEmpresasBean.empresaEdicao}" />
+		<h:form id="frm" styleClass="form-principal">
 
-				<f:event listener="#{gestaoPerfilEmpresasBean.inicializar}"
-					type="preRenderView" />
+			<h:panelGrid columns="1" styleClass="grid-titulos">
+				<h:outputLabel value="Empresa" styleClass="titulo1"></h:outputLabel>
+				<h:outputLabel value="Perfil" styleClass="titulo2"></h:outputLabel>
+			</h:panelGrid>
 
-			</f:metadata>
+			<p:fieldset class="grupo-geral">
 
-			<p:toolbar style="position: fixed; margin-top:15px">
-				<p:toolbarGroup>
+				<h:panelGrid columns="2" styleClass="grid-titulo-pesquisa">
+					<div class="barra-vertical"></div>
+					<h:outputLabel value="Edição do perfil"
+						styleClass="titulo-pesquisa"></h:outputLabel>
+				</h:panelGrid>
 
-					<p:commandButton title="Salvar" icon="ui-icon-disk"
-						onsuccess="setConfirmUnload(false)"
-						id="salvar-button" action="#{gestaoPerfilEmpresasBean.salvar}"
+
+				<p:messages id="msgs" closable="true" autoUpdate="true" />
+
+				<p:defaultCommand target="salvar-button" />
+
+				<div class="ui-fluid">
+					<h:panelGroup>
+
+						<h:panelGroup id="grupoCapa">
+							<p:focus context="grupoCapa" />
+							<ui:include src="/WEB-INF/template/empresa/perfil/Capa.xhtml" />
+						</h:panelGroup>
+
+						<p:tabView style="margin-top:25px" id="tab">
+
+							<p:tab title="Endereço">
+								<h:panelGroup id="grupoEndereco">
+									<ui:include
+										src="/WEB-INF/template/empresa/perfil/Endereco.xhtml" />
+								</h:panelGroup>
+							</p:tab>
+
+
+							<p:tab title="Logo marca">
+								<h:panelGroup id="grupoLogo">
+									<ui:include src="/WEB-INF/template/empresa/perfil/Logo.xhtml" />
+								</h:panelGroup>
+							</p:tab>
+
+							<p:tab title="IE ST">
+								<h:panelGroup id="grupoIe">
+									<ui:include
+										src="/WEB-INF/template/empresa/perfil/InscricaoEstadualST.xhtml" />
+								</h:panelGroup>
+							</p:tab>
+
+
+						</p:tabView>
+					</h:panelGroup>
+				</div>
+
+
+				<center>
+
+					<p:commandButton value="Salvar" class="button-salvar"
+						onsuccess="setConfirmUnload(false)" id="salvar-button"
+						action="#{gestaoPerfilEmpresasBean.salvar}"
 						process="grupoCapa tab:grupoEndereco tab:grupoLogo @this"
 						update="@form" />
-				</p:toolbarGroup>
-			</p:toolbar>
 
-			<h1 class="aw-page-title"></h1>
 
-			<h1 class="aw-page-title">#{gestaoPerfilEmpresasBean.editando ?
-				'Edição do emitente' : 'Novo emitente'}</h1>
-			<p:messages id="msgs" closable="true" autoUpdate="true" />
+				</center>
 
-			<p:defaultCommand target="salvar-button" />
 
-			<div class="ui-fluid">
-				<h:panelGroup>
 
-					<h:panelGroup id="grupoCapa">
-						<p:focus context="grupoCapa" />
-						<ui:include src="/WEB-INF/template/empresa/perfil/Capa.xhtml" />
-					</h:panelGroup>
 
-					<p:tabView style="margin-top:25px" id="tab">
-					
-						<p:tab title="Endereço">
-							<h:panelGroup id="grupoEndereco">
-								<ui:include src="/WEB-INF/template/empresa/perfil/Endereco.xhtml" />
-							</h:panelGroup>
-						</p:tab>
-						
-						
-						<p:tab title="Logo marca">
-							<h:panelGroup id="grupoLogo">
-								<ui:include src="/WEB-INF/template/empresa/perfil/Logo.xhtml" />
-							</h:panelGroup>
-						</p:tab>
 
-						<p:tab title="IE ST">
-							<h:panelGroup id="grupoIe">
-								<ui:include
-									src="/WEB-INF/template/empresa/perfil/InscricaoEstadualST.xhtml" />
-							</h:panelGroup>
-						</p:tab>
-						
-						
-					</p:tabView>
-				</h:panelGroup>
-			</div>
+			</p:fieldset>
+
 		</h:form>
 	</ui:define>
 

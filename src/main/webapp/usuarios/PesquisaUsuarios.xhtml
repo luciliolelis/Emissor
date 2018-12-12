@@ -5,76 +5,85 @@
 	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
 	template="/WEB-INF/template/Layout.xhtml">
 
+	<f:metadata>
+		<f:viewAction action="#{gestaoUsuariosBean.consultar}" />
+	</f:metadata>
+
 	<ui:define name="titulo">Pesquisa de Usuarios</ui:define>
 
 	<ui:define name="content">
-		<f:metadata>
-			<f:viewAction action="#{gestaoUsuariosBean.consultar}" />
-		</f:metadata>
-
-		<h:form id="frm">
 
 
-
-			<p:toolbar id="toolbar" style="position: fixed; margin-top:15px">
-				<p:toolbarGroup>
-					<p:button icon="ui-icon-plus" value="Novo usuário"
-						outcome="/usuarios/CadastroUsuario"
-						rendered="#{seguranca.incluirUsuario}"
-						action="#{gestaoUsuariosBean.prepararNovoCadastro}"
-						process="@this">
-					</p:button>
-
-	
+		<h:form id="frm" styleClass="form-principal">
 
 
+			<h:panelGrid columns="1" styleClass="grid-titulos">
+				<h:outputLabel value="Pesquisa" styleClass="titulo1"></h:outputLabel>
+				<h:outputLabel value="Usuários" styleClass="titulo2"></h:outputLabel>
+			</h:panelGrid>
 
-				</p:toolbarGroup>
+			<p:fieldset class="grupo-geral">
+				<h:panelGrid columns="2" styleClass="grid-titulo-pesquisa">
+					<div class="barra-vertical"></div>
+					<h:outputLabel value="Pesquisar" styleClass="titulo-pesquisa"></h:outputLabel>
+				</h:panelGrid>
 
-			</p:toolbar>
+				<p:toolbar id="toolbar" style=" margin-top:15px">
+					<p:toolbarGroup>
+						<p:button class="button-pesquisa" icon="fa fas fa-plus-circle"
+							value="Novo usuário" outcome="/usuarios/CadastroUsuario"
+							rendered="#{seguranca.incluirUsuario}"
+							action="#{gestaoUsuariosBean.prepararNovoCadastro}"
+							process="@this">
+						</p:button>
 
-			<h1 class="aw-page-title"></h1>
-			<h1 class="aw-page-title">Pesquisa de usuarios</h1>
-			<p:messages id="msgs" closable="true" autoUpdate="true" />
-			<p:dataTable value="#{gestaoUsuariosBean.todosusuarios}"
-				var="usuario" emptyMessage="Nenhum usuário cadastrado." rows="15"
-				paginator="true" paginatorPosition="bottom" style="margin-top: 10px"
-				id="usuarios-table" reflow="true" paginatorAlwaysVisible="false" rowKey="#{usuario.id}">
+					</p:toolbarGroup>
 
-				<p:column style="text-align: center; width: 100px"
-					exportable="false" headerText="Opções">
+				</p:toolbar>
 
-					<p:button icon="ui-icon-pencil" title="Editar"
-						outcome="/usuarios/CadastroUsuario">
-						<f:param name="usuario" value="#{usuario.id}" />
-					</p:button>
+				<p:messages id="msgs" closable="true" autoUpdate="true" />
 
-					<p:commandButton icon="ui-icon-trash" title="Excluir"
-						process="@this" disabled="#{!seguranca.excluirUsuario}"
-						update=":frm:usuarios-table :frm:toolbar :frm:msgs"
-						action="#{gestaoUsuariosBean.excluir(usuario)}">
-						<p:confirm icon="ui-icon-alert" header="Confirmação de exclusão"
-							message="Tem certeza que deseja excluir o emitente" />
-					</p:commandButton>
+				<p:dataTable value="#{gestaoUsuariosBean.todosusuarios}"
+					var="usuario" emptyMessage="Nenhum usuário cadastrado." rows="15"
+					paginator="true" paginatorPosition="bottom" styleClass="myTable"
+					style="margin-top: 10px" id="usuarios-table" reflow="true"
+					paginatorAlwaysVisible="false" rowKey="#{usuario.id}">
 
-				</p:column>
+					<p:column style="text-align: center; width: 100px"
+						exportable="false" headerText="Opções">
 
+						<p:button icon="fa far fa-pencil-alt" title="Editar"
+							class="button-pesquisa" outcome="/usuarios/CadastroUsuario">
+							<f:param name="usuario" value="#{usuario.id}" />
+						</p:button>
 
-				<p:column headerText="Nome" sortBy="#{usuario.nome}">
-					<h:outputText value="#{usuario.nome}" />
-				</p:column>
+						<p:commandButton icon="fa far fa-trash-alt" title="Excluir"
+							class="button-pesquisa" process="@this"
+							disabled="#{!seguranca.excluirUsuario}"
+							update=":frm:usuarios-table :frm:toolbar :frm:msgs"
+							action="#{gestaoUsuariosBean.excluir(usuario)}">
+							<p:confirm icon="ui-icon-alert" header="Confirmação de exclusão"
+								message="Tem certeza que deseja excluir o emitente" />
+						</p:commandButton>
 
-				<p:column headerText="Email" sortBy="#{usuario.email}">
-					<h:outputText value="#{usuario.email}" />
-				</p:column>
+					</p:column>
 
 
-				<f:facet name="footer">
+					<p:column headerText="Nome" sortBy="#{usuario.nome}">
+						<h:outputText value="#{usuario.nome}" />
+					</p:column>
+
+					<p:column headerText="Email" sortBy="#{usuario.email}">
+						<h:outputText value="#{usuario.email}" />
+					</p:column>
+
+
+					<f:facet name="footer">
 									(#{gestaoUsuariosBean.todosusuarios.size()}) registros
 				    			</f:facet>
-			</p:dataTable>
+				</p:dataTable>
 
-
+			</p:fieldset>
 		</h:form>
 
 	</ui:define>

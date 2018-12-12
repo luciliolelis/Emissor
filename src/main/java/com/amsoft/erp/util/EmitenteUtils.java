@@ -10,18 +10,21 @@ public class EmitenteUtils {
 	public static TEnderEmi getEnderecoEmitente(Empresa empresa) {
 
 		TEnderEmi enderEmit = new TEnderEmi();
-		enderEmit.setXLgr(empresa.getLogradouro());
+		enderEmit.setXLgr(AmsoftUtils.removeEspacoFinal(AmsoftUtils.removeCaracteresEspeciais(empresa.getLogradouro())));
 		enderEmit.setNro(empresa.getNumero());
-		enderEmit.setXCpl(AmsoftUtils.emptyToNull(empresa.getComplemento()));
-		enderEmit.setXBairro(empresa.getBairro());
+		//enderEmit.setXCpl(AmsoftUtils.removeCaracteresEspeciais(empresa.getComplemento()));
+		enderEmit.setXBairro(AmsoftUtils.removeCaracteresEspeciais(empresa.getBairro()));
 		enderEmit.setCMun(empresa.getIbgeCidade());
-		enderEmit.setXMun(empresa.getCidade());
+		enderEmit.setXMun(AmsoftUtils.removeEspacoFinal(AmsoftUtils.removeCaracteresEspeciais(empresa.getCidade())));
 		enderEmit.setUF(TUfEmi.valueOf(empresa.getUf()));
 		enderEmit.setCEP(AmsoftUtils.removerMascara(empresa.getCep()));
 		enderEmit.setCPais("1058");
 		enderEmit.setXPais("BRASIL");
 		enderEmit.setFone(AmsoftUtils.removerMascara(empresa.getFone()));
 
+		
+		enderEmit.setXBairro(AmsoftUtils.removeEspacoFinal(enderEmit.getXBairro()));
+		
 		return enderEmit;
 	}
 

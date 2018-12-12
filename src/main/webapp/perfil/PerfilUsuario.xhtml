@@ -5,6 +5,16 @@
 	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
 	template="/WEB-INF/template/Layout.xhtml">
 
+	<f:metadata>
+		<o:viewParam name="usuario"
+			value="#{gestaoPerfilUsuariosBean.usuarioEdicao}" />
+		<f:event listener="#{gestaoPerfilUsuariosBean.inicializar}"
+			type="preRenderView" />
+
+		<f:viewAction action="#{gestaoPerfilUsuariosBean.consultarEmpresas}" />
+	</f:metadata>
+
+
 	<ui:define name="content">
 
 		<script>
@@ -18,8 +28,7 @@
 				$('form').submit(function() {
 					setConfirmUnload(false);
 				});
-				
-	
+
 			});
 
 			function setConfirmUnload(on) {
@@ -30,68 +39,72 @@
 			}
 		</script>
 
-		<h:form id="frm">
+		<h:form id="frm" styleClass="form-principal">
 
-			<f:metadata>
-				<o:viewParam name="usuario"
-					value="#{gestaoPerfilUsuariosBean.usuarioEdicao}" />
-				<f:event listener="#{gestaoPerfilUsuariosBean.inicializar}"
-					type="preRenderView" />
-
-				<f:viewAction action="#{gestaoPerfilUsuariosBean.consultarEmpresas}" />
-			</f:metadata>
+			<h:panelGrid columns="1" styleClass="grid-titulos">
+				<h:outputLabel value="Usuário" styleClass="titulo1"></h:outputLabel>
+				<h:outputLabel value="Perfil" styleClass="titulo2"></h:outputLabel>
+			</h:panelGrid>
 
 
-			<p:toolbar style="position: fixed; margin-top:15px">
-				<p:toolbarGroup>
-					
-					<p:commandButton title="Salvar" icon="ui-icon-disk"
+			<p:fieldset class="grupo-geral">
+
+				<h:panelGrid columns="2" styleClass="grid-titulo-pesquisa">
+					<div class="barra-vertical"></div>
+					<h:outputLabel value="Edição do perfil"
+						styleClass="titulo-pesquisa"></h:outputLabel>
+				</h:panelGrid>
+
+
+				<p:messages id="msgs" closable="true" />
+
+				<p:defaultCommand target="salvar-button" />
+				<p:focus context="usuarios-table" />
+				<div class="ui-fluid">
+
+					<p:panelGrid columns="4" layout="grid" style="margin-top: 25px"
+						styleClass="panelgrid-noborder" id="usuarios-table"
+						columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4">
+
+						<p:outputLabel value="Nome" for="nome" />
+						<p:inputText id="nome" required="true"
+							value="#{gestaoPerfilUsuariosBean.usuarioEdicao.nome}" />
+
+						<p:outputLabel value="E-mail" for="email" />
+						<p:inputText id="email" required="true"
+							value="#{gestaoPerfilUsuariosBean.usuarioEdicao.email}" />
+
+						<p:outputLabel value="Senha" for="senha" />
+						<p:password id="senha" required="true"
+							value="#{gestaoPerfilUsuariosBean.usuarioEdicao.senha}"
+							feedback="true" weakLabel="Fraca" goodLabel="Boa"
+							strongLabel="Forte" promptLabel="Informe uma senha" inline="true"
+							redisplay="true" match="confirmacaoSenha" />
+
+						<p:outputLabel value="Confirme a senha" for="confirmacaoSenha" />
+						<p:password id="confirmacaoSenha" required="true" redisplay="true"
+							value="#{gestaoPerfilUsuariosBean.usuarioEdicao.senha}" />
+					</p:panelGrid>
+
+
+				</div>
+
+				<ui:include
+					src="/WEB-INF/template/usuarios/perfil/GruposUsuario.xhtml" />
+				<center>
+
+
+
+					<p:commandButton value="Salvar" class="button-salvar"
 						id="salvar-button" onsuccess="setConfirmUnload(false)"
-						action="#{gestaoPerfilUsuariosBean.salvar}" update="msgs usuarios-table"
-						process="frm" />
+						action="#{gestaoPerfilUsuariosBean.salvar}"
+						update="msgs usuarios-table" process="frm" />
 
-				</p:toolbarGroup>
-			</p:toolbar>
-			<h1 class="aw-page-title"></h1>
-			<h1 class="aw-page-title">#{gestaoPerfilUsuariosBean.editando ?
-				'Edição do usuário' : 'Novo usuário'}</h1>
+				</center>
 
-			<p:messages id="msgs" closable="true" />
-
-			<p:defaultCommand target="salvar-button" />
-			<p:focus context="usuarios-table" />
-			<div class="ui-fluid">
-
-				<p:panelGrid columns="4" layout="grid" style="margin-top: 25px"
-					styleClass="panelgrid-noborder" id="usuarios-table"
-					columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4">
-
-					<p:outputLabel value="Nome" for="nome" />
-					<p:inputText id="nome" required="true"
-						value="#{gestaoPerfilUsuariosBean.usuarioEdicao.nome}" />
-
-					<p:outputLabel value="E-mail" for="email" />
-					<p:inputText id="email" required="true"
-						value="#{gestaoPerfilUsuariosBean.usuarioEdicao.email}" />
-
-					<p:outputLabel value="Senha" for="senha" />
-					<p:password id="senha" required="true"
-						value="#{gestaoPerfilUsuariosBean.usuarioEdicao.senha}" feedback="true"
-						weakLabel="Fraca" goodLabel="Boa" strongLabel="Forte"
-						promptLabel="Informe uma senha" inline="true" redisplay="true"
-						match="confirmacaoSenha" />
-
-					<p:outputLabel value="Confirme a senha" for="confirmacaoSenha" />
-					<p:password id="confirmacaoSenha" required="true" redisplay="true"
-						value="#{gestaoPerfilUsuariosBean.usuarioEdicao.senha}" />
-				</p:panelGrid>
-
-
-			</div>
+			</p:fieldset>
 		</h:form>
-		<h:form>
-			<ui:include src="/WEB-INF/template/usuarios/perfil/GruposUsuario.xhtml" />
-		</h:form>
+
 
 	</ui:define>
 

@@ -5,6 +5,17 @@
 	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
 	template="/WEB-INF/template/Layout.xhtml">
 
+
+	<f:metadata>
+		<o:viewParam name="usuario"
+			value="#{gestaoUsuariosBean.usuarioEdicao}" />
+		<f:event listener="#{gestaoUsuariosBean.inicializar}"
+			type="preRenderView" />
+
+		<f:viewAction action="#{gestaoUsuariosBean.consultarEmpresas}" />
+	</f:metadata>
+
+
 	<ui:define name="content">
 
 		<script>
@@ -18,8 +29,7 @@
 				$('form').submit(function() {
 					setConfirmUnload(false);
 				});
-				
-	
+
 			});
 
 			function setConfirmUnload(on) {
@@ -30,77 +40,90 @@
 			}
 		</script>
 
-		<h:form id="frm">
+		<h:form id="frm" styleClass="form-principal">
 
-			<f:metadata>
-				<o:viewParam name="usuario"
-					value="#{gestaoUsuariosBean.usuarioEdicao}" />
-				<f:event listener="#{gestaoUsuariosBean.inicializar}"
-					type="preRenderView" />
+			<h:panelGrid columns="1" styleClass="grid-titulos">
+				<h:outputLabel value="Pesquisa" styleClass="titulo1"></h:outputLabel>
+				<h:outputLabel value="Usuários" styleClass="titulo2"></h:outputLabel>
+			</h:panelGrid>
 
-				<f:viewAction action="#{gestaoUsuariosBean.consultarEmpresas}" />
-			</f:metadata>
+			<p:fieldset class="grupo-geral">
+
+				<h:panelGrid columns="2" styleClass="grid-titulo-pesquisa">
+					<div class="barra-vertical"></div>
+					<h:outputLabel
+						value="#{gestaoUsuariosBean.editando ? 'Edição de usuário': 'Novo usuário'}"
+						styleClass="titulo-pesquisa"></h:outputLabel>
+				</h:panelGrid>
 
 
-			<p:toolbar style="position: fixed; margin-top:15px">
-				<p:toolbarGroup>
-					<p:button title="Pesquisa" outcome="/usuarios/PesquisaUsuarios"
-						icon="ui-icon-search" />
-					<p:separator />
+				<p:toolbar style="margin-top:15px">
+					<p:toolbarGroup>
+						<p:button value="Pesquisa" outcome="/usuarios/PesquisaUsuarios"
+							styleClass="button-filtro" icon="fa fas fa-search" />
+						<p:separator />
 
-					<p:button icon="ui-icon-plus" title="Novo"
-						outcome="/usuarios/CadastroUsuario"
-						rendered="#{seguranca.incluirUsuario}"
-						action="#{gestaoUsuariosBean.prepararNovoCadastro}"
-						process="@this">
-					</p:button>
+						<p:button class="button-pesquisa" icon="fa fas fa-plus-circle"
+							value="Novo usuário" outcome="/usuarios/CadastroUsuario"
+							rendered="#{seguranca.incluirUsuario}"
+							action="#{gestaoUsuariosBean.prepararNovoCadastro}"
+							process="@this">
+						</p:button>
 
-					<p:commandButton title="Salvar" icon="ui-icon-disk"
-						id="salvar-button" onsuccess="setConfirmUnload(false)"
+
+					</p:toolbarGroup>
+				</p:toolbar>
+
+				<p:messages id="msgs" closable="true" />
+
+				<p:defaultCommand target="salvar-button" />
+				<p:focus context="usuarios-table" />
+				<div class="ui-fluid">
+
+					<p:panelGrid columns="4" layout="grid" style="margin-top: 20px"
+						styleClass="panelgrid-noborder" id="usuarios-table"
+						columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4">
+
+						<p:outputLabel value="Nome" for="nome" />
+						<p:inputText id="nome" required="true"
+							value="#{gestaoUsuariosBean.usuarioEdicao.nome}" />
+
+						<p:outputLabel value="E-mail" for="email" />
+						<p:inputText id="email" required="true"
+							value="#{gestaoUsuariosBean.usuarioEdicao.email}" />
+
+						<p:outputLabel value="Senha" for="senha" />
+						<p:password id="senha" required="true"
+							value="#{gestaoUsuariosBean.usuarioEdicao.senha}" feedback="true"
+							weakLabel="Fraca" goodLabel="Boa" strongLabel="Forte"
+							promptLabel="Informe uma senha" inline="true" redisplay="true"
+							match="confirmacaoSenha" />
+
+						<p:outputLabel value="Confirme a senha" for="confirmacaoSenha" />
+						<p:password id="confirmacaoSenha" required="true" redisplay="true"
+							value="#{gestaoUsuariosBean.usuarioEdicao.senha}" />
+					</p:panelGrid>
+
+
+				</div>
+
+
+				<ui:include src="/WEB-INF/template/usuarios/Grupos.xhtml" />
+
+				<center>
+
+					<p:commandButton value="Salvar" icon="fa far fa-save"
+						process="@this" class="button-salvar" id="salvar-button"
+						onsuccess="setConfirmUnload(false)"
 						rendered="#{seguranca.editarUsuario or seguranca.incluirUsuario}"
-						action="#{gestaoUsuariosBean.salvar}" update="msgs usuarios-table"
-						process="frm" />
+						action="#{gestaoUsuariosBean.salvar}" update="msgs usuarios-table" />
 
-				</p:toolbarGroup>
-			</p:toolbar>
-			<h1 class="aw-page-title"></h1>
-			<h1 class="aw-page-title">#{gestaoUsuariosBean.editando ?
-				'Edição do usuário' : 'Novo usuário'}</h1>
-
-			<p:messages id="msgs" closable="true" />
-
-			<p:defaultCommand target="salvar-button" />
-			<p:focus context="usuarios-table" />
-			<div class="ui-fluid">
-
-				<p:panelGrid columns="4" layout="grid" style="margin-top: 20px"
-					styleClass="panelgrid-noborder" id="usuarios-table"
-					columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4">
-
-					<p:outputLabel value="Nome" for="nome" />
-					<p:inputText id="nome" required="true"
-						value="#{gestaoUsuariosBean.usuarioEdicao.nome}" />
-
-					<p:outputLabel value="E-mail" for="email" />
-					<p:inputText id="email" required="true"
-						value="#{gestaoUsuariosBean.usuarioEdicao.email}" />
-
-					<p:outputLabel value="Senha" for="senha" />
-					<p:password id="senha" required="true"
-						value="#{gestaoUsuariosBean.usuarioEdicao.senha}" feedback="true"
-						weakLabel="Fraca" goodLabel="Boa" strongLabel="Forte"
-						promptLabel="Informe uma senha" inline="true" redisplay="true"
-						match="confirmacaoSenha" />
-
-					<p:outputLabel value="Confirme a senha" for="confirmacaoSenha" />
-					<p:password id="confirmacaoSenha" required="true" redisplay="true"
-						value="#{gestaoUsuariosBean.usuarioEdicao.senha}" />
-				</p:panelGrid>
+				</center>
 
 
-			</div>
+			</p:fieldset>
 		</h:form>
-		<h:form>
+		<h:form styleClass="form-secundario" id="frm2">
 			<ui:include src="/WEB-INF/template/usuarios/GruposUsuario.xhtml" />
 		</h:form>
 

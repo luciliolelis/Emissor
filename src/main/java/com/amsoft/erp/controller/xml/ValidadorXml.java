@@ -35,7 +35,7 @@ public class ValidadorXml implements Serializable {
 		return nfe.getFinalidadeOperacao() == FinalidadeOperacao.COMPLEMENTA;
 	}
 
-	static boolean isDevolucao(Nfe nfe) {
+	public static boolean isDevolucao(Nfe nfe) {
 		return nfe.getFinalidadeOperacao() == FinalidadeOperacao.DEVOLUCAO;
 	}
 

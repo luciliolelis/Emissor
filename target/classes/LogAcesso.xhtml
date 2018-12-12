@@ -5,65 +5,73 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 
+
+	<f:metadata>
+
+		<f:event listener="#{gestaoHomeBean.inicializar}" type="preRenderView" />
+
+		<f:viewAction action="#{gestaoHomeBean.consultarLogAcesso}" />
+	</f:metadata>
+
 	<ui:define name="titulo">Log de acessos</ui:define>
 
 	<ui:define name="content">
-		<h1 class="aw-page-title">Log de acessos</h1>
-
-		<h:form id="frm" rendered="true">
-
-			<f:metadata>
-
-				<f:event listener="#{gestaoHomeBean.inicializar}"
-					type="preRenderView" />
-
-				<f:viewAction action="#{gestaoHomeBean.consultarLogAcesso}" />
-			</f:metadata>
 
 
-			<p:dataTable value="#{gestaoHomeBean.acessos}" var="acesso"
-				emptyMessage="Nenhum acesso encontrado." rows="10" paginator="true"
-				paginatorPosition="bottom" style="margin-top: 10px"
-				id="acessos-table" reflow="true">
+		<h:form id="frm" styleClass="form-principal">
 
 
-				<p:column headerText="Ação" sortBy="#{acesso.acao}">
-					<h:outputText value="#{acesso.acao}" />
-				</p:column>
+			<h:panelGrid columns="1" styleClass="grid-titulos">
+				<h:outputLabel value="log" styleClass="titulo1"></h:outputLabel>
+				<h:outputLabel value="Acessos" styleClass="titulo2"></h:outputLabel>
+			</h:panelGrid>
 
-				<p:column headerText="Nome" sortBy="#{acesso.nome}">
-					<h:outputText value="#{acesso.nome}" />
-				</p:column>
+			<p:fieldset class="grupo-geral">
 
-				<p:column headerText="Email" sortBy="#{acesso.email}">
-					<h:outputText value="#{acesso.email}" />
-				</p:column>
-
-				<p:column headerText="Data/hora" sortBy="#{acesso.data_hora}">
+				<p:dataTable value="#{gestaoHomeBean.acessos}" var="acesso"
+					styleClass="myTable" emptyMessage="Nenhum acesso encontrado."
+					rows="10" paginator="true" paginatorPosition="bottom"
+					style="margin-top: 10px" id="acessos-table" reflow="true">
 
 
-					<h:outputText value="#{acesso.data_hora}">
-						<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" timeZone="GMT-3" />
-					</h:outputText>
-				</p:column>
+					<p:column headerText="Ação" sortBy="#{acesso.acao}">
+						<h:outputText value="#{acesso.acao}" />
+					</p:column>
+
+					<p:column headerText="Nome" sortBy="#{acesso.nome}">
+						<h:outputText value="#{acesso.nome}" />
+					</p:column>
+
+					<p:column headerText="Email" sortBy="#{acesso.email}">
+						<h:outputText value="#{acesso.email}" />
+					</p:column>
+
+					<p:column headerText="Data/hora" sortBy="#{acesso.data_hora}">
+
+
+						<h:outputText value="#{acesso.data_hora}">
+							<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" timeZone="GMT-3" />
+						</h:outputText>
+					</p:column>
 
 
 
-				<p:column headerText="IP" sortBy="#{acesso.ip_cliente}">
-					<h:outputText value="#{acesso.ip_cliente}" />
-				</p:column>
+					<p:column headerText="IP" sortBy="#{acesso.ip_cliente}">
+						<h:outputText value="#{acesso.ip_cliente}" />
+					</p:column>
 
 
-				<p:column headerText="Empresa" sortBy="#{acesso.empresa}">
-					<h:outputText value="#{acesso.empresa}" />
-				</p:column>
+					<p:column headerText="Empresa" sortBy="#{acesso.empresa}">
+						<h:outputText value="#{acesso.empresa}" />
+					</p:column>
 
 
-				<f:facet name="footer">
+					<f:facet name="footer">
 									(#{gestaoHomeBean.acessos.size()}) registros
 				    			</f:facet>
-			</p:dataTable>
+				</p:dataTable>
 
+			</p:fieldset>
 
 		</h:form>
 

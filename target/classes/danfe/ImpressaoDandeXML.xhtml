@@ -9,23 +9,45 @@
 
 	<ui:define name="content">
 
-		<h:form enctype="multipart/form-data">
+		<h:form enctype="multipart/form-data" styleClass="form-principal">
 
-			<h1 class="aw-page-title">Geraração de Danfe NFC-e em PDF</h1>
 
-			<p:messages id="messages" autoUpdate="true" closable="true" />
+			<h:panelGrid columns="1" styleClass="grid-titulos">
+				<h:outputLabel value="Geração de Danfe" styleClass="titulo1"></h:outputLabel>
+				<h:outputLabel value="NFC-e" styleClass="titulo2"></h:outputLabel>
+			</h:panelGrid>
 
-			<p:panelGrid columns="1" layout="grid" style="margin-top: 10px"
-				styleClass="panelgrid-noborder" columnClasses="ui-grid-col-6">
 
-				<p:fileUpload value="#{gestaoDanfeBean.uploadedFile}" mode="simple"
-					label="Selecionar XML" skinSimple="true" />
+			<p:fieldset class="grupo-geral">
 
-				<p:commandButton value="Gerar danfe" ajax="false" update="messages"
-					actionListener="#{gestaoDanfeBean.upload}" disabled="false">
-					<p:fileDownload value="#{gestaoDanfeBean.filePdf}" />
-				</p:commandButton>
-			</p:panelGrid>
+				<h:panelGrid columns="2" styleClass="grid-titulo-pesquisa">
+					<div class="barra-vertical"></div>
+					<h:outputLabel value="Selecione o XML" styleClass="titulo-pesquisa"></h:outputLabel>
+				</h:panelGrid>
+
+				<p:messages id="messages" autoUpdate="true" closable="true" />
+
+				<p:panelGrid columns="1" layout="grid" style="margin-top: 10px"
+					styleClass="panelgrid-noborder" columnClasses="ui-grid-col-6">
+
+					<p:fileUpload value="#{gestaoDanfeBean.uploadedFile}" mode="simple"
+						label="Procurar arquivo" skinSimple="true" />
+
+				</p:panelGrid>
+
+
+				<center>
+					<p:commandButton value="Gerar" ajax="false" update="messages"
+						class="button-salvar" actionListener="#{gestaoDanfeBean.upload}"
+						disabled="false">
+						<p:fileDownload value="#{gestaoDanfeBean.filePdf}" />
+					</p:commandButton>
+				</center>
+
+
+			</p:fieldset>
+
+
 
 		</h:form>
 

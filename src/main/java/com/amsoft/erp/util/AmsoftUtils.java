@@ -23,6 +23,7 @@ import com.amsoft.erp.model.Cliente;
 import com.amsoft.erp.model.emitente.Empresa;
 import com.amsoft.erp.model.enun.RegimeTributario;
 import com.amsoft.erp.model.enun.TipoPessoa;
+import com.amsoft.erp.model.nfce.ItemProdutoNFCe;
 import com.amsoft.erp.model.nfce.NFCe;
 import com.amsoft.erp.model.nfe.ItemProduto;
 import com.amsoft.erp.model.nfe.Nfe;
@@ -109,6 +110,10 @@ public class AmsoftUtils {
 		return item.getProduto() != null && item.getProduto().getId() != null;
 	}
 
+	public static boolean isProdutoValido(ItemProdutoNFCe item) {
+		return item.getProduto() != null && item.getProduto().getId() != null;
+	}
+	
 	public static boolean isSimplesNacional(ItemProduto itemProjeto) {
 		return AmsoftUtils.isSimplesNacional(itemProjeto.getProduto().getEmpresa().getRegimeTributario());
 	}
@@ -287,7 +292,7 @@ public class AmsoftUtils {
 		return passa;
 	}
 
-	public String removeEspacoFinal(String text) {
+	public static String removeEspacoFinal(String text) {
 
 		text = text.replaceAll("\\s+$", "");
 		return text;

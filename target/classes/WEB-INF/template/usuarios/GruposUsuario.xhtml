@@ -4,50 +4,6 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 
-	<h:panelGrid columns="2" cellpadding="5" style="margin-top:15px"
-		id="panel-grupos">
-		<p:commandButton value="Adicionar emitente e grupo" process="@this"
-			actionListener="#{gestaoUsuariosBean.selecionaEmpresasPossiveis}"
-			update="autorizacao-dialog" oncomplete="PF('grupoDialog').show()">
-		</p:commandButton>
-	</h:panelGrid>
-
-	<p:dataTable value="#{gestaoUsuariosBean.usuarioEdicao.empresasGrupos}"
-		reflow="true" id="tableGrupoEmpresa" var="grupo"
-		style="margin-top:10px">
-
-		<p:column headerText="Logo" style="width:60px;text-align: center">
-			<p:graphicImage style="max-width:50px;max-height:48px" cache="false"
-				value="#{imageBean.streamedImageById}">
-				<f:param name="id" value="#{grupo.empresa.id}" />
-			</p:graphicImage>
-		</p:column>
-
-		<p:column headerText="Nome fantasia">
-			<h:outputText value="#{grupo.empresa.nome_fantasia}" />
-		</p:column>
-
-		<p:column headerText="Razão social">
-			<h:outputText value="#{grupo.empresa.razao_social}" />
-		</p:column>
-
-
-
-		<p:column headerText="Grupo">
-			<h:outputText value="#{grupo.grupo.nome}" />
-		</p:column>
-
-		<p:column headerText="Remover" style="width: 70px; text-align: center">
-			<p:commandButton icon="ui-icon-trash" update="tableGrupoEmpresa"
-				style="width:45px" process="tableGrupoEmpresa">
-				<p:confirm icon="ui-icon-alert" header="Confirmação de exclusão"
-					message="Tem certeza que deseja remover esta empresa?" />
-				<p:collector value="#{grupo}"
-					removeFrom="#{gestaoUsuariosBean.usuarioEdicao.empresasGrupos}"
-					unique="true" />
-			</p:commandButton>
-		</p:column>
-	</p:dataTable>
 
 
 	<p:dialog header="Autorizações" widgetVar="grupoDialog" modal="true"
@@ -97,7 +53,7 @@
 			<p:outputLabel />
 			<p:commandButton value="Confirmar" process="autorizacao-dialog"
 				oncomplete="if (!args.validationFailed) PF('grupoDialog').hide()"
-				update="msgsAutosizacao tableGrupoEmpresa"
+				update="msgsAutosizacao :frm:tableGrupoEmpresa"
 				actionListener="#{gestaoUsuariosBean.onConfirmaGrupo}"
 				styleClass="ui-priority-primary">
 			</p:commandButton>

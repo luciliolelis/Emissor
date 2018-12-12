@@ -30,7 +30,6 @@ import br.inf.portalfiscal.nfe.schema_4.enviNFe.TNFe.InfNFe.Det.Prod;
 
 public class ProdutosUtils {
 
-
 	private static Imposto getImpostos(ItemProduto item, Nfe nfe) throws TributacaoException {
 		Imposto imposto = new Imposto();
 
@@ -54,10 +53,10 @@ public class ProdutosUtils {
 		JAXBElement<ICMS> icmsElement = new JAXBElement<ICMS>(new QName("ICMS"), ICMS.class, icms);
 		imposto.getContent().add(icmsElement);
 
-		//if (IPIValidacoes.isIpi(item)) {
-			JAXBElement<TIpi> ipiElement = new JAXBElement<TIpi>(new QName("IPI"), TIpi.class, ipi);
-			imposto.getContent().add(ipiElement);
-		//}
+		// if (IPIValidacoes.isIpi(item)) {
+		JAXBElement<TIpi> ipiElement = new JAXBElement<TIpi>(new QName("IPI"), TIpi.class, ipi);
+		imposto.getContent().add(ipiElement);
+		// }
 
 		JAXBElement<PIS> pisElement = new JAXBElement<PIS>(new QName("PIS"), PIS.class, pis);
 		imposto.getContent().add(pisElement);
@@ -76,7 +75,7 @@ public class ProdutosUtils {
 
 		return imposto;
 	}
-	
+
 	private static Imposto getImpostos(ItemProdutoNFCe item, NFCe nfe) {
 		Imposto imposto = new Imposto();
 
@@ -88,7 +87,7 @@ public class ProdutosUtils {
 		if (AmsoftUtils.isSimplesNacional(nfe.getEmpresa().getRegimeTributario())) {
 			icms = SimplesUtils.popularIcmsSN(item);
 		} else {
-			//icms = SimplesUtils.popularICMS(item);
+			// icms = SimplesUtils.popularICMS(item);
 		}
 
 		PIS pis = PISCOFINSUtils.popularPIS(item);
@@ -111,14 +110,15 @@ public class ProdutosUtils {
 		JAXBElement<COFINS> cofinsElement = new JAXBElement<COFINS>(new QName("COFINS"), COFINS.class, cofins);
 		imposto.getContent().add(cofinsElement);
 
-//		if (FCPValidacoes.isNotFCPUFDest(item)) {
-//
-//		} else {
-//			ICMSUFDest icmsufdest = SimplesUtils.getICMSUFDest(item);
-//			JAXBElement<ICMSUFDest> icmsufdestElement = new JAXBElement<ICMSUFDest>(new QName("ICMSUFDest"),
-//					ICMSUFDest.class, icmsufdest);
-//			imposto.getContent().add(icmsufdestElement);
-//		}
+		// if (FCPValidacoes.isNotFCPUFDest(item)) {
+		//
+		// } else {
+		// ICMSUFDest icmsufdest = SimplesUtils.getICMSUFDest(item);
+		// JAXBElement<ICMSUFDest> icmsufdestElement = new
+		// JAXBElement<ICMSUFDest>(new QName("ICMSUFDest"),
+		// ICMSUFDest.class, icmsufdest);
+		// imposto.getContent().add(icmsufdestElement);
+		// }
 
 		return imposto;
 	}
@@ -127,7 +127,7 @@ public class ProdutosUtils {
 		Prod produto = new Prod();
 		produto.setCProd(itemProduto.getProduto().getSku());
 
-		produto.setXProd(itemProduto.getProduto().getNome());
+		produto.setXProd(AmsoftUtils.removeCaracteresEspeciais(itemProduto.getProduto().getNome()));
 
 		if (nfe.getEmpresa().getWsAmbiente().equals(2)) {
 			produto.setXProd("NOTA FISCAL EMITIDA EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL");
@@ -151,11 +151,11 @@ public class ProdutosUtils {
 		produto.setUCom(itemProduto.getProduto().getUnidadeMedida());
 		produto.setUTrib(itemProduto.getProduto().getUnidadeMedida());
 		produto.setQCom(itemProduto.getQuantidade().toString());
-		produto.setVUnCom(itemProduto.getValorUnitario().setScale(2).toPlainString());
-		produto.setVProd(itemProduto.getValorTotalProdutosSemDesconto().setScale(2).toPlainString());
+		produto.setVUnCom(itemProduto.getValorUnitario().toString());
+		produto.setVProd(itemProduto.getValorUnitario().multiply(itemProduto.getQuantidade())
+				.setScale(2, RoundingMode.HALF_EVEN).toString());
 		produto.setQTrib(itemProduto.getQuantidade().toString());
-		produto.setVUnTrib(itemProduto.getValorUnitario().setScale(2).toPlainString());
-		
+		produto.setVUnTrib(itemProduto.getValorUnitario().toString());
 
 		if (AmsoftUtils.isMaiorQZero(itemProduto.getValorFrete())) {
 			produto.setVFrete(itemProduto.getValorFrete().setScale(2, RoundingMode.HALF_EVEN).toString());
@@ -184,12 +184,11 @@ public class ProdutosUtils {
 		return produto;
 	}
 
-	
 	private static Prod getProduto(ItemProdutoNFCe itemProduto, NFCe nfe) {
 		Prod produto = new Prod();
 		produto.setCProd(itemProduto.getProduto().getSku());
 
-		produto.setXProd(itemProduto.getProduto().getNome());
+		produto.setXProd(AmsoftUtils.removeCaracteresEspeciais(itemProduto.getProduto().getNome()));
 
 		if (nfe.getEmpresa().getWsAmbiente().equals(2)) {
 			produto.setXProd("NOTA FISCAL EMITIDA EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL");
@@ -213,10 +212,11 @@ public class ProdutosUtils {
 		produto.setUCom(itemProduto.getProduto().getUnidadeMedida());
 		produto.setUTrib(itemProduto.getProduto().getUnidadeMedida());
 		produto.setQCom(itemProduto.getQuantidade().toString());
-		produto.setVUnCom(itemProduto.getValorUnitario().setScale(2).toPlainString());
-		produto.setVProd(itemProduto.getValorTotalProdutosSemDesconto().setScale(2).toPlainString());
+		produto.setVUnCom(itemProduto.getValorUnitario().toPlainString());
+		produto.setVProd(itemProduto.getValorUnitario().multiply(itemProduto.getQuantidade())
+				.setScale(2, RoundingMode.HALF_EVEN).toString());
 		produto.setQTrib(itemProduto.getQuantidade().toString());
-		produto.setVUnTrib(itemProduto.getValorUnitario().setScale(2).toPlainString());
+		produto.setVUnTrib(itemProduto.getValorUnitario().toPlainString());
 
 		if (AmsoftUtils.isMaiorQZero(itemProduto.getValorFrete())) {
 			produto.setVFrete(itemProduto.getValorFrete().setScale(2, RoundingMode.HALF_EVEN).toString());
@@ -244,7 +244,7 @@ public class ProdutosUtils {
 
 		return produto;
 	}
-	
+
 	public static ArrayList<Det> getProdutos(List<ItemProduto> produtos, Nfe nfe) throws TributacaoException {
 
 		ArrayList<Det> ret = new ArrayList<Det>();
@@ -286,11 +286,11 @@ public class ProdutosUtils {
 
 		return ret;
 	}
-	
+
 	private static boolean isCest(ItemProduto item) {
 		return !isNotCest(item);
 	}
-	
+
 	private static boolean isCest(ItemProdutoNFCe item) {
 		return !isNotCest(item);
 	}
@@ -298,7 +298,7 @@ public class ProdutosUtils {
 	private static boolean isNotCest(ItemProdutoNFCe item) {
 		return item.getProduto().getCest().equals("") || item.getProduto().getCest().equals(null);
 	}
-	
+
 	private static boolean isNotCest(ItemProduto item) {
 		return item.getProduto().getCest().equals("") || item.getProduto().getCest().equals(null);
 	}
@@ -306,11 +306,10 @@ public class ProdutosUtils {
 	public static boolean isProdutoValido(ItemProduto item) {
 		return item.getProduto() != null && item.getProduto().getId() != null;
 	}
-	
+
 	public static boolean isProdutoValido(ItemProdutoNFCe item) {
 		return item.getProduto() != null && item.getProduto().getId() != null;
 	}
-
 
 	public boolean isOrigemNacional(String origem) {
 		return origem.equals("0") || origem.equals("3") || origem.equals("4") || origem.equals("5");

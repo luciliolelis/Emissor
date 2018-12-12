@@ -31,7 +31,7 @@ public class ItemProdutoNFCe implements Serializable {
 	@Column(nullable = false)
 	private BigDecimal quantidade = BigDecimal.ONE;
 
-	@Column(name = "valor_unitario", nullable = false, precision = 10, scale = 2)
+	@Column(name = "valor_unitario", nullable = false, precision = 10, scale = 4)
 	private BigDecimal valorUnitario = BigDecimal.ZERO;
 
 	@Column(name = "valor_desconto", nullable = false, precision = 10, scale = 2)
@@ -171,9 +171,7 @@ public class ItemProdutoNFCe implements Serializable {
 	public void setProduto(Produto produto) {
 		this.produto = produto;
 	}
-
 	
-
 	public NFCe getNfce() {
 		return nfce;
 	}

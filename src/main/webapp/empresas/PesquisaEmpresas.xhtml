@@ -5,97 +5,114 @@
 	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
 	template="/WEB-INF/template/Layout.xhtml">
 
+
+	<f:metadata>
+		<f:viewAction action="#{gestaoEmpresasBean.consultar}" />
+	</f:metadata>
+
 	<ui:define name="titulo">Pesquisa de emitentes</ui:define>
 
 	<ui:define name="content">
-		<f:metadata>
-			<f:viewAction action="#{gestaoEmpresasBean.consultar}" />
-		</f:metadata>
-
-		<h:form id="frm">
-
-			<p:toolbar id="toolbar" style="position: fixed; margin-top:15px">
-				<p:toolbarGroup>
-					<p:button icon="ui-icon-plus" value="Novo Emitente"
-						outcome="/empresas/CadastroEmpresa"
-						rendered="#{seguranca.incluirEmpresa}"
-						action="#{gestaoEmpresasBean.prepararNovoCadastro}"
-						process="@this">
-					</p:button>
 
 
-				</p:toolbarGroup>
-			</p:toolbar>
+		<h:form id="frm" styleClass="form-principal">
 
-			<h1 class="aw-page-title"></h1>
-			<h1 class="aw-page-title">Pesquisa de emitentes</h1>
-			<p:messages id="msgs" closable="true" autoUpdate="true" />
+			<h:panelGrid columns="1" styleClass="grid-titulos">
+				<h:outputLabel value="Pesquisa" styleClass="titulo1"></h:outputLabel>
+				<h:outputLabel value="Emitentes" styleClass="titulo2"></h:outputLabel>
+			</h:panelGrid>
 
-			<p:dataTable value="#{gestaoEmpresasBean.todasEmpresas}"
-				var="empresa" emptyMessage="Nenhuma empresa cadastrada." rows="10"
-				paginator="true" paginatorPosition="bottom" style="margin-top: 10px"
-				id="empresas-table" reflow="true" paginatorAlwaysVisible="false" rowKey="#{empresa.id}">
+			<p:fieldset class="grupo-geral">
 
+				<h:panelGrid columns="2" styleClass="grid-titulo-pesquisa">
+					<div class="barra-vertical"></div>
+					<h:outputLabel value="Pesquisar" styleClass="titulo-pesquisa"></h:outputLabel>
+				</h:panelGrid>
 
-				<p:column style="text-align: center; width: 100px"
-					exportable="false" headerText="Opções">
-
-					<p:button icon="ui-icon-pencil" title="Editar"
-						outcome="/empresas/CadastroEmpresa">
-						<f:param name="empresa" value="#{empresa.id}" />
-					</p:button>
-
-					<p:commandButton icon="ui-icon-trash" title="Excluir"
-						process="@this"
-						update=":frm:empresas-table :frm:toolbar :frm:msgs"
-						action="#{gestaoEmpresasBean.excluir(empresa)}">
-						<p:confirm icon="ui-icon-alert" header="Confirmação de exclusão"
-							message="Tem certeza que deseja excluir o emitente" />
-					</p:commandButton>
-
-				</p:column>
+				<p:toolbar id="toolbar" style="margin-top:15px">
+					<p:toolbarGroup>
+						<p:button class="button-pesquisa" icon="fa fas fa-plus-circle"
+							value="Novo Emitente" outcome="/empresas/CadastroEmpresa"
+							rendered="#{seguranca.incluirEmpresa}"
+							action="#{gestaoEmpresasBean.prepararNovoCadastro}"
+							process="@this">
+						</p:button>
 
 
-				<p:ajax event="rowSelect" update=":frm:toolbar" />
-				<p:ajax event="rowUnselect" update=":frm:toolbar" />
-
-				<p:ajax event="rowDblselect"
-					listener="#{gestaoEmpresasBean.onRowDblClckSelect}"
-					update=":frm:toolbar">
-				</p:ajax>
-
-				<p:column headerText="Logo" style="width:60px;text-align: center">
-					<p:graphicImage style="max-width:50px;max-height:48px"
-						cache="false" value="#{imageBean.streamedImageById}">
-						<f:param name="id" value="#{empresa.id}" />
-					</p:graphicImage>
-				</p:column>
+					</p:toolbarGroup>
+				</p:toolbar>
 
 
+				<p:messages id="msgs" closable="true" autoUpdate="true" />
 
-				<p:column headerText="Razão social" sortBy="#{empresa.razao_social}">
-					<h:outputText value="#{empresa.razao_social}" />
-				</p:column>
-				<p:column headerText="Nome fantasia"
-					sortBy="#{empresa.nome_fantasia}">
-					<h:outputText value="#{empresa.nome_fantasia}" />
-				</p:column>
-				<p:column headerText="CNPJ">
-					<h:outputText value="#{empresa.cnpj}" />
-				</p:column>
-
-				<p:column headerText="Regime tributário">
-					<h:outputText value="#{empresa.regimeTributario.descricao}" />
-				</p:column>
+				<p:dataTable value="#{gestaoEmpresasBean.todasEmpresas}"
+					styleClass="myTable" var="empresa"
+					emptyMessage="Nenhuma empresa cadastrada." rows="10"
+					paginator="true" paginatorPosition="bottom"
+					style="margin-top: 10px" id="empresas-table" reflow="true"
+					paginatorAlwaysVisible="false" rowKey="#{empresa.id}">
 
 
-				<f:facet name="footer">
+					<p:column style="text-align: center; width: 100px"
+						exportable="false" headerText="Opções">
+
+						<p:button icon="fa far fa-pencil-alt" title="Editar"
+							class="button-pesquisa" outcome="/empresas/CadastroEmpresa">
+							<f:param name="empresa" value="#{empresa.id}" />
+						</p:button>
+
+						<p:commandButton icon="fa far fa-trash-alt" title="Excluir"
+							class="button-pesquisa" process="@this"
+							update=":frm:empresas-table :frm:toolbar :frm:msgs"
+							action="#{gestaoEmpresasBean.excluir(empresa)}">
+							<p:confirm icon="ui-icon-alert" header="Confirmação de exclusão"
+								message="Tem certeza que deseja excluir o emitente" />
+						</p:commandButton>
+
+					</p:column>
+
+
+					<p:ajax event="rowSelect" update=":frm:toolbar" />
+					<p:ajax event="rowUnselect" update=":frm:toolbar" />
+
+					<p:ajax event="rowDblselect"
+						listener="#{gestaoEmpresasBean.onRowDblClckSelect}"
+						update=":frm:toolbar">
+					</p:ajax>
+
+					<p:column headerText="Logo" style="width:60px;text-align: center">
+						<p:graphicImage style="max-width:50px;max-height:48px"
+							cache="false" value="#{imageBean.streamedImageById}">
+							<f:param name="id" value="#{empresa.id}" />
+						</p:graphicImage>
+					</p:column>
+
+
+
+					<p:column headerText="Razão social"
+						sortBy="#{empresa.razao_social}">
+						<h:outputText value="#{empresa.razao_social}" />
+					</p:column>
+					<p:column headerText="Nome fantasia"
+						sortBy="#{empresa.nome_fantasia}">
+						<h:outputText value="#{empresa.nome_fantasia}" />
+					</p:column>
+					<p:column headerText="CNPJ">
+						<h:outputText value="#{empresa.cnpj}" />
+					</p:column>
+
+					<p:column headerText="Regime tributário">
+						<h:outputText value="#{empresa.regimeTributario.descricao}" />
+					</p:column>
+
+
+					<f:facet name="footer">
 									(#{gestaoEmpresasBean.todasEmpresas.size()}) registros
 				    			</f:facet>
-			</p:dataTable>
+				</p:dataTable>
 
 
-
+			</p:fieldset>
 		</h:form>
 
 	</ui:define>

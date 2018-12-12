@@ -2,6 +2,7 @@ package com.amsoft.erp.model.nfce;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -574,10 +575,10 @@ public class NFCe implements Serializable {
 		BigDecimal total = BigDecimal.ZERO;
 		for (ItemProdutoNFCe item : this.getItensProdutos()) {
 			if (isProdutoValido(item)) {
-				total = total.add(item.getValorTotal());
+				total = total.add(item.getValorTotal().setScale(2, RoundingMode.HALF_EVEN));
 			}
 		}
-		return total.setScale(2);
+		return total;
 	}
 
 	@Transient

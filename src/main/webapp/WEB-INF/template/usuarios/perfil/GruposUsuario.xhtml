@@ -5,9 +5,10 @@
 	xmlns:p="http://primefaces.org/ui">
 
 
-	<p:dataTable value="#{gestaoPerfilUsuariosBean.usuarioEdicao.empresasGrupos}"
-		reflow="true" id="tableGrupoEmpresa" var="grupo"
-		style="margin-top:10px">
+	<p:dataTable
+		value="#{gestaoPerfilUsuariosBean.usuarioEdicao.empresasGrupos}"
+		styleClass="myTable" reflow="true" id="tableGrupoEmpresa" var="grupo"
+		style="margin-top:20px">
 
 		<p:column headerText="Logo" style="width:60px;text-align: center">
 			<p:graphicImage style="max-width:50px;max-height:48px" cache="false"

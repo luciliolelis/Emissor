@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui">
 
 
-	<p:panelGrid columns="4" layout="grid" style="margin-top: 10px"
+	<p:panelGrid columns="4" layout="grid" style="margin-top: 15px"
 		styleClass="panelgrid-noborder"
 		columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4">
 
@@ -18,10 +18,10 @@
 			value="#{cadastroProdutoBean.produto.nome}" />
 
 		<p:outputLabel value="Valor unitário" for="valor-unitario" />
-		<p:inputText id="valor-unitario" styleClass="moeda"
+		<p:inputNumber id="valor-unitario" decimalPlaces="4"
 			value="#{cadastroProdutoBean.produto.valorUnitario}">
-			<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
-		</p:inputText>
+
+		</p:inputNumber>
 
 		<p:outputLabel value="Unidade de medida" for="unidade" />
 		<p:autoComplete id="unidade" dropdown="true" minQueryLength="1"
@@ -49,13 +49,13 @@
 
 		<p:outputLabel value="NCM" for="ncm" />
 
-		
-		
-		<p:panelGrid columns="2" styleClass="panelgrid-noborder"
-				style="width:105%;margin-left:-10px" layout="grid"
-				columnClasses="ui-grid-col-3, ui-grid-col-12">
 
-				<p:commandButton icon="ui-icon-search" title="Pesquisar"
+
+		<p:panelGrid columns="2" styleClass="panelgrid-noborder"
+			style="width:105%;margin-left:-10px" layout="grid"
+			columnClasses="ui-grid-col-3, ui-grid-col-12">
+
+			<p:commandButton icon="ui-icon-search" title="Pesquisar"
 				style="margin-left: 3px" process="@this" update="@none"
 				action="#{selecaoNcmBean.abrirDialogo}" ignoreAutoUpdate="true">
 				<p:ajax event="dialogReturn"
@@ -63,9 +63,9 @@
 					ignoreAutoUpdate="true" />
 			</p:commandButton>
 
-					<p:inputText id="ncm" value="#{cadastroProdutoBean.ncm}"
+			<p:inputText id="ncm" value="#{cadastroProdutoBean.ncm}"
 				readonly="#{facesContext.currentPhaseId.name eq 'RENDER_RESPONSE'}" />
-			</p:panelGrid>
+		</p:panelGrid>
 
 
 		<p:outputLabel value="CEST" for="cest" />

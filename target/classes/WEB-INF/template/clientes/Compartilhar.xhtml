@@ -4,10 +4,9 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 	
-	<h1 class="aw-page-title">Emitentes que acessam o cliente
-		#{gestaoClientesBean.clienteEdicao.nome}</h1>
 
-	<p:selectManyCheckbox
+
+	<p:selectManyCheckbox columns="2" 
 		value="#{gestaoClientesBean.clienteEdicao.empresas}">
 		<f:attribute name="collectionType" value="java.util.ArrayList" />
 		<f:converter converterId="empresaConverter" />

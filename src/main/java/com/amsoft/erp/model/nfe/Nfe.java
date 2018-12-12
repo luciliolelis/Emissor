@@ -928,6 +928,32 @@ public class Nfe implements Serializable {
 		return true;
 	}
 
+	public void recalcularValorTotalDesconto() {
+		BigDecimal total = BigDecimal.ZERO;
+
+		for (ItemProduto item : this.getItensProdutos()) {
+			if (this.isProdutoValido(item) && item.getValorDesconto() != null) {
+				total = total.add(item.getValorDesconto());
+			}
+		}
+
+		this.setValorDesconto(total.setScale(2));
+
+	}
+
+	@Transient
+	public BigDecimal getValorTotalUnitario() {
+		BigDecimal total = BigDecimal.ZERO;
+
+		for (ItemProduto item : this.getItensProdutos()) {
+			if (this.isProdutoValido(item) && item.getValorUnitario() != null) {
+				total = total.add(item.getValorUnitario());
+			}
+		}
+
+		return total.setScale(2);
+	}
+
 	/**
 	 * Total nfe = protutos + frete + despesas + seguro + ipi + icms st
 	 * 
@@ -1089,174 +1115,10 @@ public class Nfe implements Serializable {
 		BigDecimal total = BigDecimal.ZERO;
 		for (ItemProduto item : this.getItensProdutos()) {
 			if (isProdutoValido(item)) {
-				total = total.add(item.getValorTotal());
+				total = total.add(item.getValorTotal().setScale(2, RoundingMode.HALF_EVEN));
 			}
 		}
-		return total.setScale(2);
-	}
-
-	public void recalcularTotalIpi() {
-		info("Recalcular Total Ipi ----------");
-		this.setValorIpi(this.calcularTotalIpi());
-	}
-
-	public void recalcularTotalCofins() {
-		info("Recalcular Total COFINS ----------");
-		this.setValorTotalCOFINS(this.calcularTotalCofins());
-	}
-
-	private BigDecimal calcularTotalCofins() {
-		BigDecimal total = BigDecimal.ZERO;
-		for (ItemProduto item : this.getItensProdutos()) {
-			if (isProdutoValido(item)) {
-				total = total.add(item.getCofins());
-			}
-		}
-
-		info("COFINS total : " + total);
-		return total.setScale(2);
-	}
-
-	public void recalcularTotalPis() {
-		info("Recalcular Total PIS ----------");
-		this.setValorTotalPIS(this.calcularTotalPis());
-	}
-
-	private BigDecimal calcularTotalPis() {
-		BigDecimal total = BigDecimal.ZERO;
-		for (ItemProduto item : this.getItensProdutos()) {
-			if (isProdutoValido(item)) {
-				total = total.add(item.getPis());
-			}
-		}
-
-		info("PIS total : " + total);
-		return total.setScale(2);
-	}
-
-	private BigDecimal calcularTotalIpi() {
-		BigDecimal total = BigDecimal.ZERO;
-		for (ItemProduto item : this.getItensProdutos()) {
-			if (isProdutoValido(item)) {
-				total = total.add(item.getValorIpi());
-			}
-		}
-
-		info("IPI total : " + total);
-		return total.setScale(2);
-	}
-
-	public void recalcularTotalBaseIcms() {
-		info("Recalcular Total Base Icms ----------");
-
-		BigDecimal total = this.calcularTotalBaseIcms();
-		this.setValorBaseIcms(total);
-	}
-
-	private BigDecimal calcularTotalBaseIcms() {
-		BigDecimal total = BigDecimal.ZERO;
-
-		for (ItemProduto item : this.getItensProdutos()) {
-			if (isProdutoValido(item)) {
-				total = total.add(item.getBaseIcms());
-			}
-		}
-
-		info("Base icms total : " + total);
-		return total.setScale(2);
-	}
-
-	public void recalcularTotalBaseIcmsSt() {
-		info("Recalcular Total Base Icms St ----------");
-		this.setValorBaseIcmsSt(this.calcularTotalBaseIcmsSt());
-	}
-
-	private BigDecimal calcularTotalBaseIcmsSt() {
-		BigDecimal total = BigDecimal.ZERO;
-
-		for (ItemProduto item : this.getItensProdutos()) {
-			if (isProdutoValido(item)) {
-				total = total.add(item.getBaseIcmsSt());
-			}
-		}
-
-		info("Base icms st total : " + total);
-		return total.setScale(2);
-	}
-
-	public void recalcularTotalIcms() {
-		info("Recalcular Total Icms ----------");
-		this.setValorIcms(this.calcularTotalIcms());
-	}
-
-	private BigDecimal calcularTotalIcms() {
-		BigDecimal total = BigDecimal.ZERO;
-
-		for (ItemProduto item : this.getItensProdutos()) {
-			if (isProdutoValido(item)) {
-				total = total.add(item.getValorIcms());
-			}
-		}
-		info("icms total : " + total);
-		return total.setScale(2);
-	}
-
-	public void recalcularTotalIcmsSt() {
-		info("Recalcular Total Icm St ----------");
-		this.setValorIcmsSt(this.calcularTotalIcmsSt());
-	}
-
-	private BigDecimal calcularTotalIcmsSt() {
-		BigDecimal total = BigDecimal.ZERO;
-
-		for (ItemProduto item : this.getItensProdutos()) {
-			if (isProdutoValido(item)) {
-				total = total.add(item.getValorIcmsSt());
-			}
-		}
-
-		info("icms st total : " + total);
-
-		return total.setScale(2);
-	}
-
-	public void recalcularValorTotalDesconto() {
-		BigDecimal total = BigDecimal.ZERO;
-
-		for (ItemProduto item : this.getItensProdutos()) {
-			if (this.isProdutoValido(item) && item.getValorDesconto() != null) {
-				total = total.add(item.getValorDesconto().setScale(2));
-			}
-		}
-
-		this.setValorDesconto(total.setScale(2));
-
-	}
-
-	@Transient
-	public BigDecimal getValorTotalUnitario() {
-		BigDecimal total = BigDecimal.ZERO;
-
-		for (ItemProduto item : this.getItensProdutos()) {
-			if (this.isProdutoValido(item) && item.getValorUnitario() != null) {
-				total = total.add(item.getValorUnitario().setScale(2));
-			}
-		}
-
-		return total.setScale(2);
-	}
-
-	@Transient
-	public BigDecimal getValorTotalSemDesconto() {
-		BigDecimal total = BigDecimal.ZERO;
-
-		for (ItemProduto item : this.getItensProdutos()) {
-			if (this.isProdutoValido(item) && item.getValorUnitario() != null) {
-				total = total.add(item.getValorTotalProdutosSemDesconto());
-			}
-		}
-
-		return total.setScale(2);
+		return total;
 	}
 
 	@Transient

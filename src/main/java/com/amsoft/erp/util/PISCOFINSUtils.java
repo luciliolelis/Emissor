@@ -224,7 +224,7 @@ public class PISCOFINSUtils {
 		return pis;
 	}
 
-	private static PIS popularPISAliq(ItemProdutoNFCe item) {
+	public static PIS popularPISAliq(ItemProdutoNFCe item) {
 		PIS pis = new PIS();
 
 		PISAliq pisAliq = new PISAliq();
@@ -275,7 +275,7 @@ public class PISCOFINSUtils {
 		return pis;
 	}
 
-	private static PIS popularPisOutr(ItemProdutoNFCe item) {
+	public static PIS popularPisOutr(ItemProdutoNFCe item) {
 		PIS pis = new PIS();
 
 		PISOutr pisOutr = new PISOutr();

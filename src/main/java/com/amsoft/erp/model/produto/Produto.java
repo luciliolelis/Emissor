@@ -108,7 +108,7 @@ public class Produto implements Serializable {
 		this.sku = sku == null ? null : sku.toUpperCase();
 	}
 
-	@Column(name = "valor_unitario", nullable = true, precision = 12, scale = 2)
+	@Column(name = "valor_unitario", nullable = true, precision = 12, scale = 4)
 	public BigDecimal getValorUnitario() {
 		return valorUnitario;
 	}

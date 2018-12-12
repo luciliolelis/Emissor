@@ -13,12 +13,16 @@ public class DestinatarioUtils {
 
 		TEndereco endereco = new TEndereco();
 
-		endereco.setXLgr(nfe.getEnderecoEntrega().getLogradouro());
+		endereco.setXLgr(AmsoftUtils.removeCaracteresEspeciais(AmsoftUtils.removeEspacoFinal(nfe.getEnderecoEntrega().getLogradouro())));
 		endereco.setNro(nfe.getEnderecoEntrega().getNumero());
-		endereco.setXCpl(AmsoftUtils.emptyToNull(nfe.getEnderecoEntrega().getComplemento()));
-		endereco.setXBairro(nfe.getEnderecoEntrega().getBairro());
+		
+
+		//endereco.setXCpl(AmsoftUtils.removeCaracteresEspeciais((nfe.getEnderecoEntrega().getComplemento())));
+		
+		endereco.setXBairro(AmsoftUtils.removeCaracteresEspeciais(nfe.getEnderecoEntrega().getBairro()));
 		endereco.setCMun(nfe.getEnderecoEntrega().getIbgeCidade());
-		endereco.setXMun(nfe.getEnderecoEntrega().getCidade());
+		endereco.setXMun(AmsoftUtils
+				.removeCaracteresEspeciais(AmsoftUtils.removeEspacoFinal(nfe.getEnderecoEntrega().getCidade())));
 		endereco.setUF(TUf.valueOf(nfe.getEnderecoEntrega().getUf()));
 		endereco.setCEP(AmsoftUtils.removerMascara(nfe.getEnderecoEntrega().getCep()));
 		endereco.setCPais("1058");
@@ -27,6 +31,8 @@ public class DestinatarioUtils {
 		if (!nfe.getCliente().getTelefone().isEmpty()) {
 			endereco.setFone(AmsoftUtils.removerMascara(nfe.getCliente().getTelefone()));
 		}
+
+		endereco.setXBairro(AmsoftUtils.removeEspacoFinal(endereco.getXBairro()));
 
 		return endereco;
 	}
@@ -35,12 +41,15 @@ public class DestinatarioUtils {
 
 		TEndereco endereco = new TEndereco();
 
-		endereco.setXLgr(nfe.getEnderecoEntrega().getLogradouro());
+		endereco.setXLgr(AmsoftUtils
+				.removeCaracteresEspeciais(AmsoftUtils.removeEspacoFinal(nfe.getEnderecoEntrega().getLogradouro())));
 		endereco.setNro(nfe.getEnderecoEntrega().getNumero());
-		endereco.setXCpl(AmsoftUtils.emptyToNull(nfe.getEnderecoEntrega().getComplemento()));
-		endereco.setXBairro(nfe.getEnderecoEntrega().getBairro());
+		endereco.setXCpl(AmsoftUtils.removeCaracteresEspeciais(
+				AmsoftUtils.emptyToNull(AmsoftUtils.removeEspacoFinal(nfe.getEnderecoEntrega().getComplemento()))));
+		endereco.setXBairro(AmsoftUtils.removeCaracteresEspeciais(nfe.getEnderecoEntrega().getBairro()));
 		endereco.setCMun(nfe.getEnderecoEntrega().getIbgeCidade());
-		endereco.setXMun(nfe.getEnderecoEntrega().getCidade());
+		endereco.setXMun(AmsoftUtils
+				.removeCaracteresEspeciais(AmsoftUtils.removeEspacoFinal(nfe.getEnderecoEntrega().getCidade())));
 		endereco.setUF(TUf.valueOf(nfe.getEnderecoEntrega().getUf()));
 		endereco.setCEP(AmsoftUtils.removerMascara(nfe.getEnderecoEntrega().getCep()));
 		endereco.setCPais("1058");
@@ -50,19 +59,22 @@ public class DestinatarioUtils {
 			endereco.setFone(AmsoftUtils.removerMascara(nfe.getCliente().getTelefone()));
 		}
 
+		endereco.setXBairro(AmsoftUtils.removeEspacoFinal(endereco.getXBairro()));
+
 		return endereco;
 	}
-	
+
 	public static TEndereco getEnderecoDestinatario(Empresa empresa) {
 
 		TEndereco endereco = new TEndereco();
 
-		endereco.setXLgr(empresa.getLogradouro());
+		endereco.setXLgr(AmsoftUtils.removeCaracteresEspeciais(AmsoftUtils.removeEspacoFinal(empresa.getLogradouro())));
 		endereco.setNro(empresa.getNumero());
-		endereco.setXCpl(AmsoftUtils.emptyToNull(empresa.getComplemento()));
-		endereco.setXBairro(empresa.getBairro());
+		endereco.setXCpl(AmsoftUtils.removeCaracteresEspeciais(
+				AmsoftUtils.emptyToNull(AmsoftUtils.removeEspacoFinal(empresa.getComplemento()))));
+		endereco.setXBairro(AmsoftUtils.removeCaracteresEspeciais(empresa.getBairro()));
 		endereco.setCMun(empresa.getIbgeCidade());
-		endereco.setXMun(empresa.getCidade());
+		endereco.setXMun(AmsoftUtils.removeCaracteresEspeciais(AmsoftUtils.removeEspacoFinal(empresa.getCidade())));
 		endereco.setUF(TUf.valueOf(empresa.getUf()));
 
 		endereco.setCEP(AmsoftUtils.removerMascara(empresa.getCep()));
@@ -70,6 +82,8 @@ public class DestinatarioUtils {
 		endereco.setXPais("BRASIL");
 
 		endereco.setFone(AmsoftUtils.removerMascara(empresa.getFone()));
+
+		endereco.setXBairro(AmsoftUtils.removeEspacoFinal(endereco.getXBairro()));
 
 		return endereco;
 	}

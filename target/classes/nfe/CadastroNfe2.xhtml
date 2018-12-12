@@ -5,6 +5,13 @@
 	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
 	template="/WEB-INF/template/Layout.xhtml">
 
+
+	<f:metadata>
+		<o:viewParam name="nfe" value="#{cadastroNFeBean.nfe}" />
+		<f:event listener="#{cadastroNFeBean.inicializar}"
+			type="preRenderView" />
+	</f:metadata>
+
 	<ui:define name="content">
 
 		<script>
@@ -28,183 +35,189 @@
 			}
 		</script>
 
-		<h:form id="frm">
+		<h:form id="frm" styleClass="form-principal">
 
-			<f:metadata>
-				<o:viewParam name="nfe" value="#{cadastroNFeBean.nfe}" />
-				<f:event listener="#{cadastroNFeBean.inicializar}"
-					type="preRenderView" />
-			</f:metadata>
+			<h:panelGrid columns="1" styleClass="grid-titulos">
+				<h:outputLabel value="Cadastro" styleClass="titulo1"></h:outputLabel>
+				<h:outputLabel value="NF-e" styleClass="titulo2"></h:outputLabel>
+			</h:panelGrid>
 
-			<p:toolbar style="position: fixed; margin-top:15px">
-				<p:toolbarGroup>
-					<p:button title="Pesquisa" icon="ui-icon-search"
-						outcome="/nfe/PesquisaNfe2" />
+			<p:fieldset class="grupo-geral">
 
-					<p:separator />
 
-					<p:button icon="ui-icon-plus" title="Novo"
-						outcome="/nfe/CadastroNfe2"
-						action="#{cadastroNFeBean.prepararNovoCadastro}" process="@this">
-					</p:button>
 
-					<p:commandButton title="Salvar" icon="ui-icon-disk"
+				<h:panelGrid columns="2" styleClass="grid-titulo-pesquisa">
+					<div class="barra-vertical"></div>
+					<h:outputLabel
+						value="#{cadastroNFeBean.editando ? 'Edição de NF-e': 'Nova NF-e'}"
+						styleClass="titulo-pesquisa"></h:outputLabel>
+				</h:panelGrid>
+
+
+
+				<p:toolbar>
+					<p:toolbarGroup>
+						<p:button value="Pesquisa" styleClass="button-filtro"
+							icon="fa fas fa-search" outcome="/nfe/PesquisaNfe2" />
+
+						<p:separator />
+
+						<p:button class="button-pesquisa" icon="fa fas fa-plus-circle"
+							value="Nova NF-e" outcome="/nfe/CadastroNfe2"
+							action="#{cadastroNFeBean.prepararNovoCadastro}" process="@this">
+						</p:button>
+
+						<p:commandButton title="Atualizar dados da NF-e"
+							class="button-pesquisa" icon="fa fas fa-sync-alt"
+							id="atualiza-impostos"
+							disabled="#{cadastroNFeBean.nfe.naoAlteravel}"
+							action="#{cadastroNFeBean.atualizaImpostos}" update="@form" />
+						<p:separator />
+
+						<p:menuButton value="Serviços 4.0">
+							<p:menuitem value="Emitir"
+								disabled="#{cadastroNFeBean.nfe.status == 'AUTORIZADA' || cadastroNFeBean.nfe.status == 'CANCELADA' || cadastroNFeBean.nfe.status == 'EMPROCESSAMENTO'|| cadastroNFeBean.nfe.status == 'AUTORIZADACORRECAO' || cadastroNFeBean.nfe.status == 'INUTILIZADA'}"
+								action="#{autorizaNFeBean.emitir}" process="@this"
+								update="@form" icon="ui-icon-check">
+								<p:confirm icon="ui-icon-alert" header="Confirmação de emissão"
+									message="Tem certeza que deseja emitir a Nf-e?" />
+							</p:menuitem>
+
+							<p:menuitem value="Cancelar"
+								disabled="#{cadastroNFeBean.nfe.status != 'AUTORIZADA' and cadastroNFeBean.nfe.status != 'AUTORIZADACORRECAO'}"
+								action="#{cancelaNFeBean.emitir}" icon="ui-icon-cancel"
+								process="@this" update="@form">
+								<p:confirm icon="ui-icon-alert"
+									header="Confirmação de cancelamento"
+									message="Tem certeza que deseja cancelar a Nf-e?" />
+							</p:menuitem>
+
+							<p:menuitem value="Inutilizar"
+								disabled="#{cadastroNFeBean.nfe.status == 'AUTORIZADA' || cadastroNFeBean.nfe.status == 'CANCELADA' || cadastroNFeBean.nfe.status == 'EMPROCESSAMENTO'|| cadastroNFeBean.nfe.status == 'AUTORIZADACORRECAO' || cadastroNFeBean.nfe.status == 'INUTILIZADA'}"
+								actionListener="#{inutilizaNFeBean.inutilizar}" process="@this"
+								update="@form" icon="fa fa-times">
+								<p:confirm icon="ui-icon-alert"
+									header="Confirmação de inutilização"
+									message="Tem certeza que deseja inutilizar o número da Nf-e?" />
+							</p:menuitem>
+
+							<p:menuitem value="Consultar autorização"
+								actionListener="#{statusNFeBean.status}" update="@form"
+								process="@this" icon="fa fa-search" />
+
+							<p:menuitem icon="ui-icon-document" value="Carta de correção"
+								process="@this" update="cce-dialog panel-cce"
+								oncomplete="PF('cceDialog').show()" ignoreAutoUpdate="true"
+								disabled="#{cadastroNFeBean.nfe.status != 'AUTORIZADA' and cadastroNFeBean.nfe.status != 'AUTORIZADACORRECAO'}" />
+						</p:menuButton>
+
+						<p:separator />
+						<p:menuButton value="Documentos">
+							<p:menuitem value="Danfe" actionListener="#{danfeBean.danfe}"
+								disabled="#{cadastroNFeBean.nfe.status != 'AUTORIZADA' and cadastroNFeBean.nfe.status != 'AUTORIZADACORRECAO'}"
+								ajax="false" process="@this" icon="ui-icon-arrowstop-1-s">
+								<p:fileDownload value="#{danfeBean.file}" />
+							</p:menuitem>
+
+							<p:menuitem value="XML"
+								actionListener="#{cadastroNFeBean.exportarNfe}"
+								disabled="#{cadastroNFeBean.nfe.status != 'AUTORIZADA' and cadastroNFeBean.nfe.status != 'AUTORIZADACORRECAO'}"
+								update="@form" ajax="false" icon="ui-icon-arrowstop-1-s" />
+
+							<p:menuitem value="Enviar por e-mail"
+								disabled="#{cadastroNFeBean.nfe.status != 'AUTORIZADA' and cadastroNFeBean.nfe.status != 'AUTORIZADACORRECAO'}"
+								process="@this" update="pnl-email dlg-email"
+								oncomplete="PF('dlgEmail').show()" ignoreAutoUpdate="true"
+								icon="ui-icon-mail-closed" />
+						</p:menuButton>
+					</p:toolbarGroup>
+
+
+				</p:toolbar>
+
+
+
+				<p:defaultCommand target="salvar-button" />
+
+
+				<p:messages autoUpdate="false" closable="true" id="msg" />
+
+				<ui:include src="/WEB-INF/template/nfe/DadosIniciais.xhtml" />
+
+				<h:panelGroup
+					rendered="#{(cadastroNFeBean.nfe.tipoNota eq 'NF' and cadastroNFeBean.nfe.finalidadeOperacao eq 'DEVOLUCAO')}">
+					<ui:include src="/WEB-INF/template/nfe/Nf.xhtml" />
+				</h:panelGroup>
+
+				<p:tabView style="margin-top:10px" id="tab">
+
+					<p:tab title="Destinatário"
+						disabled="#{cadastroNFeBean.nfe.finalidadeOperacao eq 'COMPLEMENTA'}">
+						<ui:include src="/WEB-INF/template/nfe/ClienteNfe.xhtml" />
+					</p:tab>
+
+					<p:tab title="CFOP">
+						<ui:include src="/WEB-INF/template/nfe/CfopNfe.xhtml" />
+					</p:tab>
+
+					<p:tab title="Produtos"
+						disabled="#{cadastroNFeBean.nfe.finalidadeOperacao eq 'COMPLEMENTA'}">
+						<ui:include src="/WEB-INF/template/nfe/ProdutosNfe.xhtml" />
+						<ui:include src="/WEB-INF/template/nfe/TransparenciaNfe.xhtml" />
+					</p:tab>
+
+					<p:tab title="Frete"
+						disabled="#{cadastroNFeBean.nfe.finalidadeOperacao eq 'COMPLEMENTA'}">
+						<ui:include src="/WEB-INF/template/nfe/TransportadorNfe.xhtml" />
+					</p:tab>
+
+					<p:tab title="Pagamento"
+						disabled="#{cadastroNFeBean.nfe.finalidadeOperacao eq 'COMPLEMENTA'}">
+						<ui:include src="/WEB-INF/template/nfe/FormaPagamentoNfe.xhtml" />
+					</p:tab>
+
+					<p:tab title="Complementar"
+						disabled="#{cadastroNFeBean.nfe.finalidadeOperacao != 'COMPLEMENTA'}">
+						<ui:include src="/WEB-INF/template/nfe/Complementar.xhtml" />
+					</p:tab>
+
+					<p:tab title="Dados adicionais">
+						<ui:include src="/WEB-INF/template/nfe/CompementosNfe.xhtml" />
+					</p:tab>
+
+					<p:tab title="XML NFe">
+						<p:inputTextarea id="enviNFe" style="margin-top:15px"
+							value="#{cadastroNFeBean.nfe.enviNFe}" cols="170" readonly="true" />
+					</p:tab>
+
+					<p:tab title="XML Retorno cancelamento"
+						rendered="#{ cadastroNFeBean.nfe.status == 'CANCELADA'}">
+						<p:inputTextarea id="retCancelamento" style="margin-top:15px"
+							value="#{cadastroNFeBean.nfe.retEnvEventoCancNFe}" cols="80000"
+							readonly="true" />
+					</p:tab>
+
+					<p:tab title="XML Retorno correção"
+						rendered="#{ cadastroNFeBean.nfe.status == 'AUTORIZADACORRECAO'}">
+						<p:inputTextarea id="retCorrecao" style="margin-top:15px"
+							value="#{cadastroNFeBean.nfe.retcce}" cols="80000"
+							readonly="true" />
+					</p:tab>
+
+				</p:tabView>
+
+				<center>
+
+					<p:commandButton title="Salvar"
 						disabled="#{cadastroNFeBean.nfe.naoAlteravel}"
-						onsuccess="setConfirmUnload(false)" id="salvar-button"
-						action="#{cadastroNFeBean.salvar}" update="@form" />
+						class="button-salvar" onsuccess="setConfirmUnload(false)"
+						id="salvar-button" action="#{cadastroNFeBean.salvar}"
+						update="@form" />
 
-					<p:commandButton title="Atualizar dados da NF-e"
-						icon="ui-icon-refresh" id="atualiza-impostos"
-						disabled="#{cadastroNFeBean.nfe.naoAlteravel}"
-						action="#{cadastroNFeBean.atualizaImpostos}" update="@form" />
+				</center>
 
 
-					<p:separator />
-
-
-					<p:menuButton value="Serviços 4.0">
-
-						<p:menuitem value="Emitir"
-							disabled="#{cadastroNFeBean.nfe.status == 'AUTORIZADA' || cadastroNFeBean.nfe.status == 'CANCELADA' || cadastroNFeBean.nfe.status == 'EMPROCESSAMENTO'|| cadastroNFeBean.nfe.status == 'AUTORIZADACORRECAO' || cadastroNFeBean.nfe.status == 'INUTILIZADA'}"
-							action="#{autorizaNFeBean.emitir}" process="@this" update="@form"
-							icon="ui-icon-check">
-
-							<p:confirm icon="ui-icon-alert" header="Confirmação de emissão"
-								message="Tem certeza que deseja emitir a Nf-e?" />
-						</p:menuitem>
-
-						<p:menuitem value="Cancelar"
-							disabled="#{cadastroNFeBean.nfe.status != 'AUTORIZADA' and cadastroNFeBean.nfe.status != 'AUTORIZADACORRECAO'}"
-							action="#{cancelaNFeBean.emitir}" icon="ui-icon-cancel"
-							process="@this" update="@form">
-							<p:confirm icon="ui-icon-alert"
-								header="Confirmação de cancelamento"
-								message="Tem certeza que deseja cancelar a Nf-e?" />
-						</p:menuitem>
-
-
-						<p:menuitem value="Inutilizar"
-							disabled="#{cadastroNFeBean.nfe.status == 'AUTORIZADA' || cadastroNFeBean.nfe.status == 'CANCELADA' || cadastroNFeBean.nfe.status == 'EMPROCESSAMENTO'|| cadastroNFeBean.nfe.status == 'AUTORIZADACORRECAO' || cadastroNFeBean.nfe.status == 'INUTILIZADA'}"
-							actionListener="#{inutilizaNFeBean.inutilizar}" process="@this"
-							update="@form" icon="fa fa-times">
-							<p:confirm icon="ui-icon-alert"
-								header="Confirmação de inutilização"
-								message="Tem certeza que deseja inutilizar o número da Nf-e?" />
-						</p:menuitem>
-
-
-						<p:menuitem value="Consultar autorização"
-							actionListener="#{statusNFeBean.status}" update="@form"
-							process="@this" icon="fa fa-search" />
-
-
-						<p:menuitem icon="ui-icon-document" value="Carta de correção"
-							process="@this" update="cce-dialog panel-cce"
-							oncomplete="PF('cceDialog').show()" ignoreAutoUpdate="true"
-							disabled="#{cadastroNFeBean.nfe.status != 'AUTORIZADA' and cadastroNFeBean.nfe.status != 'AUTORIZADACORRECAO'}" />
-					</p:menuButton>
-
-
-
-					<p:separator />
-					<p:menuButton value="Documentos">
-						<p:menuitem value="Danfe" actionListener="#{danfeBean.danfe}"
-							disabled="#{cadastroNFeBean.nfe.status != 'AUTORIZADA' and cadastroNFeBean.nfe.status != 'AUTORIZADACORRECAO'}"
-							ajax="false" process="@this" icon="ui-icon-arrowstop-1-s">
-							<p:fileDownload value="#{danfeBean.file}" />
-						</p:menuitem>
-
-						<p:menuitem value="XML"
-							actionListener="#{cadastroNFeBean.exportarNfe}"
-							disabled="#{cadastroNFeBean.nfe.status != 'AUTORIZADA' and cadastroNFeBean.nfe.status != 'AUTORIZADACORRECAO'}"
-							update="@form" ajax="false" icon="ui-icon-arrowstop-1-s" />
-
-						<p:menuitem value="Enviar por e-mail"
-							disabled="#{cadastroNFeBean.nfe.status != 'AUTORIZADA' and cadastroNFeBean.nfe.status != 'AUTORIZADACORRECAO'}"
-							process="@this" update="pnl-email dlg-email"
-							oncomplete="PF('dlgEmail').show()" ignoreAutoUpdate="true"
-							icon="ui-icon-mail-closed" />
-					</p:menuButton>
-				</p:toolbarGroup>
-
-
-			</p:toolbar>
-
-			<h1 class="aw-page-title"></h1>
-
-			<p:defaultCommand target="salvar-button" />
-
-			<h1 class="aw-page-title">#{cadastroNFeBean.editando ? 'Edição
-				da NF-e' : 'Nova NF-e'} #{cadastroNFeBean.producao ? ' (Produção)' :
-				' (Homologação)'}</h1>
-
-			<p:messages autoUpdate="false" closable="true" id="msg" />
-
-			<ui:include src="/WEB-INF/template/nfe/DadosIniciais.xhtml" />
-
-			<h:panelGroup
-				rendered="#{(cadastroNFeBean.nfe.tipoNota eq 'NF' and cadastroNFeBean.nfe.finalidadeOperacao eq 'DEVOLUCAO')}">
-				<ui:include src="/WEB-INF/template/nfe/Nf.xhtml" />
-			</h:panelGroup>
-
-			<p:tabView style="margin-top:10px" id="tab">
-
-				<p:tab title="Destinatário"
-					disabled="#{cadastroNFeBean.nfe.finalidadeOperacao eq 'COMPLEMENTA'}">
-					<ui:include src="/WEB-INF/template/nfe/ClienteNfe.xhtml" />
-				</p:tab>
-
-				<p:tab title="CFOP">
-					<ui:include src="/WEB-INF/template/nfe/CfopNfe.xhtml" />
-				</p:tab>
-
-				<p:tab title="Produtos"
-					disabled="#{cadastroNFeBean.nfe.finalidadeOperacao eq 'COMPLEMENTA'}">
-					<ui:include src="/WEB-INF/template/nfe/ProdutosNfe.xhtml" />
-					<ui:include src="/WEB-INF/template/nfe/TransparenciaNfe.xhtml" />
-				</p:tab>
-
-				<p:tab title="Frete"
-					disabled="#{cadastroNFeBean.nfe.finalidadeOperacao eq 'COMPLEMENTA'}">
-					<ui:include src="/WEB-INF/template/nfe/TransportadorNfe.xhtml" />
-				</p:tab>
-
-				<p:tab title="Pagamento"
-					disabled="#{cadastroNFeBean.nfe.finalidadeOperacao eq 'COMPLEMENTA'}">
-					<ui:include src="/WEB-INF/template/nfe/FormaPagamentoNfe.xhtml" />
-				</p:tab>
-
-				<p:tab title="Complementar"
-					disabled="#{cadastroNFeBean.nfe.finalidadeOperacao != 'COMPLEMENTA'}">
-					<ui:include src="/WEB-INF/template/nfe/Complementar.xhtml" />
-				</p:tab>
-
-				<p:tab title="Dados adicionais">
-					<ui:include src="/WEB-INF/template/nfe/CompementosNfe.xhtml" />
-				</p:tab>
-
-				<p:tab title="XML NFe">
-					<p:inputTextarea id="enviNFe" style="margin-top:15px"
-						value="#{cadastroNFeBean.nfe.enviNFe}" cols="80000"
-						readonly="true" />
-				</p:tab>
-
-				<p:tab title="XML Retorno cancelamento"
-					rendered="#{ cadastroNFeBean.nfe.status == 'CANCELADA'}">
-					<p:inputTextarea id="retCancelamento" style="margin-top:15px"
-						value="#{cadastroNFeBean.nfe.retEnvEventoCancNFe}" cols="80000"
-						readonly="true" />
-				</p:tab>
-
-				<p:tab title="XML Retorno correção"
-					rendered="#{ cadastroNFeBean.nfe.status == 'AUTORIZADACORRECAO'}">
-					<p:inputTextarea id="retCorrecao" style="margin-top:15px"
-						value="#{cadastroNFeBean.nfe.retcce}" cols="80000" readonly="true" />
-				</p:tab>
-
-			</p:tabView>
-
-
+			</p:fieldset>
 
 			<p:dialog header="Enviar por e-mail" widgetVar="dlgEmail"
 				modal="true" id="dlg-email" height="140">
@@ -271,7 +284,6 @@
 
 				</h:panelGroup>
 			</p:dialog>
-
 
 
 		</h:form>

@@ -6,7 +6,7 @@
 
 
 
-	<p:dataTable
+	<p:dataTable styleClass="myTable"
 		value="#{gestaoEmpresasBean.empresaEdicao.inscricoesEstaduais}"
 		var="item" style="margin-top: 25px" rowIndexVar="linha"
 		id="tabelaItens" reflow="true">
@@ -38,7 +38,8 @@
 
 
 		<p:column headerText="IE">
-			<p:inputText value="#{item.numero}" rendered="#{linha != 0}" required="true">
+			<p:inputText value="#{item.numero}" rendered="#{linha != 0}"
+				required="true">
 				<p:ajax event="change" process="@this" update="frm:tab:tabelaItens"
 					listener="#{gestaoEmpresasBean.atualizarIE(item, linha)}" />
 			</p:inputText>

@@ -28,21 +28,20 @@
 	</f:metadata>
 
 
-
-
 	<div id="outer">
+
 		<div id="inner" class="login-form">
 
-			<h1>
-				<h:graphicImage library="images" name="logo.png"
-					style="width:125px;height:35px" />
-			</h1>
-
-			<h1 class="aw-page-title">Olá #{seguranca.nomeUsuario},
-				selecione a empresa emitente*</h1>
-			<p:messages id="messages" autoUpdate="true" closable="true" />
 
 			<h:form id="frm" prependId="false">
+
+				<center>
+					<h:graphicImage library="images" name="logo.png"
+						style="width:150px;height:50px" />
+				</center>
+
+				<p:spacer />
+				<p:messages id="messages" autoUpdate="true" closable="true" />
 
 				<div class="ui-fluid">
 
@@ -107,9 +106,6 @@
 			</h:form>
 		</div>
 
-		<div style="float: right; margin-top: 10px; margin-right: 10px">
-			<h:graphicImage library="images" name="img-nfe400.png" />
-		</div>
 	</div>
 
 

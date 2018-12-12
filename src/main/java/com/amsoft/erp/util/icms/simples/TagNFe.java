@@ -7,7 +7,6 @@ import com.chronos.calc.csosn.Csosn101;
 import com.chronos.calc.csosn.Csosn201;
 import com.chronos.calc.csosn.Csosn202;
 import com.chronos.calc.csosn.Csosn500;
-import com.chronos.calc.csosn.Csosn900;
 import com.chronos.calc.dto.ITributavel;
 import com.chronos.calc.resultados.IResultadoCalculoFcpSt;
 
@@ -41,7 +40,6 @@ public class TagNFe {
 		return icmsSN102;
 	}
 
-	
 	public static ICMSSN201 getICMSST201(ItemProduto item) {
 
 		// CALCULOS
@@ -67,7 +65,6 @@ public class TagNFe {
 		icmsSN201.setPCredSN(csosn.getPercentualCredito().toPlainString());
 		icmsSN201.setVCredICMSSN(csosn.getValorCredito().toPlainString());
 
-	
 		icmsSN201.setPFCPST(tributos.getPercentualFcpSt().toPlainString());
 		icmsSN201.setVBCFCPST(fcpst.getBaseCalculo().toPlainString());
 		icmsSN201.setVFCPST(fcpst.getValor().toPlainString());
@@ -75,9 +72,8 @@ public class TagNFe {
 		return icmsSN201;
 	}
 
-	
 	public static ICMSSN202 getICMSST202(ItemProduto item) {
-		
+
 		ITributavel tributos = TributosUtils.getTtibutos(item);
 		Csosn202 csosn = new Csosn202();
 		csosn.calcular(tributos);
@@ -121,40 +117,45 @@ public class TagNFe {
 	}
 
 	public static ICMSSN900 getICMSST900(ItemProduto item) {
-		
+
 		// CALCULOS
-		ITributavel tributos = TributosUtils.getTtibutos(item);
-		Csosn900 csosn = new Csosn900();
-		csosn.calcular(tributos);
-		IResultadoCalculoFcpSt fcp = CalculosUtils.calcularFcpSt(item);
-		
+//		ITributavel tributos = TributosUtils.getTtibutos(item);
+//		Csosn900 csosn = new Csosn900();
+//		csosn.calcular(tributos);
+		//IResultadoCalculoFcpSt fcp = CalculosUtils.calcularFcpSt(item);
+
 		// ICMSSN900
 		ICMSSN900 icmsSN900 = new ICMSSN900();
-		icmsSN900.setOrig(item.getProduto().getOrigemProduto().getCodigo()); 
+		icmsSN900.setOrig(item.getProduto().getOrigemProduto().getCodigo());
 		icmsSN900.setCSOSN(item.getCsosn());
-		icmsSN900.setModBCST(getModBCST(item));
-
-		// ICMS
-		icmsSN900.setVBC(csosn.getValorBcIcms().toPlainString());
-		icmsSN900.setPRedBC(csosn.getPercentualReducaoIcmsBc().toPlainString());
-		icmsSN900.setVICMS(csosn.getValorIcms().toPlainString());
-		
-		// ICMS ST
-		icmsSN900.setPMVAST(csosn.getPercentualMva().toPlainString());
-		icmsSN900.setPRedBCST(csosn.getPercentualReducaoSt().toPlainString());
-		icmsSN900.setVBCST(csosn.getValorBcIcmsSt().toPlainString());
-		icmsSN900.setPICMSST(csosn.getPercentualIcmsSt().toPlainString());
-		icmsSN900.setVICMSST(csosn.getValorIcmsSt().toPlainString());
+		//icmsSN900.setModBC("3");
 
 		// Credito ICMS
-		icmsSN900.setPCredSN(csosn.getPercentualCredito().toPlainString());
-		icmsSN900.setVCredICMSSN(csosn.getValorCredito().toPlainString());
+//		icmsSN900.setPCredSN(csosn.getPercentualCredito().toPlainString());
+//		icmsSN900.setVCredICMSSN(csosn.getValorCredito().toPlainString());
 
-		// FCP ST - OBS. Este valor é temporário até que a conf. no emitente
-		// esteja pronta.
-		icmsSN900.setPFCPST(tributos.getPercentualFcpSt().toPlainString());
-		icmsSN900.setVBCFCPST(fcp.getBaseCalculo().toPlainString());
-		icmsSN900.setVFCPST(fcp.getValor().toPlainString());
+		// ICMS
+//		icmsSN900.setVBC(csosn.getValorBcIcms().toPlainString());
+//		icmsSN900.setPICMS(tributos.getPercentualIcms().toPlainString());
+//		icmsSN900.setVICMS(csosn.getValorIcms().toPlainString());
+//		icmsSN900.setPRedBC(csosn.getPercentualReducaoIcmsBc().toPlainString());
+//		icmsSN900.setPRedBC("0.00");
+
+		// ICMS ST
+//		icmsSN900.setModBCST(getModBCST(item));
+//		icmsSN900.setPMVAST(csosn.getPercentualMva().toPlainString());
+//		icmsSN900.setPRedBCST(csosn.getPercentualReducaoSt().toPlainString());
+//		icmsSN900.setVBCST(csosn.getValorBcIcmsSt().toPlainString());
+//		icmsSN900.setPICMSST(csosn.getPercentualIcmsSt().toPlainString());
+//		icmsSN900.setVICMSST(csosn.getValorIcmsSt().toPlainString());
+//
+//		icmsSN900.setPFCPST(tributos.getPercentualFcpSt().toPlainString());
+//		icmsSN900.setPFCPST("0.00");
+//		//icmsSN900.setVBCFCPST(fcp.getBaseCalculo().toPlainString());
+//		icmsSN900.setVBCFCPST("0.00");
+
+//		//icmsSN900.setVFCPST(fcp.getValor().toPlainString());
+//		icmsSN900.setVFCPST("0.00");
 
 		return icmsSN900;
 	}

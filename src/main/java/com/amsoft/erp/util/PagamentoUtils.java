@@ -3,6 +3,7 @@ package com.amsoft.erp.util;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.amsoft.erp.controller.xml.ValidadorXml;
 import com.amsoft.erp.model.nfce.FormaPagamentoNFCe;
 import com.amsoft.erp.model.nfce.ItemDuplicataNFCe;
 import com.amsoft.erp.model.nfce.NFCe;
@@ -20,10 +21,10 @@ public class PagamentoUtils {
 	public static Pag getPagamento(Nfe nfe) {
 		Pag pag = new Pag();
 
-		if (IDUtils.getFinalidadeEmissao(nfe).equals("4")) {
+		if (ValidadorXml.isDevolucao(nfe)) {
 			Pag.DetPag detPag = new Pag.DetPag();
 			detPag.setTPag("90");
-			detPag.setVPag(nfe.getValorTotal().setScale(2).toPlainString());
+			detPag.setVPag("0.00");
 			pag.getDetPag().add(detPag);
 
 			return pag;
@@ -158,7 +159,6 @@ public class PagamentoUtils {
 		}
 	}
 
-	
 	private static String getTipoPagamento(FormaPagamentoNFCe pagamento) {
 
 		if (pagamento.equals(FormaPagamentoNFCe.DINHEIRO)) {
@@ -183,6 +183,7 @@ public class PagamentoUtils {
 			return "99";
 		}
 	}
+
 	static String formataData(Date data) {
 		String ret = "";
 		try {

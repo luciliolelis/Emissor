@@ -26,15 +26,16 @@
 	<div id="outer">
 		<div id="inner" class="login-form">
 
-			<h1>
-				<h:graphicImage library="images" name="logo.png"
-					style="width:125px;height:35px" />
-			</h1>
-
-			<h1 class="aw-page-title">Recuperação de senha</h1>
-			<p:messages id="messages" autoUpdate="true" closable="true" />
 
 			<h:form id="frm" prependId="false">
+
+				<center>
+					<h:graphicImage library="images" name="logo.png"
+						style="width:150px;height:50px" />
+				</center>
+
+				<p:spacer />
+				<p:messages id="messages" autoUpdate="true" closable="true" />
 
 				<div class="ui-fluid">
 
@@ -42,8 +43,8 @@
 						styleClass="panelgrid-noborder">
 
 
-						<p:outputLabel value="E-mail" for="email" />
-						<p:inputText type="" id="email"
+				
+						<p:inputText type="" id="email" placeholder="E-mail"
 							value="#{recuperaSenhaEmailBean.email}" required="true"
 							requiredMessage="O e-mail é necessário" />
 

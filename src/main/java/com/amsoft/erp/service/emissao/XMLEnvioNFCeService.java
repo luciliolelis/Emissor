@@ -3,7 +3,6 @@ package com.amsoft.erp.service.emissao;
 import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -124,7 +123,7 @@ public class XMLEnvioNFCeService implements Serializable {
 			// Emitente
 			Emit emit = new Emit();
 			emit.setCNPJ(AmsoftUtils.removerMascara(nfe.getUsuario().getEmpresa().getCnpj()));
-			emit.setXNome(nfe.getUsuario().getEmpresa().getRazao_social());
+			emit.setXNome(AmsoftUtils.removeCaracteresEspeciais(nfe.getUsuario().getEmpresa().getRazao_social()));
 
 			if (amsoftUtils.isHomologacao()) {
 				emit.setXNome("NF-E EMITIDA EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL");
@@ -149,7 +148,7 @@ public class XMLEnvioNFCeService implements Serializable {
 					dest.setCNPJ(AmsoftUtils.removerMascara(nfe.getCliente().getDocReceitaFederal()));
 				}
 
-				dest.setXNome(nfe.getCliente().getNome());
+				dest.setXNome(AmsoftUtils.removeCaracteresEspeciais(nfe.getCliente().getNome()));
 
 				if (amsoftUtils.isHomologacao()) {
 					dest.setXNome("NF-E EMITIDA EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL");
@@ -176,7 +175,6 @@ public class XMLEnvioNFCeService implements Serializable {
 			infNFe.setInfAdic(infAdic);
 
 			Pag pag = PagamentoUtils.getPagamento(nfe);
-			//infNFe.setPag(pag);
 
 			if (PagamentoUtils.isAPrazo(nfe)) {
 				Cobr cob = PagamentoUtils.getCobranca(nfe);
@@ -206,14 +204,22 @@ public class XMLEnvioNFCeService implements Serializable {
 			csc = this.getCsc(nfe);
 			idToken = nfe.getUsuario().getEmpresa().getToken();
 
-			String qrCode = NFCeUtil.getCodeQRCode(infNFe.getId().substring(3), "100", ide.getTpAmb(),
-					dest.getCNPJ() == null ? dest.getCPF() : dest.getCNPJ(), ide.getDhEmi(),
-					total.getICMSTot().getVNF(), total.getICMSTot().getVICMS(),
-					Base64.getEncoder().encodeToString(
-							enviNFe.getNFe().get(0).getSignature().getSignedInfo().getReference().getDigestValue()),
-					idToken, csc, WebServiceUtil.getUrl(config ,ConstantesUtil.NFCE, ConstantesUtil.SERVICOS.URL_QRCODE));
+//			String qrCode = NFCeUtil.getCodeQRCode(infNFe.getId().substring(3), "2", ide.getTpAmb(),
+//					dest.getCNPJ() == null ? dest.getCPF() : dest.getCNPJ(), ide.getDhEmi(),
+//					total.getICMSTot().getVNF(), total.getICMSTot().getVICMS(),
+//					Base64.getEncoder().encodeToString(
+//							enviNFe.getNFe().get(0).getSignature().getSignedInfo().getReference().getDigestValue()),
+//					idToken, csc, WebServiceUtil.getUrl(config ,ConstantesUtil.NFCE, ConstantesUtil.SERVICOS.URL_QRCODE));
 
 
+			String qrCode = NFCeUtil.getCodeQRCode(
+	                infNFe.getId().substring(3),
+	                config.getAmbiente(),
+	                idToken,
+	                csc,
+	                WebServiceUtil.getUrl(config,ConstantesUtil.NFCE, ConstantesUtil.SERVICOS.URL_QRCODE));
+
+			
 			TNFe.InfNFeSupl infNFeSupl = new TNFe.InfNFeSupl();
 			infNFeSupl.setQrCode(qrCode);
 			infNFeSupl.setUrlChave(WebServiceUtil.getUrl(config ,ConstantesUtil.NFCE, ConstantesUtil.SERVICOS.URL_CONSULTANFCE));
