@@ -1,0 +1,40 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<p:dataTable value="#{gestaoHomeBean.acessos}" var="acesso"
+		styleClass="myTable" emptyMessage="Nenhum acesso encontrado."
+		rows="10" paginator="true" paginatorPosition="bottom"
+		style="margin-top: 10px" id="acessos-table" reflow="true">
+
+		<p:column headerText="Data/hora">
+			<h:outputText value="#{acesso.data_hora}">
+				<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" timeZone="GMT-3" />
+			</h:outputText>
+		</p:column>
+
+		<p:column headerText="IP">
+			<h:outputText value="#{acesso.ip_cliente}" />
+		</p:column>
+
+		<p:column headerText="Email">
+			<h:outputText value="#{acesso.email}" />
+		</p:column>
+
+		<p:column headerText="Nome">
+			<h:outputText value="#{acesso.nome}" />
+		</p:column>
+
+		<p:column headerText="Empresa">
+			<h:outputText value="#{acesso.empresa}" />
+		</p:column>
+
+		<f:facet name="footer">
+									(#{gestaoHomeBean.acessos.size()}) registros
+				    			</f:facet>
+	</p:dataTable>
+
+</ui:composition>

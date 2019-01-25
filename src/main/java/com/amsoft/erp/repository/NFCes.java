@@ -33,6 +33,7 @@ import com.amsoft.erp.model.StatusNotas;
 import com.amsoft.erp.model.emitente.Empresa;
 import com.amsoft.erp.model.nfce.NFCe;
 import com.amsoft.erp.repository.filter.NfceFilter;
+import com.amsoft.erp.repository.filter.NfeFilter;
 import com.amsoft.erp.security.UsuarioLogado;
 import com.amsoft.erp.security.UsuarioSistema;
 
@@ -98,9 +99,8 @@ public class NFCes implements Serializable {
 
 	public String getTotalSaida(Empresa empresaLogada) {
 
-		Query q = manager
-				.createQuery(
-						"SELECT SUM(x.valorTotal) FROM NFCe x where empresa = :empresa and status = :status and cliente_id <> null")
+		Query q = manager.createQuery(
+				"SELECT SUM(x.valorTotal) FROM NFCe x where empresa = :empresa and status = :status and cliente_id <> null")
 				.setParameter("empresa", empresaLogada).setParameter("status", StatusNFe.AUTORIZADA);
 
 		BigDecimal result = (BigDecimal) q.getSingleResult();
@@ -209,4 +209,83 @@ public class NFCes implements Serializable {
 
 		return query.getResultList();
 	}
+
+	
+
+	public List<NFCe> emitidas(NfeFilter filtro) {
+		From<?, ?> orderByFromEntity = null;
+
+		CriteriaBuilder builder = manager.getCriteriaBuilder();
+		CriteriaQuery<NFCe> criteriaQuery = builder.createQuery(NFCe.class);
+
+		Root<NFCe> NfceRoot = criteriaQuery.from(NFCe.class);
+		From<?, ?> clienteJoin = (From<?, ?>) NfceRoot.fetch("cliente", JoinType.INNER);
+
+		List<Predicate> predicates = criarPredicatesParaNfcEmitidas(filtro, NfceRoot, clienteJoin);
+
+		criteriaQuery.select(NfceRoot);
+		criteriaQuery.where(predicates.toArray(new Predicate[0]));
+
+		if (filtro.getPropriedadeOrdenacao() != null) {
+			String nomePropriedadeOrdenacao = filtro.getPropriedadeOrdenacao();
+			orderByFromEntity = NfceRoot;
+
+			if (filtro.getPropriedadeOrdenacao().contains(".")) {
+				nomePropriedadeOrdenacao = nomePropriedadeOrdenacao
+						.substring(filtro.getPropriedadeOrdenacao().indexOf(".") + 1);
+			}
+
+			if (filtro.getPropriedadeOrdenacao().startsWith("cliente.")) {
+				orderByFromEntity = clienteJoin;
+			}
+
+			if (filtro.isAscendente() && filtro.getPropriedadeOrdenacao() != null) {
+				criteriaQuery.orderBy(builder.asc(orderByFromEntity.get(nomePropriedadeOrdenacao)));
+			} else if (filtro.getPropriedadeOrdenacao() != null) {
+				criteriaQuery.orderBy(builder.desc(orderByFromEntity.get(nomePropriedadeOrdenacao)));
+			}
+		}
+
+		TypedQuery<NFCe> query = manager.createQuery(criteriaQuery);
+
+		query.setFirstResult(filtro.getPrimeiroRegistro());
+		query.setMaxResults(filtro.getQuantidadeRegistros());
+
+		return query.getResultList();
+	}
+
+	private List<Predicate> criarPredicatesParaNfcEmitidas(NfeFilter filtro, Root<NFCe> NfceRoot, From<?, ?> clienteJoin) {
+		CriteriaBuilder builder = manager.getCriteriaBuilder();
+		List<Predicate> predicates = new ArrayList<>();
+
+		filtro.setPropriedadeOrdenacao("emissao");
+		filtro.setAscendente(false);
+
+		if (filtro.getDataCriacaoDe() != null) {
+			predicates.add(builder.greaterThanOrEqualTo(NfceRoot.get("emissao"), filtro.getDataCriacaoDe()));
+		}
+
+		if (filtro.getDataCriacaoAte() != null) {
+			predicates.add(builder.lessThanOrEqualTo(NfceRoot.get("emissao"), filtro.getDataCriacaoAte()));
+		}
+
+		predicates.add(builder.notEqual(NfceRoot.get("status"), StatusNFe.EXCUIDA));
+
+		return predicates;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

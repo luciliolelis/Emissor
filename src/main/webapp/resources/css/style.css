@@ -40,6 +40,9 @@ h1, p {
 strong {
 	font-weight: bold;
 }
+noStrong {
+	font-weight: normal !important;
+}
 
 .uppercase {
 	text-transform: uppercase;

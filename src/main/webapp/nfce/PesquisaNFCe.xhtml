@@ -36,11 +36,16 @@
 
 					<p:outputLabel value="Data de emissão" />
 					<h:panelGroup>
-						<p:calendar size="10" pattern="dd/MM/yyyy"
-							value="#{pesquisaNFCeBean.filtro.dataCriacaoDe}" />
+						<p:calendar value="#{pesquisaNFCeBean.filtro.dataCriacaoDe}"
+							style="margin: 5px" label="Data inicial" pattern="dd/MM/yyyy"
+							maxdate="new Date()" size="10">
+							<p:ajax event="dateSelect" update="dataFinal" />
+						</p:calendar>
 	    			a
-	    			<p:calendar size="10" pattern="dd/MM/yyyy"
-							value="#{pesquisaNFCeBean.filtro.dataCriacaoAte}" />
+	    			<p:calendar value="#{pesquisaNFCeBean.filtro.dataCriacaoAte}"
+							style="margin: 5px" label="Data final" pattern="dd/MM/yyyy"
+							id="dataFinal" maxdate="new Date()"
+							mindate="#{pesquisaNFCeBean.filtro.dataCriacaoDe}" size="10" />
 					</h:panelGroup>
 
 					<p:outputLabel value="Cliente" />
@@ -82,7 +87,8 @@
 						headerText="Opções">
 
 						<p:button icon="fa far fa-pencil-alt" title="Editar"
-							class="button-pesquisa" disabled="#{nfce.status == 'INUTILIZADA'}"
+							class="button-pesquisa"
+							disabled="#{nfce.status == 'INUTILIZADA'}"
 							outcome="/nfce/CadastroNFCe">
 							<f:param name="nfce" value="#{nfce.id}" />
 						</p:button>
