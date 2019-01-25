@@ -84,7 +84,7 @@ public class Nfes implements Serializable {
 		return this.manager.createQuery("from ItemDuplicata where nfe_id = :nfe_id", ItemDuplicata.class)
 				.setParameter("nfe_id", nfe.getId()).getResultList();
 	}
-	
+
 	@SuppressWarnings({ "unchecked", "deprecation" })
 	public List<Nfe> pesquisa(NfeFilter filtro) {
 		Session session = manager.unwrap(Session.class);
@@ -216,11 +216,9 @@ public class Nfes implements Serializable {
 
 	public List<Nfe> porChave(String chave, Empresa empresaLogada) {
 
-		List<Nfe> list = this.manager
-				.createQuery(
-						"from Nfe where upper(chave) like :chave and empresa = :empresa and (status = :status or status = :statusCorrecao)",
-						Nfe.class)
-				.setParameter("chave", chave.toUpperCase() + "%").setParameter("empresa", empresaLogada)
+		List<Nfe> list = this.manager.createQuery(
+				"from Nfe where upper(chave) like :chave and empresa = :empresa and (status = :status or status = :statusCorrecao)",
+				Nfe.class).setParameter("chave", chave.toUpperCase() + "%").setParameter("empresa", empresaLogada)
 				.setParameter("status", StatusNFe.AUTORIZADA)
 				.setParameter("statusCorrecao", StatusNFe.AUTORIZADACORRECAO).getResultList();
 
@@ -233,8 +231,10 @@ public class Nfes implements Serializable {
 		Session session = manager.unwrap(Session.class);
 		Criteria criteria = session.createCriteria(Nfe.class);
 		criteria.add(Restrictions.ne("status", StatusNFe.EXCUIDA));
+
 		Criterion rest1 = Restrictions.and(Restrictions.eq("numero", nfe.getNumero()),
 				Restrictions.eq("serie", nfe.getSerie()));
+
 		Criterion rest2 = Restrictions.ne("id", nfe.getId());
 
 		criteria.add(Restrictions.and(rest1, rest2));
@@ -245,9 +245,8 @@ public class Nfes implements Serializable {
 
 	public String getTotalSaida(Empresa empresaLogada) {
 
-		Query q = manager
-				.createQuery(
-						"SELECT SUM(x.valorTotal) FROM Nfe x where empresa = :empresa and tipoDocumento = :tipoDocumento and status <> :status")
+		Query q = manager.createQuery(
+				"SELECT SUM(x.valorTotal) FROM Nfe x where empresa = :empresa and tipoDocumento = :tipoDocumento and status <> :status")
 				.setParameter("empresa", empresaLogada).setParameter("tipoDocumento", TipoDocumento.SAIDA)
 				.setParameter("status", StatusNFe.EXCUIDA);
 		BigDecimal result = (BigDecimal) q.getSingleResult();
@@ -262,9 +261,8 @@ public class Nfes implements Serializable {
 
 	public String getTotalEntrada(Empresa empresaLogada) {
 
-		Query q = manager
-				.createQuery(
-						"SELECT SUM(x.valorTotal) FROM Nfe x where empresa = :empresa and tipoDocumento = :tipoDocumento and status <> :status")
+		Query q = manager.createQuery(
+				"SELECT SUM(x.valorTotal) FROM Nfe x where empresa = :empresa and tipoDocumento = :tipoDocumento and status <> :status")
 				.setParameter("empresa", empresaLogada).setParameter("tipoDocumento", TipoDocumento.ENTRADA)
 				.setParameter("status", StatusNFe.EXCUIDA);
 
@@ -347,6 +345,69 @@ public class Nfes implements Serializable {
 		return predicates;
 	}
 
+	
+	public List<Nfe> emitidas(NfeFilter filtro) {
+		From<?, ?> orderByFromEntity = null;
+
+		CriteriaBuilder builder = manager.getCriteriaBuilder();
+		CriteriaQuery<Nfe> criteriaQuery = builder.createQuery(Nfe.class);
+
+		Root<Nfe> NfeRoot = criteriaQuery.from(Nfe.class);
+		From<?, ?> clienteJoin = (From<?, ?>) NfeRoot.fetch("cliente", JoinType.INNER);
+
+		List<Predicate> predicates = criarPredicatesParaEmitidas(filtro, NfeRoot, clienteJoin);
+
+		criteriaQuery.select(NfeRoot);
+		criteriaQuery.where(predicates.toArray(new Predicate[0]));
+
+		if (filtro.getPropriedadeOrdenacao() != null) {
+			String nomePropriedadeOrdenacao = filtro.getPropriedadeOrdenacao();
+			orderByFromEntity = NfeRoot;
+
+			if (filtro.getPropriedadeOrdenacao().contains(".")) {
+				nomePropriedadeOrdenacao = nomePropriedadeOrdenacao
+						.substring(filtro.getPropriedadeOrdenacao().indexOf(".") + 1);
+			}
+
+			if (filtro.getPropriedadeOrdenacao().startsWith("cliente.")) {
+				orderByFromEntity = clienteJoin;
+			}
+
+			if (filtro.isAscendente() && filtro.getPropriedadeOrdenacao() != null) {
+				criteriaQuery.orderBy(builder.asc(orderByFromEntity.get(nomePropriedadeOrdenacao)));
+			} else if (filtro.getPropriedadeOrdenacao() != null) {
+				criteriaQuery.orderBy(builder.desc(orderByFromEntity.get(nomePropriedadeOrdenacao)));
+			}
+		}
+
+		TypedQuery<Nfe> query = manager.createQuery(criteriaQuery);
+
+		query.setFirstResult(filtro.getPrimeiroRegistro());
+		query.setMaxResults(filtro.getQuantidadeRegistros());
+
+		return query.getResultList();
+	}
+
+	private List<Predicate> criarPredicatesParaEmitidas(NfeFilter filtro, Root<Nfe> NfeRoot, From<?, ?> clienteJoin) {
+		CriteriaBuilder builder = manager.getCriteriaBuilder();
+		List<Predicate> predicates = new ArrayList<>();
+
+		filtro.setPropriedadeOrdenacao("emissao");
+		filtro.setAscendente(false);
+
+		if (filtro.getDataCriacaoDe() != null) {
+			predicates.add(builder.greaterThanOrEqualTo(NfeRoot.get("emissao"), filtro.getDataCriacaoDe()));
+		}
+
+		if (filtro.getDataCriacaoAte() != null) {
+			predicates.add(builder.lessThanOrEqualTo(NfeRoot.get("emissao"), filtro.getDataCriacaoAte()));
+		}
+
+		predicates.add(builder.notEqual(NfeRoot.get("status"), StatusNFe.EXCUIDA));
+
+		return predicates;
+	}
+
 	public List<Nfe> filtrados(NfeFilter filtro) {
 		From<?, ?> orderByFromEntity = null;
 
@@ -388,4 +449,5 @@ public class Nfes implements Serializable {
 
 		return query.getResultList();
 	}
+
 }

@@ -36,11 +36,16 @@
 
 					<p:outputLabel value="Data de emissão" />
 					<h:panelGroup>
-						<p:calendar size="10" pattern="dd/MM/yyyy"
-							value="#{pesquisaNFeBean.filtro.dataCriacaoDe}" />
+						<p:calendar value="#{pesquisaNFeBean.filtro.dataCriacaoDe}"
+							style="margin: 5px" label="Data inicial" pattern="dd/MM/yyyy"
+							maxdate="new Date()" size="10">
+							<p:ajax event="dateSelect" update="dataFinal" />
+						</p:calendar>
 	    			a
-	    			<p:calendar size="10" pattern="dd/MM/yyyy"
-							value="#{pesquisaNFeBean.filtro.dataCriacaoAte}" />
+	    			<p:calendar value="#{pesquisaNFeBean.filtro.dataCriacaoAte}"
+							style="margin: 5px" label="Data final" pattern="dd/MM/yyyy"
+							id="dataFinal" maxdate="new Date()"
+							mindate="#{pesquisaNFeBean.filtro.dataCriacaoDe}" size="10" />
 					</h:panelGroup>
 
 					<p:outputLabel value="Cliente" />
