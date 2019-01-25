@@ -1,0 +1,29 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+
+	<div class="ui-fluid">
+
+		<h:commandButton value="Atualizar informações complementares"
+			class="button-green"
+			rendered="#{cadastroNFeBean.nfe.finalidadeOperacao eq 'COMPLEMENTA'}"
+			actionListener="#{cadastroNFeBean.atualizarComplementos}"
+			update="complemento" process="@this" />
+
+		<h1 class="aw-page-title"></h1>
+		<p:outputLabel value="Informações complementares" />
+		<p:inputTextarea id="complemento"
+			value="#{cadastroNFeBean.nfe.dadosComplementares}" />
+
+
+		<h1 class="aw-page-title"></h1>
+		<p:outputLabel value="Reservado ao fisco" />
+		<p:inputTextarea id="fisco" value="#{cadastroNFeBean.nfe.fisco}" />
+	</div>
+
+
+</ui:composition>

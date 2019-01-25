@@ -1,0 +1,139 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
+	template="/WEB-INF/template/Layout.xhtml">
+
+	<f:metadata>
+		<o:viewParam name="empresa"
+			value="#{gestaoEmpresasBean.empresaEdicao}" />
+
+		<f:event listener="#{gestaoEmpresasBean.inicializar}"
+			type="preRenderView" />
+	</f:metadata>
+
+
+	<ui:define name="content">
+
+		<script>
+			$(document).ready(function() {
+				// Sempre que um input Mudar
+				$(':input').change(function() {
+					setConfirmUnload(true);
+				});
+
+				// Sem mudança no form
+				$('form').submit(function() {
+					setConfirmUnload(false);
+				});
+			});
+
+			function setConfirmUnload(on) {
+				var message = "Você tem dados não salvos, deseja sair da tela?";
+				window.onbeforeunload = (on) ? function() {
+					return message;
+				} : null;
+			}
+		</script>
+
+		<h:form id="frm" styleClass="form-principal">
+			<h:panelGrid columns="1" styleClass="grid-titulos">
+				<h:outputLabel value="Cadastro" styleClass="titulo1"></h:outputLabel>
+				<h:outputLabel value="Emitente" styleClass="titulo2"></h:outputLabel>
+			</h:panelGrid>
+
+			<p:fieldset class="grupo-geral">
+
+				<h:panelGrid columns="2" styleClass="grid-titulo-pesquisa">
+					<div class="barra-vertical"></div>
+					<h:outputLabel
+						value="#{gestaoEmpresasBean.editando ? 'Edição de emitente': 'Novo emitente'}"
+						styleClass="titulo-pesquisa"></h:outputLabel>
+				</h:panelGrid>
+
+				<p:toolbar style="margin-top:15px">
+					<p:toolbarGroup>
+						<p:button outcome="/empresas/PesquisaEmpresas" value="Pesquisa"
+							styleClass="button-filtro" icon="fa fas fa-search" />
+						<p:separator />
+
+						<p:button class="button-pesquisa" icon="fa fas fa-plus-circle"
+							value="Novo emitente" outcome="/empresas/CadastroEmpresa"
+							rendered="#{seguranca.incluirEmpresa}"
+							action="#{gestaoEmpresasBean.prepararNovoCadastro}"
+							process="@this">
+						</p:button>
+
+
+					</p:toolbarGroup>
+				</p:toolbar>
+
+
+				<p:messages id="msgs" closable="true" autoUpdate="true" />
+
+				<p:defaultCommand target="salvar-button" />
+
+				<div class="ui-fluid">
+					<h:panelGroup>
+
+						<h:panelGroup id="grupoCapa">
+							<p:focus context="grupoCapa" />
+							<ui:include src="/WEB-INF/template/empresa/Capa.xhtml" />
+						</h:panelGroup>
+
+						<p:tabView style="margin-top:25px" id="tab">
+							<p:tab title="Endereço">
+								<h:panelGroup id="grupoEndereco">
+									<ui:include src="/WEB-INF/template/empresa/Endereco.xhtml" />
+								</h:panelGroup>
+							</p:tab>
+
+							<p:tab title="Logo marca">
+								<h:panelGroup id="grupoLogo">
+									<ui:include src="/WEB-INF/template/empresa/Logo.xhtml" />
+								</h:panelGroup>
+							</p:tab>
+
+							<p:tab title="FCP">
+								<h:panelGroup id="grupoFcp">
+									<ui:include src="/WEB-INF/template/empresa/Fcp.xhtml" />
+								</h:panelGroup>
+							</p:tab>
+
+							<p:tab title="IE ST">
+								<h:panelGroup id="grupoIe">
+									<ui:include
+										src="/WEB-INF/template/empresa/InscricaoEstadualST.xhtml" />
+								</h:panelGroup>
+							</p:tab>
+
+							<p:tab title="Segurança">
+								<h:panelGroup id="certificado">
+									<ui:include src="/WEB-INF/template/empresa/Certificados.xhtml" />
+								</h:panelGroup>
+							</p:tab>
+
+							<p:tab title="Dados adicionais">
+								<p:inputTextarea id="dadosAdicionais"
+									value="#{gestaoEmpresasBean.empresaEdicao.dadosadicionais}" />
+							</p:tab>
+						</p:tabView>
+
+					</h:panelGroup>
+				</div>
+				<center>
+
+					<p:commandButton value="Salvar" class="button-salvar"
+						onsuccess="setConfirmUnload(false)"
+						rendered="#{seguranca.editarEmpresa or seguranca.incluirEmpresa}"
+						id="salvar-button" action="#{gestaoEmpresasBean.salvar}"
+						process="grupoCapa tab:grupoEndereco tab:grupoLogo @this tab:certificado tab:dadosAdicionais"
+						update="@form" />
+
+				</center>
+			</p:fieldset>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

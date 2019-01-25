@@ -1,0 +1,269 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<div class="ui-fluid">
+
+		<p:panelGrid columns="2" styleClass="panelgrid-noborder" layout="grid"
+			style="margin-top:15px; margin-left:-10px"
+			columnClasses="ui-grid-col-3, ui-grid-col-12">
+
+			<p:commandButton class="button-pesquisa" icon="fa fas fa-plus-circle"
+				value="Adicionar produtos" process="@this"
+				rendered="#{(cadastroNFCeBean.nfce.status != 'AUTORIZADA' and cadastroNFCeBean.nfce.status != 'CANCELADA')}"
+				update="produtos-dialog panel-produtos"
+				actionListener="#{cadastroNFCeBean.pesquisaProdutos}"
+				oncomplete="PF('produtosDialog').show()" ignoreAutoUpdate="true">
+			</p:commandButton>
+		</p:panelGrid>
+
+		<p:dataTable value="#{cadastroNFCeBean.nfce.itensProdutos}" var="item"
+			styleClass="myTable" style="margin-top:5px" sortBy="#{item.cfop}"
+			rowIndexVar="linha" id="tabelaItens" reflow="true">
+
+			<p:summaryRow>
+				<p:column rendered="#{linha != 0}" colspan="11">
+					<h:outputText value=" #{item.cfop}" />
+				</p:column>
+			</p:summaryRow>
+
+			<p:column headerText="CFOP">
+				<h:outputText value=" #{item.cfop}"
+					rendered="#{item.produtoAssociado and linha eq 0 or (cadastroNFCeBean.nfce.status eq 'AUTORIZADA' or cadastroNFCeBean.nfce.status eq 'CANCELADA')}" />
+
+				<p:inputText value="#{item.cfop}"
+					rendered="#{linha != 0 and (cadastroNFCeBean.nfce.status != 'AUTORIZADA' and cadastroNFCeBean.nfce.status != 'CANCELADA')}"
+					style="width:75%" required="#{linha > 0}"
+					requiredMessage="O CFOP do produto é necessário">
+					<p:ajax event="change" process="@this" update="tabelaItens"
+						listener="#{cadastroNFCeBean.pesquisarCfopProduto(item, linha)}" />
+				</p:inputText>
+				<h:graphicImage library="images" name="alerta.png" id="semEstoque"
+					style="horizontal-align: center; certical-align: center"
+					rendered="#{item.cfopProduto}" />
+			</p:column>
+
+			<p:column headerText="Código">
+
+				<h:outputText value="#{item.produto.sku}"
+					rendered="#{item.produtoAssociado}" />
+
+				<p:inputText size="8" value="#{cadastroNFCeBean.codigoProduto}"
+					placeholder="Digite o código" label="Código"
+					rendered="#{not item.produtoAssociado}">
+					<p:ajax event="change" process="@this" update="tabelaItens"
+						listener="#{cadastroNFCeBean.carregarProdutoPorSku}" />
+				</p:inputText>
+			</p:column>
+
+			<p:column headerText="Produto">
+
+				<h:outputText value="#{item.produto.nome}"
+					rendered="#{item.produtoAssociado}" />
+
+				<p:autoComplete styleClass="produto-tabela"
+					placeholder="Digite o nome" minQueryLength="3"
+					value="#{cadastroNFCeBean.produtoLinhaEditavel}"
+					completeMethod="#{cadastroNFCeBean.completarProduto}" var="produto"
+					itemLabel="#{produto.nome}" itemValue="#{produto}"
+					forceSelection="true" rendered="#{not item.produtoAssociado}">
+					<p:ajax event="itemSelect" update="tabelaItens"
+						listener="#{cadastroNFCeBean.carregarProdutoLinhaEditavel}" />
+					<p:column>
+						<h:outputText value="#{produto.nome}" />
+					</p:column>
+					<p:column>
+						<h:outputText value="#{produto.unidadeMedida}" />
+					</p:column>
+					<p:column>
+						<h:outputText value="#{produto.valorUnitario}">
+							<f:convertNumber type="currency" />
+						</h:outputText>
+					</p:column>
+				</p:autoComplete>
+			</p:column>
+
+			<p:column headerText="NCM">
+				<h:outputText value="#{item.ncm}">
+				</h:outputText>
+			</p:column>
+
+
+
+			<p:column headerText="CST"
+				rendered="#{seguranca.empresa.regimeTributario != 'SIMPLES'}">
+
+				<h:graphicImage library="images" name="alerta.png" id="semCst"
+					style="horizontal-align: center; certical-align: center"
+					rendered="#{item.produto.csticms eq null and linha != 0}" />
+
+				<h:outputText value="#{item.produto.csticms.codigo}"
+					rendered="#{linha != 0}">
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="CSOSN"
+				rendered="#{seguranca.empresa.regimeTributario == 'SIMPLES'}">
+				<h:graphicImage library="images" name="alerta.png" id="semCsosn"
+					style="horizontal-align: center; certical-align: center"
+					rendered="#{item.produto.csosn eq null and linha != 0}" />
+
+				<h:outputText value="#{item.produto.csosn.codigo}"
+					rendered="#{item.produtoAssociado  and linha eq 0}">
+				</h:outputText>
+
+				<h:outputText value="#{item.produto.csosn.codigo}"
+					rendered="#{linha != 0}">
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="Unid.">
+				<h:outputText value="#{item.produto.unidadeMedida}" />
+			</p:column>
+
+			<p:column headerText="Qtd.">
+
+				<h:outputText value=" #{item.quantidade}"
+					rendered="#{item.produtoAssociado and linha eq 0 or (cadastroNFCeBean.nfce.status eq 'AUTORIZADA' or cadastroNFCeBean.nfce.status eq 'CANCELADA')}" />
+				<p:inputText size="8" value="#{item.quantidade}"
+					rendered="#{linha != 0 and (cadastroNFCeBean.nfce.status != 'AUTORIZADA' and cadastroNFCeBean.nfce.status != 'CANCELADA')}">
+					<p:ajax event="change" process="@this" update="tabelaItens"
+						listener="#{cadastroNFCeBean.atualizarQuantidade(item, linha)}" />
+				</p:inputText>
+			</p:column>
+
+			<p:column headerText="Valor unitário">
+
+				<h:outputText value="#{item.valorUnitario}"
+					rendered="#{item.produtoAssociado and linha eq 0 or (cadastroNFCeBean.nfce.status eq 'AUTORIZADA'  or cadastroNFCeBean.nfce.status eq 'CANCELADA')}">
+					<f:convertNumber type="currency" />
+				</h:outputText>
+
+				<p:inputNumber value="#{item.valorUnitario}" decimalPlaces="4"
+					rendered="#{linha != 0 and (cadastroNFCeBean.nfce.status != 'AUTORIZADA' and cadastroNFCeBean.nfce.status != 'CANCELADA')}">
+					<p:ajax event="change" process="@this" update="tabelaItens"
+						listener="#{cadastroNFCeBean.atualizarValorProduto(item, linha)}" />
+				</p:inputNumber>
+			</p:column>
+
+			<p:column headerText="Desconto">
+
+				<h:outputText value=" #{item.valorDesconto}"
+					rendered="#{item.produtoAssociado and linha eq 0 or (cadastroNFCeBean.nfce.status eq 'AUTORIZADA'  or cadastroNFCeBean.nfce.status eq 'CANCELADA')}">
+					<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+				</h:outputText>
+				<p:inputText value="#{item.valorDesconto}" styleClass="moeda"
+					rendered="#{linha != 0 and (cadastroNFCeBean.nfce.status != 'AUTORIZADA'  and cadastroNFCeBean.nfce.status != 'CANCELADA')}">
+					<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+					<p:ajax event="change" process="@this" update="tabelaItens"
+						listener="#{cadastroNFCeBean.atualizarValorDesconto(item, linha)}" />
+				</p:inputText>
+			</p:column>
+
+			<p:column headerText="Valor total">
+
+				<h:outputText value="#{item.valorTotal}"
+					rendered="#{linha eq 0 and item.produtoAssociado}">
+					<f:convertNumber type="currency" />
+				</h:outputText>
+
+				<h:outputText value="#{item.valorTotal}" rendered="#{linha != 0}">
+					<f:convertNumber type="currency" />
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="Opções" style="text-align: center; width:90px">
+
+				<p:commandButton icon="ui-icon-trash" update="tabelaItens"
+					title="Remover produto" style="width:40px"
+					rendered="#{linha != 0 and (cadastroNFCeBean.nfce.status != 'AUTORIZADA' and cadastroNFCeBean.nfce.status != 'CANCELADA')}"
+					process="tabelaItens">
+					<p:confirm icon="ui-icon-alert" header="Confirmação de exclusão"
+						message="Tem certeza que deseja remover este produto" />
+					<p:ajax event="click" process="@this" update="tabelaItens"
+						listener="#{cadastroNFCeBean.removerItem(item, linha)}" />
+				</p:commandButton>
+			</p:column>
+
+			<p:columnGroup type="footer">
+				<p:row>
+					<p:column colspan="8" footerText="Totais" style="text-align: right" />
+
+					<p:column style="text-align: right">
+						<f:facet name="footer">
+							<h:outputText value="#{cadastroNFCeBean.nfce.valorDesconto}">
+								<f:convertNumber type="currency" />
+							</h:outputText>
+						</f:facet>
+					</p:column>
+
+					<p:column style="text-align: right">
+						<f:facet name="footer">
+							<h:outputText value="#{cadastroNFCeBean.nfce.valorTotalProdutos}">
+								<f:convertNumber type="currency" />
+							</h:outputText>
+						</f:facet>
+					</p:column>
+
+					<p:column style="text-align: right">
+						<f:facet name="footer">
+
+						</f:facet>
+					</p:column>
+				</p:row>
+			</p:columnGroup>
+		</p:dataTable>
+
+
+
+
+
+
+
+
+		<p:dialog header="Pesquisa de produtos" widgetVar="produtosDialog"
+			modal="true" id="produtos-dialog" closeOnEscape="true"
+			resizable="true">
+
+			<h:panelGroup id="panel-produtos" style="margin-top:5px">
+				<p:dataTable id="produtosTable" widgetVar="table-produtos"
+					style="max-width:550px; max-higth:450px"
+					value="#{cadastroNFCeBean.produtosFiltrados}" var="produto"
+					emptyMessage="Nenhum produto encontrado." rows="7" reflow="true"
+					paginator="true" paginatorPosition="bottom"
+					paginatorAlwaysVisible="false">
+
+					<p:column style="width: 30px; text-align: center">
+						<p:commandButton icon="ui-icon-check" title="Selecionar"
+							oncomplete="if (!args.validationFailed) PF('produtosDialog').hide()"
+							process="@this"
+							action="#{cadastroNFCeBean.produtosSelecionar(produto)}"
+							update=":frm:tab:tabelaItens :frm:tab:transparencia" />
+					</p:column>
+
+					<p:column headerText="Código" filterBy="#{produto.sku}"
+						style="width: 80px; text-align:center">
+						<h:outputText value="#{produto.sku}" />
+					</p:column>
+
+					<p:column headerText="Nome" filterBy="#{produto.nome}">
+						<h:outputText value="#{produto.nome}" />
+					</p:column>
+
+					<p:column headerText="Valor unitário"
+						style="width: 100px; text-align:center">
+						<h:outputText value="#{produto.valorUnitario}">
+							<f:convertNumber type="currency" />
+						</h:outputText>
+					</p:column>
+
+				</p:dataTable>
+
+			</h:panelGroup>
+		</p:dialog>
+
+	</div>
+
+</ui:composition>

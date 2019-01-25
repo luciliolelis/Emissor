@@ -1,0 +1,79 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<p:panelGrid columns="4" layout="grid" style="margin-top: 10px"
+		styleClass="panelgrid-noborder"
+		columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4">
+
+		<p:outputLabel value="CST IPI" for="ipi" />
+		<p:selectOneMenu id="ipi" required="true" autoWidth="false"
+			value="#{cadastroProdutoBean.produto.cstipi}">
+			<f:selectItem itemLabel="Selecione" />
+			<f:selectItems value="#{cadastroProdutoBean.ipis}" var="ipi"
+				itemValue="#{ipi}" itemLabel="#{ipi.codigo} - #{ipi.descricao}" />
+			<p:ajax event="change" process="@this" update="outputIpi inputIpi outputSomar inputSomar outputSomarSt inputSomarSt" />
+		</p:selectOneMenu>
+
+		
+
+
+		<p:outputPanel id="outputIpi">
+			<p:outputLabel value="Alíquota IPI (%)" for="aliquota-ipi"
+				id="panelIpi"
+				rendered="#{cadastroProdutoBean.produto.cstipi.codigo eq 50 or cadastroProdutoBean.produto.cstipi.codigo eq 00}" />
+		</p:outputPanel>
+		<p:outputPanel id="inputIpi">
+			<p:inputText id="aliquota-ipi" required="true"
+				rendered="#{cadastroProdutoBean.produto.cstipi.codigo eq 50 or cadastroProdutoBean.produto.cstipi.codigo eq 00}"
+				value="#{cadastroProdutoBean.produto.aliquotaIpi}">
+				<f:convertNumber type="percent" pattern="#0.00" />
+			</p:inputText>
+		</p:outputPanel>
+		
+		
+		
+		
+		<p:outputPanel id="outputSomar">
+			<p:outputLabel value="Somar IPI a B.C de ICMS"
+				rendered="#{cadastroProdutoBean.produto.cstipi.codigo eq 50 or cadastroProdutoBean.produto.cstipi.codigo eq 00}" />
+
+		</p:outputPanel>
+
+		<p:outputPanel id="inputSomar">
+			<p:selectBooleanButton id="somar-ipi-icms" onIcon="ui-icon-check"
+				rendered="#{cadastroProdutoBean.produto.cstipi.codigo eq 50 or cadastroProdutoBean.produto.cstipi.codigo eq 00}"
+				offIcon="ui-icon-close"
+				value="#{cadastroProdutoBean.produto.somarIpiBcIcms}" onLabel="Sim"
+				offLabel="Não" style="width:100px">
+
+				
+
+			</p:selectBooleanButton>
+		</p:outputPanel>
+		
+		
+		<p:outputPanel id="outputSomarSt">
+			<p:outputLabel value="Somar IPI a B.C de ICMS ST"
+				rendered="#{cadastroProdutoBean.produto.cstipi.codigo eq 50 or cadastroProdutoBean.produto.cstipi.codigo eq 00}" />
+
+		</p:outputPanel>
+
+		<p:outputPanel id="inputSomarSt">
+			<p:selectBooleanButton id="somar-ipi-icms-st" onIcon="ui-icon-check"
+				rendered="#{cadastroProdutoBean.produto.cstipi.codigo eq 50 or cadastroProdutoBean.produto.cstipi.codigo eq 00}"
+				offIcon="ui-icon-close"
+				value="#{cadastroProdutoBean.produto.somarIpiBcIcmsSt}" onLabel="Sim"
+				offLabel="Não" style="width:100px">
+
+			
+
+			</p:selectBooleanButton>
+		</p:outputPanel>
+
+
+	</p:panelGrid>
+</ui:composition>

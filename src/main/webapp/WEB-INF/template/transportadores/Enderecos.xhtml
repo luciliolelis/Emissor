@@ -1,0 +1,135 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:panelGrid columns="2" cellpadding="5" style="margin-top:5px"
+		id="panel-grupos">
+		<p:commandButton value="Adicionar endereço" 
+			 process="@this" class="button-pesquisa"
+			icon="fa fas fa-plus-circle" update=":frm:tab:endereco-dialog"
+			oncomplete="PF('enderecoDialog').show()"
+			actionListener="#{gestaoTransportadorBean.novoEndereco}">
+			<p:resetInput target="endereco-dialog" />
+		</p:commandButton>
+	</h:panelGrid>
+
+	<p:dataTable value="#{gestaoTransportadorBean.clienteEdicao.enderecos}" styleClass="myTable"
+		reflow="true" id="tableEnderecos" var="endereco"
+		emptyMessage="Nenhum endereço cadastrado." style="margin-top:10px">
+
+		<p:column headerText="Opções" style="width:100px">
+			<p:commandButton update=":frm:tab:endereco-dialog" style="width:45px"
+				oncomplete="PF('enderecoDialog').show()" icon="fa far fa-pencil-alt"
+				title="Editar" class="button-pesquisa" process="@this">
+				<f:setPropertyActionListener value="#{endereco}"
+					target="#{gestaoTransportadorBean.enderecoSelecionado}" />
+			</p:commandButton>
+
+			<p:commandButton icon="fa far fa-trash-alt" title="Excluir"
+				class="button-pesquisa" update="tableEnderecos" style="width:45px"
+				process="tableEnderecos">
+				<p:confirm icon="ui-icon-alert" header="Confirmação de exclusão"
+					message="Tem certeza que deseja remover este endereço" />
+				<p:collector value="#{endereco}"
+					removeFrom="#{gestaoTransportadorBean.clienteEdicao.enderecos}" />
+			</p:commandButton>
+		</p:column>
+
+		<p:column headerText="CEP">
+			<h:outputText value="#{endereco.cep}" />
+		</p:column>
+
+		<p:column headerText="Cidade">
+			<h:outputText value="#{endereco.cidade} - #{endereco.uf}" />
+		</p:column>
+
+		<p:column headerText="Logradouro">
+			<h:outputText value="#{endereco.logradouro}, #{endereco.numero}" />
+		</p:column>
+
+		<p:column headerText="Bairro">
+			<h:outputText value="#{endereco.bairro}" />
+		</p:column>
+
+		<p:column headerText="Complemento">
+			<h:outputText value="#{endereco.complemento}" />
+		</p:column>
+
+
+	</p:dataTable>
+
+
+	<p:dialog header="Pesquisa de CEP" widgetVar="enderecoDialog"
+		modal="true" id="endereco-dialog" showEffect="fade" hideEffect="fade"
+		resizable="false" closeOnEscape="true">
+
+		<p:messages id="msgsEnderecos" closable="true" />
+		<p:defaultCommand target="salvar-endereco-button"
+			scope="endereco-dialog" />
+
+		<h:panelGroup id="painel-dialog">
+			<p:panelGrid columns="2" cellpadding="5">
+
+				<p:outputLabel value="CEP" for="cep" />
+				<p:inputMask id="cep" mask="99999-999" placeholder="Digite o CEP"
+					size="9" maxlength="10" required="true"
+					value="#{gestaoTransportadorBean.enderecoSelecionado.cep}">
+					<p:ajax event="change" process="@this"
+						update="cep uf cidade bairro logradouro complemento ibge-cidade ibge-uf"
+						listener="#{gestaoTransportadorBean.pesquisarCepEnderecos}" />
+				</p:inputMask>
+
+				<p:outputLabel value="UF" for="uf" />
+				<p:inputText id="uf" required="true" size="2" maxlength="2"
+					value="#{gestaoTransportadorBean.enderecoSelecionado.uf}" />
+
+				<p:outputLabel value="Cidade" for="cidade" />
+				<p:inputText id="cidade" required="true" size="50" maxlength="50"
+					value="#{gestaoTransportadorBean.enderecoSelecionado.cidade}" />
+
+				<p:outputLabel value="Bairro" for="bairro" />
+				<p:inputText id="bairro" required="true" size="50" maxlength="50"
+					value="#{gestaoTransportadorBean.enderecoSelecionado.bairro}" />
+
+				<p:outputLabel value="Logradouro" for="logradouro" />
+				<p:inputText id="logradouro" required="true" size="50"
+					maxlength="100"
+					value="#{gestaoTransportadorBean.enderecoSelecionado.logradouro}" />
+
+				<p:outputLabel value="Número" for="numero" />
+				<p:inputText id="numero" required="true" size="10" maxlength="10"
+					value="#{gestaoTransportadorBean.enderecoSelecionado.numero}" />
+
+				<p:outputLabel value="Complemento" for="complemento" />
+				<p:inputText id="complemento" size="50"
+					value="#{gestaoTransportadorBean.enderecoSelecionado.complemento}" />
+
+				<p:outputLabel value="IBGE cidade" for="ibge-cidade" />
+				<p:inputText id="ibge-cidade" size="10"
+					value="#{gestaoTransportadorBean.enderecoSelecionado.ibgeCidade}" />
+
+
+				<p:outputLabel value="IBGE UF" for="ibge-uf" />
+				<p:inputText id="ibge-uf" size="10"
+					value="#{gestaoTransportadorBean.enderecoSelecionado.ibgeEstado}" />
+				<p:outputLabel />
+
+				<p:commandButton value="Confirmar" process="endereco-dialog"
+					id="salvar-endereco-button"
+					oncomplete="if (!args.validationFailed) PF('enderecoDialog').hide()"
+					update="msgsEnderecos :frm:tab:tableEnderecos painel-dialog"
+					actionListener="#{gestaoTransportadorBean.onConfirmaEndereco}">
+					<p:collector value="#{gestaoTransportadorBean.enderecoSelecionado}"
+						addTo="#{gestaoTransportadorBean.clienteEdicao.enderecos}"
+						unique="true" />
+				</p:commandButton>
+			</p:panelGrid>
+		</h:panelGroup>
+	</p:dialog>
+
+
+
+
+</ui:composition>

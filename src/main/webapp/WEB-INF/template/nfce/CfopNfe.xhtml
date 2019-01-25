@@ -1,0 +1,68 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<div class="ui-fluid">
+		<h1 class="aw-page-title"></h1>
+
+		<p:panelGrid columns="2" layout="grid" styleClass="panelgrid-noborder"
+			columnClasses="ui-grid-col-2,ui-grid-col-4">
+
+			<p:outputLabel value="CFOP" for="cfop" />
+			<p:panelGrid columns="2" styleClass="panelgrid-noborder"
+				style="width:105%;margin-left:-10px" layout="grid"
+				columnClasses="ui-grid-col-3, ui-grid-col-12">
+
+				<p:commandButton icon="ui-icon-search" title="Pesquisar"
+					process="@this" update="cfop-dialog panel-cfop"
+					actionListener="#{cadastroNFCeBean.novaPesquisa}"
+					oncomplete="PF('cfopDialog').show()" ignoreAutoUpdate="true">
+				</p:commandButton>
+
+				<p:inputText id="cfop" required="true" maxlength="4" mask="9999"
+					placeholder="Pesquise por CFOP"
+					readonly="#{facesContext.currentPhaseId.name eq 'RENDER_RESPONSE'}"
+					value="#{cadastroNFCeBean.codigoCfop}">
+				</p:inputText>
+
+			</p:panelGrid>
+
+		</p:panelGrid>
+
+
+		<p:dialog header="CFOP NFC-e" widgetVar="cfopDialog" modal="true"
+			id="cfop-dialog" showEffect="fade" hideEffect="fade" resizable="true"
+			closeOnEscape="true">
+
+			<h:panelGroup id="panel-cfop" style="margin-top:5px">
+				<p:dataTable value="#{cadastroNFCeBean.cfopFiltrados}" var="cfop"
+					style="max-width:550px; max-higth:450px"
+					emptyMessage="Nenhum cfop encontrado.">
+
+					<p:column style="width: 30px; text-align: center">
+						<p:commandButton icon="ui-icon-check" title="Selecionar"
+							oncomplete="if (!args.validationFailed) PF('cfopDialog').hide()"
+							process="@this" action="#{cadastroNFCeBean.cfopSelecionar(cfop)}"
+							update=":frm:cfop" />
+					</p:column>
+
+					<p:column headerText="CFOP" style="width:60px"
+						filterBy="#{cfop.codigo}" sortBy="#{cfop.codigo}">
+						<h:outputText value="#{cfop.codigo}" />
+					</p:column>
+
+					<p:column headerText="Descrição" sortBy="#{cfop.descricao}"
+						footerText="contains" filterBy="#{cfop.descricao}">
+						<h:outputText value="#{cfop.descricao}" />
+					</p:column>
+
+				</p:dataTable>
+			</h:panelGroup>
+		</p:dialog>
+	</div>
+
+
+
+</ui:composition>

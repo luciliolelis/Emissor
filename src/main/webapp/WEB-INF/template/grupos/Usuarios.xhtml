@@ -1,0 +1,20 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h3>Usuários</h3>
+	<p:selectManyCheckbox 
+		value="#{gestaoGruposBean.selectedUsuarios}"
+		layout="pageDirection">
+		<f:selectItem itemLabel="Pesquisar usuários"
+			itemValue="USUARIO_PESQUISAR" />
+		<f:selectItem itemLabel="Incluir novos usuários"
+			itemValue="USUARIO_INCLUIR" />
+		<f:selectItem itemLabel="Editar usuários existentes"
+			itemValue="USUARIO_EDITAR" />
+		<f:selectItem itemLabel="Excluir usuários"
+			itemValue="USUARIO_EXCLUIR" />
+	</p:selectManyCheckbox>
+</ui:composition>

@@ -1,0 +1,148 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
+	template="/WEB-INF/template/Layout.xhtml">
+
+	<f:metadata>
+		<o:viewParam name="grupo" value="#{gestaoGruposBean.grupoEdicao}" />
+		<f:event listener="#{gestaoGruposBean.inicializar}"
+			type="preRenderView" />
+	</f:metadata>
+
+
+	<ui:define name="content">
+
+		<script>
+			$(document).ready(function() {
+				// Sempre que um input Mudar
+				$(':input').change(function() {
+					setConfirmUnload(true);
+				});
+
+				// Sem mudança no form
+				$('form').submit(function() {
+					setConfirmUnload(false);
+				});
+			});
+
+			function setConfirmUnload(on) {
+				var message = "Você tem dados não salvos, deseja sair da tela?";
+				window.onbeforeunload = (on) ? function() {
+					return message;
+				} : null;
+			}
+		</script>
+
+
+
+		<h:form id="frm" styleClass="form-principal">
+
+			<h:panelGrid columns="1" styleClass="grid-titulos">
+				<h:outputLabel value="Cadastro" styleClass="titulo1"></h:outputLabel>
+				<h:outputLabel value="Grupo de usuário" styleClass="titulo2"></h:outputLabel>
+			</h:panelGrid>
+
+			<p:fieldset class="grupo-geral">
+				<h:panelGrid columns="2" styleClass="grid-titulo-pesquisa">
+					<div class="barra-vertical"></div>
+					<h:outputLabel
+						value="#{gestaoGruposBean.editando ? 'Edição de grupo': 'Novo grupo'}"
+						styleClass="titulo-pesquisa"></h:outputLabel>
+				</h:panelGrid>
+
+				<p:toolbar style="margin-top:15px">
+					<p:toolbarGroup>
+						<p:button value="Pesquisa" outcome="/grupos/PesquisaGrupos"
+							styleClass="button-filtro" icon="fa fas fa-search" />
+						<p:separator />
+						<p:button class="button-pesquisa" icon="fa fas fa-plus-circle"
+							value="Novo grupo" outcome="/grupos/CadastroGrupo"
+							action="#{gestaoGruposBean.prepararNovoCadastro}" process="@this">
+						</p:button>
+
+					</p:toolbarGroup>
+				</p:toolbar>
+
+
+				<p:messages id="msgs" closable="true" autoUpdate="true" />
+
+				<p:focus context="painel" />
+				<div class="ui-fluid">
+
+					<p:panelGrid columns="4" id="painel" layout="grid"
+						style="margin-top: 20px" styleClass="panelgrid-noborder"
+						columnClasses="ui-grid-col-2, ui-grid-col-4,ui-grid-col-2, ui-grid-col-4">
+						<p:outputLabel value="Nome" for="nome" />
+						<p:inputText id="nome"
+							value="#{gestaoGruposBean.grupoEdicao.nome}" />
+
+					</p:panelGrid>
+
+				</div>
+
+
+				<p:tabView style="margin-top:25px" id="tab">
+					<p:tab title="Base do emitente">
+
+						<p:panelGrid columns="4" layout="grid" style="margin-top: 10px"
+							styleClass="panelgrid-noborder"
+							columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4">
+							<ui:include src="/WEB-INF/template/grupos/Empresas.xhtml"></ui:include>
+							<ui:include src="/WEB-INF/template/grupos/Grupos.xhtml"></ui:include>
+
+						</p:panelGrid>
+
+						<p:panelGrid columns="4" layout="grid" style="margin-top: 10px"
+							styleClass="panelgrid-noborder"
+							columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4">
+							<ui:include src="/WEB-INF/template/grupos/Usuarios.xhtml"></ui:include>
+							<ui:include src="/WEB-INF/template/grupos/Logs.xhtml"></ui:include>
+						</p:panelGrid>
+
+					</p:tab>
+
+					<p:tab title="Cadastros basicos">
+
+						<p:panelGrid columns="4" layout="grid" style="margin-top: 10px"
+							styleClass="panelgrid-noborder"
+							columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4">
+							<ui:include src="/WEB-INF/template/grupos/Clientes.xhtml"></ui:include>
+							<ui:include src="/WEB-INF/template/grupos/Transportadores.xhtml"></ui:include>
+						</p:panelGrid>
+
+						<p:panelGrid columns="4" layout="grid" style="margin-top: 10px"
+							styleClass="panelgrid-noborder"
+							columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4">
+
+							<ui:include src="/WEB-INF/template/grupos/Produtos.xhtml"></ui:include>
+							<ui:include src="/WEB-INF/template/grupos/Ncms.xhtml"></ui:include>
+						</p:panelGrid>
+					</p:tab>
+
+					<p:tab title="Documentos fiscais">
+
+						<p:panelGrid columns="4" layout="grid" style="margin-top: 10px"
+							styleClass="panelgrid-noborder"
+							columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4">
+							<ui:include src="/WEB-INF/template/grupos/NF.xhtml"></ui:include>
+							<ui:include src="/WEB-INF/template/grupos/NFE.xhtml"></ui:include>
+						</p:panelGrid>
+
+					</p:tab>
+
+				</p:tabView>
+
+				<center>
+
+					<p:commandButton title="Salvar" class="button-salvar"
+						onsuccess="setConfirmUnload(false)"
+						actionListener="#{gestaoGruposBean.salvar}" update="frm" />
+
+				</center>
+			</p:fieldset>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

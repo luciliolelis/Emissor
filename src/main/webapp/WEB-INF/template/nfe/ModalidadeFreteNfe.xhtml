@@ -1,0 +1,32 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<div class="ui-fluid">
+		<h1 class="aw-page-title">Modalidade do frete</h1>
+		<p:panelGrid columns="4" layout="grid" 
+			styleClass="panelgrid-noborder"
+			columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4">
+
+			<p:outputLabel value="Responsável" for="modalidade-frete" />
+
+			<p:selectOneButton value="#{cadastroNfeBean.nfe.modalidadeFrete}"
+				id="modalidade-frete">
+				<f:selectItem itemLabel="Emitente" itemValue="EMITENTE" />
+				<f:selectItem itemLabel="Destinatário" itemValue="DESTINATARIO" />
+				<f:selectItem itemLabel="Outro" itemValue="OUTRO" />
+				<p:ajax event="change"
+					update="groupTransporteLabel groupTransporteText" />
+			</p:selectOneButton>
+
+
+		</p:panelGrid>
+
+	</div>
+
+
+
+</ui:composition>

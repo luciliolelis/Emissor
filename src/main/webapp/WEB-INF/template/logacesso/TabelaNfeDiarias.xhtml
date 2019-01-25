@@ -1,0 +1,51 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:dataTable id="nfediariasTable" value="#{gestaoHomeBean.nfeList}"
+		var="nfe" styleClass="myTable" emptyMessage="Nenhuma NF-e encontrada."
+		rows="10" paginator="true" paginatorPosition="bottom"
+		style="margin-top: 10px" reflow="true">
+
+		<p:column headerText="Emissão">
+			<h:outputText value="#{nfe.emissao}">
+				<f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="GMT-3" />
+			</h:outputText>
+		</p:column>
+
+		<p:column headerText="Empresa">
+			<h:outputText value="#{nfe.empresa.nome_fantasia}" />
+		</p:column>
+		<p:column headerText="Usúario">
+			<h:outputText value="#{nfe.usuario.nome}" />
+		</p:column>
+
+		<p:column headerText="Valor" style="text-align: right">
+			<h:outputText value="#{nfe.valorTotalNota}">
+				<f:convertNumber type="currency" />
+			</h:outputText>
+		</p:column>
+
+		<p:columnGroup type="footer">
+			<p:row>
+				<p:column colspan="3" footerText="Totais" style="text-align: right" />
+
+				<p:column style="text-align: right">
+					<f:facet name="footer">
+						<h:outputText value="#{gestaoHomeBean.totalNotasNfeFiltadas}">
+							<f:convertNumber type="currency" />
+						</h:outputText>
+					</f:facet>
+				</p:column>
+			</p:row>
+		</p:columnGroup>
+
+		<f:facet name="footer">
+			(#{gestaoHomeBean.nfeList.size()}) registros
+		</f:facet>
+
+	</p:dataTable>
+
+</ui:composition>

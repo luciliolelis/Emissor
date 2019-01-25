@@ -1,0 +1,63 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+
+	<p:dialog header="Autorizações" widgetVar="grupoDialog" modal="true"
+		id="autorizacao-dialog" showEffect="fade" hideEffect="fade"
+		resizable="true" closeOnEscape="true">
+
+		<p:messages id="msgsAutosizacao" closable="true" />
+
+		<h:panelGrid columns="2" cellpadding="5" style="margin-top:15px">
+
+			<p:outputLabel value="Usuário" />
+			<p:outputLabel value="#{gestaoUsuariosBean.usuarioEdicao.nome}" />
+
+			<p:outputLabel value="Emitente" for="empresa" />
+			<p:selectOneMenu id="empresa" required="true" var="e"
+				value="#{gestaoUsuariosBean.empresaSelecionada}">
+
+				<f:selectItems value="#{gestaoUsuariosBean.todasEmpresas}"
+					var="empresa" itemLabel="#{empresa.nome_fantasia}"
+					itemValue="#{empresaSelecionada}" />
+
+				<p:column>
+					<p:graphicImage style="max-width:50px;max-height:48px"
+						cache="false" value="#{imageBean.streamedImageById}">
+						<f:param name="id" value="#{e.id}" />
+					</p:graphicImage>
+				</p:column>
+
+				<p:column>
+					<p:outputLabel value="#{e.nome_fantasia}" />
+				</p:column>
+
+				<p:column>
+					<p:outputLabel value="#{e.razao_social}" />
+				</p:column>
+
+			</p:selectOneMenu>
+
+			<p:outputLabel value="Grupo" for="grupo" />
+			<p:selectOneMenu id="grupo" required="true"
+				value="#{gestaoUsuariosBean.grupoSelecionado}">
+				<f:selectItem itemLabel="Selecione" />
+				<f:selectItems value="#{gestaoUsuariosBean.gruposTodos}" var="grupo"
+					itemLabel="#{grupo.nome}" itemValue="#{grupoSelecionado}" />
+			</p:selectOneMenu>
+
+			<p:outputLabel />
+			<p:commandButton value="Confirmar" process="autorizacao-dialog"
+				oncomplete="if (!args.validationFailed) PF('grupoDialog').hide()"
+				update="msgsAutosizacao :frm:tableGrupoEmpresa"
+				actionListener="#{gestaoUsuariosBean.onConfirmaGrupo}"
+				styleClass="ui-priority-primary">
+			</p:commandButton>
+		</h:panelGrid>
+	</p:dialog>
+
+</ui:composition>

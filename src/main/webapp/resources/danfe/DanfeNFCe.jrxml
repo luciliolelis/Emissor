@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2018-04-17T17:44:56 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="DanfeNFCe" pageWidth="206" pageHeight="1133" columnWidth="202" leftMargin="2" rightMargin="2" topMargin="0" bottomMargin="0" uuid="2ee59f2c-90ef-45b6-820e-6d2b3ab6db90">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="48"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Adapter from XML"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="mm"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="mm"/>
+	<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<subDataset name="detalhes" uuid="d402eb6a-5484-4328-a03d-55ba7b288e4b">
+		<parameter name="PreImpresso" class="java.lang.Boolean">
+			<defaultValueExpression><![CDATA[new Boolean(false)]]></defaultValueExpression>
+		</parameter>
+		<queryString language="xPath">
+			<![CDATA[//det]]>
+		</queryString>
+		<field name="codigo" class="java.lang.String">
+			<fieldDescription><![CDATA[prod/cProd]]></fieldDescription>
+		</field>
+		<field name="descricao" class="java.lang.String">
+			<fieldDescription><![CDATA[prod/xProd]]></fieldDescription>
+		</field>
+		<field name="lbaseIcms" class="java.lang.String">
+			<fieldDescription><![CDATA[imposto/ICMS//vBC]]></fieldDescription>
+		</field>
+		<field name="lvalorIcms" class="java.lang.String">
+			<fieldDescription><![CDATA[imposto/ICMS//vICMS]]></fieldDescription>
+		</field>
+		<field name="lvalorIpi" class="java.lang.String">
+			<fieldDescription><![CDATA[imposto/IPI/IPITrib/vIPI]]></fieldDescription>
+		</field>
+		<field name="ncm" class="java.lang.String">
+			<fieldDescription><![CDATA[prod/NCM]]></fieldDescription>
+		</field>
+		<field name="cst" class="java.lang.String">
+			<fieldDescription><![CDATA[imposto/ICMS//CST]]></fieldDescription>
+		</field>
+		<field name="orig" class="java.lang.String">
+			<fieldDescription><![CDATA[imposto/ICMS//orig]]></fieldDescription>
+		</field>
+		<field name="cfop" class="java.lang.String">
+			<fieldDescription><![CDATA[prod/CFOP]]></fieldDescription>
+		</field>
+		<field name="valorTotal" class="java.lang.String">
+			<fieldDescription><![CDATA[prod/vProd]]></fieldDescription>
+		</field>
+		<field name="aliquotaIcms" class="java.lang.String">
+			<fieldDescription><![CDATA[imposto/ICMS//pICMS]]></fieldDescription>
+		</field>
+		<field name="aliquotaIpi" class="java.lang.String">
+			<fieldDescription><![CDATA[imposto/IPI/IPITrib/pIPI]]></fieldDescription>
+		</field>
+		<field name="unidadeTributaria" class="java.lang.String">
+			<fieldDescription><![CDATA[prod/uTrib]]></fieldDescription>
+		</field>
+		<field name="valorUnitarioComercial" class="java.lang.String">
+			<fieldDescription><![CDATA[prod/vUnCom]]></fieldDescription>
+		</field>
+		<field name="quantidadeComercial" class="java.lang.String">
+			<fieldDescription><![CDATA[prod/qCom]]></fieldDescription>
+		</field>
+		<field name="valorUnitarioTributario" class="java.lang.String">
+			<fieldDescription><![CDATA[prod/vUnTrib]]></fieldDescription>
+		</field>
+		<field name="quantidadeTributaria" class="java.lang.String">
+			<fieldDescription><![CDATA[prod/qTrib]]></fieldDescription>
+		</field>
+		<field name="unidadeComercial" class="java.lang.String">
+			<fieldDescription><![CDATA[prod/uCom]]></fieldDescription>
+		</field>
+		<field name="valorICMSST" class="java.lang.String">
+			<fieldDescription><![CDATA[imposto/ICMS//vICMSST]]></fieldDescription>
+		</field>
+		<field name="baseICMSST" class="java.lang.String">
+			<fieldDescription><![CDATA[imposto/ICMS//vBCST]]></fieldDescription>
+		</field>
+		<field name="ldesconto" class="java.lang.String">
+			<fieldDescription><![CDATA[prod/vDesc]]></fieldDescription>
+		</field>
+		<field name="informacoesAdicionais" class="java.lang.String">
+			<fieldDescription><![CDATA[infAdProd]]></fieldDescription>
+		</field>
+		<field name="nItem" class="java.lang.String">
+			<fieldDescription><![CDATA[@nItem]]></fieldDescription>
+		</field>
+	</subDataset>
+	<subDataset name="pagamentos" uuid="1578a218-3fb7-4aef-ae21-4e6142002704">
+		<queryString language="xPath">
+			<![CDATA[//pag]]>
+		</queryString>
+		<field name="tPag" class="java.lang.String">
+			<fieldDescription><![CDATA[tPag]]></fieldDescription>
+		</field>
+		<field name="vPag" class="java.lang.String">
+			<fieldDescription><![CDATA[vPag]]></fieldDescription>
+		</field>
+		<field name="cardCNPJ" class="java.lang.String">
+			<fieldDescription><![CDATA[card/CNPJ]]></fieldDescription>
+		</field>
+		<field name="cardtBand" class="java.lang.String">
+			<fieldDescription><![CDATA[card/tBand]]></fieldDescription>
+		</field>
+		<field name="cardcAut" class="java.lang.String">
+			<fieldDescription><![CDATA[card/cAut]]></fieldDescription>
+		</field>
+	</subDataset>
+	<parameter name="UrlConsulta" class="java.lang.String"/>
+	<queryString language="xPath">
+		<![CDATA[/]]>
+	</queryString>
+	<field name="emitenteRazaoSocial" class="java.lang.String">
+		<fieldDescription><![CDATA[/nfeProc/NFe/infNFe/emit/xNome]]></fieldDescription>
+	</field>
+	<field name="emitenteCnpj" class="java.lang.String">
+		<fieldDescription><![CDATA[/nfeProc/NFe/infNFe/emit/CNPJ]]></fieldDescription>
+	</field>
+	<field name="emitenteInscricaoEstadual" class="java.lang.String">
+		<fieldDescription><![CDATA[/nfeProc/NFe/infNFe/emit/IE]]></fieldDescription>
+	</field>
+	<field name="emitenteInscricaoEstadualSubtributario" class="java.lang.String">
+		<fieldDescription><![CDATA[/nfeProc/NFe/infNFe/emit/IEST]]></fieldDescription>
+	</field>
+	<field name="emitenteEndereco" class="java.lang.String">
+		<fieldDescription><![CDATA[/nfeProc/NFe/infNFe/emit/enderEmit/xLgr]]></fieldDescription>
+	</field>
+	<field name="emitenteEnderecoNro" class="java.lang.String">
+		<fieldDescription><![CDATA[/nfeProc/NFe/infNFe/emit/enderEmit/nro]]></fieldDescription>
+	</field>
+	<field name="emitenteBairro" class="java.lang.String">
+		<fieldDescription><![CDATA[/nfeProc/NFe/infNFe/emit/enderEmit/xBairro]]></fieldDescription>
+	</field>
+	<field name="emitenteMunicipio" class="java.lang.String">
+		<fieldDescription><![CDATA[/nfeProc/NFe/infNFe/emit/enderEmit/xMun]]></fieldDescription>
+	</field>
+	<field name="emitenteUf" class="java.lang.String">
+		<fieldDescription><![CDATA[/nfeProc/NFe/infNFe/emit/enderEmit/UF]]></fieldDescription>
+	</field>
+	<field name="emitenteInscricaoEstadual_1" class="java.lang.String">
+		<fieldDescription><![CDATA[/nfeProc/NFe/infNFe/emit/IE]]></fieldDescription>
+	</field>
+	<field name="emitenteInscricaoEstadualSubtributario_1" class="java.lang.String">
+		<fieldDescription><![CDATA[/nfeProc/NFe/infNFe/emit/IEST]]></fieldDescription>
+	</field>
+	<field name="emitenteCnpj_1" class="java.lang.String">
+		<fieldDescription><![CDATA[/nfeProc/NFe/infNFe/emit/CNPJ]]></fieldDescription>
+	</field>
+	<field name="emitenteCep" class="java.lang.String">
+		<fieldDescription><![CDATA[/nfeProc/NFe/infNFe/emit/enderEmit/CEP]]></fieldDescription>
+	</field>
+	<field name="emitenteTelefone" class="java.lang.String">
+		<fieldDescription><![CDATA[/nfeProc/NFe/infNFe/emit/enderEmit/fone]]></fieldDescription>
+	</field>
+	<field name="chaveAcesso" class="java.lang.String">
+		<fieldDescription><![CDATA[/nfeProc/NFe/infNFe/@Id]]></fieldDescription>
+	</field>
+	<field name="nNF" class="java.lang.String">
+		<fieldDescription><![CDATA[/nfeProc/NFe/infNFe/ide/nNF]]></fieldDescription>
+	</field>
+	<field name="serie" class="java.lang.String">
+		<fieldDescription><![CDATA[/nfeProc/NFe/infNFe/ide/serie]]></fieldDescription>
+	</field>
+	<field name="dataEmissao" class="java.lang.String">
+		<fieldDescription><![CDATA[/nfeProc/NFe/infNFe/ide/dhEmi]]></fieldDescription>
+	</field>
+	<field name="valorTotalNota" class="java.lang.String">
+		<fieldDescription><![CDATA[/nfeProc/NFe/infNFe/total/ICMSTot/vNF]]></fieldDescription>
+	</field>
+	<field name="nProt" class="java.lang.String">
+		<fieldDescription><![CDATA[/nfeProc/protNFe/infProt/nProt]]></fieldDescription>
+	</field>
+	<field name="dhRecbto" class="java.lang.String">
+		<fieldDescription><![CDATA[/nfeProc/protNFe/infProt/dhRecbto]]></fieldDescription>
+	</field>
+	<field name="destinatarioRazaoSocial" class="java.lang.String">
+		<fieldDescription><![CDATA[/nfeProc/NFe/infNFe/dest/xNome]]></fieldDescription>
+	</field>
+	<field name="destinatarioCnpj" class="java.lang.String">
+		<fieldDescription><![CDATA[/nfeProc/NFe/infNFe/dest/CNPJ]]></fieldDescription>
+	</field>
+	<field name="destinatarioCpf" class="java.lang.String">
+		<fieldDescription><![CDATA[/nfeProc/NFe/infNFe/dest/CPF]]></fieldDescription>
+	</field>
+	<field name="destinatarioCnpjCpf" class="java.lang.String">
+		<fieldDescription><![CDATA[/nfeProc/NFe/infNFe/dest/CNPJ | /nfeProc/NFe/infNFe/dest/CPF]]></fieldDescription>
+	</field>
+	<field name="destinatarioEndereco" class="java.lang.String">
+		<fieldDescription><![CDATA[/nfeProc/NFe/infNFe/dest/enderDest/xLgr]]></fieldDescription>
+	</field>
+	<field name="destinatarioEnderecoNro" class="java.lang.String">
+		<fieldDescription><![CDATA[/nfeProc/NFe/infNFe/dest/enderDest/nro]]></fieldDescription>
+	</field>
+	<field name="valorTotalProduto" class="java.lang.String">
+		<fieldDescription><![CDATA[/nfeProc/NFe/infNFe/total/ICMSTot/vProd]]></fieldDescription>
+	</field>
+	<field name="informacoesComplementares2" class="java.lang.String">
+		<fieldDescription><![CDATA[/nfeProc/NFe/infNFe/infAdic/infCpl]]></fieldDescription>
+	</field>
+	<field name="detCount" class="java.lang.String">
+		<fieldDescription><![CDATA[count(//det)]]></fieldDescription>
+	</field>
+	<field name="qrCode" class="java.lang.String">
+		<fieldDescription><![CDATA[/nfeProc/NFe/infNFeSupl/qrCode]]></fieldDescription>
+	</field>
+	<field name="desconto" class="java.lang.String">
+		<fieldDescription><![CDATA[/nfeProc/NFe/infNFe/total/ICMSTot/vDesc]]></fieldDescription>
+	</field>
+	<field name="Troco" class="java.lang.String">
+		<fieldDescription><![CDATA[/nfeProc/NFe/infNFe/total/ICMSTot/vDesc]]></fieldDescription>
+	</field>
+	<field name="tpEmis" class="java.lang.String">
+		<fieldDescription><![CDATA[/nfeProc/NFe/infNFe/ide/tpEmis]]></fieldDescription>
+	</field>
+	<group name="group">
+		<groupExpression><![CDATA[$F{nNF}]]></groupExpression>
+		<groupHeader>
+			<band height="3" splitType="Stretch"/>
+		</groupHeader>
+	</group>
+</jasperReport>

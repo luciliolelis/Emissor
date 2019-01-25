@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+
+
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Recuperação de senha</title>
+
+	<h:outputStylesheet library="css" name="login.css" />
+
+
+</h:head>
+
+<h:body>
+
+
+
+
+	<div id="outer">
+		<div id="inner" class="login-form">
+
+
+			<h:form id="frm" prependId="false">
+
+				<center>
+					<h:graphicImage library="images" name="logo.png"
+						style="width:150px;height:50px" />
+				</center>
+
+				<p:spacer />
+				<p:messages id="messages" autoUpdate="true" closable="true" />
+
+				<div class="ui-fluid">
+
+					<h:panelGrid columns="1" layout="grid"
+						styleClass="panelgrid-noborder">
+
+
+				
+						<p:inputText type="" id="email" placeholder="E-mail"
+							value="#{recuperaSenhaEmailBean.email}" required="true"
+							requiredMessage="O e-mail é necessário" />
+
+
+					</h:panelGrid>
+
+
+					<p:spacer />
+					<h:panelGrid columns="2" layout="grid"
+						styleClass="panelgrid-noborder">
+
+						<h:commandButton value="Solicitar" ajax="false"
+							class="button-logout"
+							action="#{recuperaSenhaEmailBean.recuperar}"
+							icon="fa fa-envelope" />
+
+						<h:button outcome="/Login" value="Voltar para o login"
+							class="button-login" icon="fa fa-mail-reply" />
+					</h:panelGrid>
+
+
+
+				</div>
+
+			</h:form>
+		</div>
+	</div>
+
+</h:body>
+</html>

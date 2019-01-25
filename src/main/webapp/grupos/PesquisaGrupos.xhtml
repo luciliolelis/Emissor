@@ -1,0 +1,85 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
+	template="/WEB-INF/template/Layout.xhtml">
+
+
+	<f:metadata>
+		<f:viewAction action="#{gestaoGruposBean.consultar}" />
+	</f:metadata>
+
+	<ui:define name="titulo">Grupos de usuários</ui:define>
+
+	<ui:define name="content">
+
+		<h:form id="frm" styleClass="form-principal">
+
+			<h:panelGrid columns="1" styleClass="grid-titulos">
+				<h:outputLabel value="Pesquisa" styleClass="titulo1"></h:outputLabel>
+				<h:outputLabel value="Grupos de usuários" styleClass="titulo2"></h:outputLabel>
+			</h:panelGrid>
+
+			<p:fieldset class="grupo-geral">
+
+				<h:panelGrid columns="2" styleClass="grid-titulo-pesquisa">
+					<div class="barra-vertical"></div>
+					<h:outputLabel value="Pesquisar" styleClass="titulo-pesquisa"></h:outputLabel>
+				</h:panelGrid>
+
+
+				<p:toolbar id="toolbar" style="margin-top:15px">
+					<p:toolbarGroup>
+
+						<p:button class="button-pesquisa" icon="fa fas fa-plus-circle"
+							value="Novo grupo de usuário" outcome="/grupos/CadastroGrupo"
+							action="#{gestaoGruposBean.prepararNovoCadastro}" process="@this">
+						</p:button>
+
+
+
+					</p:toolbarGroup>
+				</p:toolbar>
+	
+				<p:messages id="msgs" closable="true" autoUpdate="true" />
+
+				<p:dataTable value="#{gestaoGruposBean.todosGupos}" var="grupo"
+					emptyMessage="Nenhum grupo cadastrado." rows="10" paginator="true"
+					paginatorPosition="bottom" style="margin-top: 10px"
+					styleClass="myTable" id="pesquisa-table" reflow="true"
+					paginatorAlwaysVisible="false">
+
+					<p:column style="text-align: center; width: 100px"
+						exportable="false" headerText="Opções">
+
+						<p:button icon="fa far fa-pencil-alt" title="Editar"
+							class="button-pesquisa" outcome="/grupos/CadastroGrupo">
+							<f:param name="grupo" value="#{grupo.id}" />
+						</p:button>
+
+						<p:commandButton icon="fa far fa-trash-alt" title="Excluir"
+							process="@this" class="button-pesquisa"
+							update=":frm:pesquisa-table :frm:toolbar :frm:msgs"
+							action="#{gestaoGruposBean.excluir(grupo)}">
+							<p:confirm icon="ui-icon-alert" header="Confirmação de exclusão"
+								message="Tem certeza que deseja excluir o grupo" />
+						</p:commandButton>
+
+					</p:column>
+
+					<p:column headerText="Nome">
+						<h:outputText value="#{grupo.nome}" />
+					</p:column>
+					<f:facet name="footer">
+									(#{gestaoGruposBean.todosGupos.size()}) registros
+				    			</f:facet>
+
+				</p:dataTable>
+
+
+			</p:fieldset>
+		</h:form>
+
+	</ui:define>
+</ui:composition>

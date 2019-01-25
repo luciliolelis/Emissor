@@ -1,0 +1,28 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<div class="ui-fluid">
+
+		
+	
+
+		
+		<h:commandButton
+			actionListener="#{cadastroNFeBean.exportarNfe}"
+			update="@form" value="Exportar XML" 
+			ajax="false" class="button-blue"></h:commandButton>
+
+		<p:inputTextarea id="editor" value="#{cadastroNFeBean.nfe.xml}"
+			cols="80000" readonly="false" />
+
+		<h:commandButton value="Gerar Cacerts" class="button-blue"
+			actionListener="#{cadastroNFeBean.gerarCacerts}" update="editor"
+			process="@this" />
+	</div>
+
+
+</ui:composition>

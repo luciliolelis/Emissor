@@ -1,0 +1,98 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:o="http://omnifaces.org/ui" xmlns:p="http://primefaces.org/ui">
+
+	<div class="ui-fluid">
+		<p:panelGrid columns="4" layout="grid" id="grid-capa"
+			style="margin-top:15px" styleClass="panelgrid-noborder"
+			columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4">
+
+			<p:outputLabel value="Status" />
+			<h:outputText value="#{cadastroNFeBean.nfe.status.descricao}"
+				id="status" />
+
+			<p:outputLabel value="Finalidade da operação"
+				for="finalidadeOperacao" />
+
+			<p:selectOneMenu id="finalidadeOperacao" required="true"
+				value="#{cadastroNFeBean.nfe.finalidadeOperacao}" effect="fold"
+				editable="false">
+				<f:selectItem itemLabel="1 - Nf-e normal" itemValue="NORMAL" />
+				<f:selectItem itemLabel="2 - Nf-e complementar"
+					itemValue="COMPLEMENTA" />
+				<f:selectItem itemLabel="3 - Nf-e de ajuste" itemValue="AJUSTE" />
+				<f:selectItem itemLabel="4 - Devolução de mercadoria"
+					itemValue="DEVOLUCAO" />
+				<p:ajax event="itemSelect" process="@this" update="@form" />
+			</p:selectOneMenu>
+
+			<p:outputLabel value="Tipo do documento" for="tipoDocumento" />
+			<p:selectOneMenu value="#{cadastroNFeBean.nfe.tipoDocumento}"
+				effect="fold" id="tipoDocumento" widgetVar="ps">
+				<f:selectItem itemLabel="Entrada" itemValue="ENTRADA" />
+				<f:selectItem itemLabel="Saída" itemValue="SAIDA" />
+				<p:ajax event="itemSelect" process="@this" update="@this" />
+			</p:selectOneMenu>
+
+			<p:outputLabel value="Número" for="numero" />
+			<p:spinner id="numero" value="#{cadastroNFeBean.nfe.numero}" min="1"
+				max="999999">
+				<p:ajax process="@this" update="@this" />
+			</p:spinner>
+
+			<p:outputLabel value="Série" for="serie" />
+			<p:inputText id="serie" value="#{cadastroNFeBean.nfe.serie}"
+				required="true" />
+
+			<p:outputLabel value="Ins. Est. Subst. Tributária" for="substituicao" />
+			<p:inputText id="substituicao"
+				value="#{cadastroNFeBean.nfe.substituicaoTributaria}" />
+
+			<h:outputText value="Entrada/Saída" />
+			<p:calendar value="#{cadastroNFeBean.nfe.dataEntradaOuSaida}"
+				pattern="dd/MM/yyyy HH:mm">
+			</p:calendar>
+
+			<h:outputText value="Emissão" for="emissao" />
+			<p:calendar id="emissao" value="#{cadastroNFeBean.nfe.emissao}"
+				required="true" pattern="dd/MM/yyyy HH:mm">
+			</p:calendar>
+		</p:panelGrid>
+
+		<h:panelGroup
+			rendered="#{cadastroNFeBean.nfe.finalidadeOperacao eq 'DEVOLUCAO'}">
+			<h1 class="aw-page-title">Devolução de mercadoria</h1>
+		</h:panelGroup>
+
+		<h:panelGroup
+			rendered="#{cadastroNFeBean.nfe.finalidadeOperacao eq 'COMPLEMENTA'}">
+			<h1 class="aw-page-title">Nota complementar</h1>
+		</h:panelGroup>
+
+		<p:panelGrid columns="4" layout="grid" style="margin-top: 10px"
+			styleClass="panelgrid-noborder"
+			columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4">
+			<p:outputLabel value="Tipo da nota" for="tipoNota"
+				rendered="#{cadastroNFeBean.nfe.finalidadeOperacao eq 'DEVOLUCAO' or cadastroNFeBean.nfe.finalidadeOperacao eq 'COMPLEMENTA'}" />
+			<p:selectOneMenu id="tipoNota" effect="fold"
+				rendered="#{cadastroNFeBean.nfe.finalidadeOperacao eq 'DEVOLUCAO' or cadastroNFeBean.nfe.finalidadeOperacao eq 'COMPLEMENTA'}"
+				value="#{cadastroNFeBean.nfe.tipoNota}">
+				<f:selectItem itemLabel="Selecione" />
+				<f:selectItems value="#{cadastroNFeBean.tTipoNotas}" var="tipoNota"
+					itemValue="#{tipoNota}" itemLabel="#{tipoNota.descricao}" />
+				<p:ajax event="change" process="@this" update="@form" />
+			</p:selectOneMenu>
+
+			<p:outputLabel value="Chave de acesso" for="nota"
+				rendered="#{cadastroNFeBean.nfe.tipoNota != 'NF' and cadastroNFeBean.nfe.finalidadeOperacao eq 'DEVOLUCAO' or cadastroNFeBean.nfe.finalidadeOperacao eq 'COMPLEMENTA'}" />
+			<p:inputText value="#{cadastroNFeBean.nfe.chaveRef}" id="nota"
+				rendered="#{cadastroNFeBean.nfe.tipoNota != 'NF' and cadastroNFeBean.nfe.finalidadeOperacao eq 'DEVOLUCAO' or cadastroNFeBean.nfe.finalidadeOperacao eq 'COMPLEMENTA'}" />
+
+
+
+		</p:panelGrid>
+	</div>
+
+</ui:composition>

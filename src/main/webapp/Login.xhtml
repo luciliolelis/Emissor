@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Login</title>
+
+	<h:outputStylesheet library="css" name="login.css" />
+
+
+</h:head>
+
+
+<h:body>
+	<f:metadata>
+		<f:viewParam name="dummy" />
+		<f:event listener="#{loginBean.preRender}" type="preRenderView" />
+	</f:metadata>
+
+	<div id="outer">
+
+
+		<div id="inner" class="login-form">
+
+			<h:form id="frm" prependId="false">
+				<center>
+					<h:graphicImage library="images" name="logo.png"
+						style="width:150px;height:50px" />
+				</center>
+
+				<p:spacer />
+				<p:messages id="messages" autoUpdate="true" closable="true" />
+
+
+				<div class="ui-fluid">
+					<p:focus context="grid-login" />
+					<h:panelGrid columns="1" layout="grid" id="grid-login"
+						styleClass="panelgrid-noborder">
+
+
+						<p:inputText id="j_username" value="#{loginBean.email}" size="40"
+							placeholder="Email" />
+						<p:outputLabel />
+						<p:watermark for="j_username" value="Informe o login" />
+						<p:password id="j_password" placeholder="Senha" size="40" />
+
+						<p:spacer />
+
+						<p:commandLink actionListener="#{loginBean.recuperaSenha}"
+							ajax="false">
+							<h:outputText value="Esqueceu sua senha?" />
+						</p:commandLink>
+						<p:spacer />
+
+
+
+
+					</h:panelGrid>
+
+
+					<center>
+						<h:commandButton value="Login" action="#{loginBean.login}"
+							class="button-login" ajax="false" />
+					</center>
+
+
+				</div>
+
+
+
+
+
+
+			</h:form>
+
+		</div>
+
+	</div>
+
+
+
+</h:body>
+</html>

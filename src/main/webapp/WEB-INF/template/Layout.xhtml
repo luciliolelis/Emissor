@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:head>
+
+	<!-- 	<link rel="icon" href="images/icon.ico" type="image/x-icon" /> -->
+	<!-- 	<link rel="shortcut icon" href="images/icon.ico" type="image/x-icon" /> -->
+
+
+	<link rel="stylesheet"
+		href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+		integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU"
+		crossorigin="anonymous"></link>
+
+	<f:facet name="first">
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+	</f:facet>
+
+	<title>AmSoft Nf-e</title>
+
+	<h:outputStylesheet library="amsoft" name="styles/custom.css" />
+	<h:outputStylesheet library="amsoft" name="styles/layout.css" />
+	<h:outputStylesheet library="amsoft" name="styles/components.css" />
+	<h:outputStylesheet library="css" name="sistema.css" />
+	<h:outputStylesheet library="css" name="app.css" />
+
+	<h:outputScript target="body" library="primefaces"
+		name="jquery/jquery.js" />
+	<h:outputScript target="body" library="amsoft"
+		name="javascripts/app.js" />
+	<h:outputScript library="js" name="jquery.maskMoney.js" />
+
+	<script>
+		PrimeFaces.locales['pt'] = {
+			closeText : 'Fechar',
+			prevText : 'Anterior',
+			nextText : 'Próximo',
+			currentText : 'Começo',
+			monthNames : [ 'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio',
+					'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro',
+					'Novembro', 'Dezembro' ],
+			monthNamesShort : [ 'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun',
+					'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez' ],
+			dayNames : [ 'Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta',
+					'Sexta', 'Sábado' ],
+			dayNamesShort : [ 'Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb' ],
+			dayNamesMin : [ 'D', 'S', 'T', 'Q', 'Q', 'S', 'S' ],
+			weekHeader : 'Semana',
+			firstDay : 0,
+			isRTL : false,
+			showMonthAfterYear : false,
+			yearSuffix : '',
+			timeOnlyTitle : 'Só Horas',
+			timeText : 'Tempo',
+			hourText : 'Hora',
+			minuteText : 'Minuto',
+			secondText : 'Segundo',
+			ampm : false,
+			month : 'Mês',
+			week : 'Semana',
+			day : 'Dia',
+			allDayText : 'Todo o Dia'
+		};
+	</script>
+
+</h:head>
+
+<h:body>
+	<f:metadata>
+		<f:viewParam name="dummy" />
+		<f:event listener="#{loginEmpresaBean.preRender}" type="preRenderView" />
+	</f:metadata>
+
+	<script>
+		function configurarMoeda() {
+			$(".moeda").maskMoney({
+				decimal : ",",
+				thousands : ".",
+				allowZero : true
+			});
+		}
+
+		$(document).ready(function() {
+			configurarMoeda();
+		});
+	</script>
+
+	<header class="aw-topbar">
+
+
+		<p:ajaxStatus onstart="PF('statusDialog').show()"
+			onsuccess="PF('statusDialog').hide();configurarMoeda()" />
+
+		<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+			closable="false" resizable="false" showHeader="false">
+			<h:graphicImage library="images" name="ajax-loader.gif" width="110"
+				height="110" />
+		</p:dialog>
+
+		<a href="#" class="aw-toggle  js-toggle"><i class="fa  fa-bars"></i></a>
+
+		<div style="float: left; margin-left: 15px; margin-top: 5px">
+			<h:link outcome="/Home">
+				<h:graphicImage library="images" name="amsof.png" height="60"
+					width="175" />
+			</h:link>
+
+		</div>
+
+		<div style="float: right; margin-top: 10px; margin-right: 10px">
+
+			<h:form style="display: inline-block">
+
+				<p:menubar>
+					<p:submenu label="Olá #{seguranca.nomeUsuario}"
+						icon="fa far fa-user">
+
+						<p:menuitem value="Perfil" outcome="/perfil/PerfilUsuario"
+							icon="fa fa-user" />
+						<p:menuitem value="Empresa" outcome="/perfil/PerfilEmpresa"
+							icon="fa fa-bank" />
+						<p:separator />
+						<p:menuitem value="Sair"
+							actionListener="#{loginEmpresaBean.onGravaLogOut}"
+							icon="fa fa-power-off">
+
+							<p:confirm icon="ui-icon-alert" header="Sair"
+								message="Tem certeza que deseja sair do sistema?" />
+
+						</p:menuitem>
+					</p:submenu>
+				</p:menubar>
+			</h:form>
+		</div>
+	</header>
+
+	<section class="aw-content  js-content">
+		<ui:insert name="content" />
+	</section>
+
+	<aside class="aw-sidebar  js-sidebar">
+		<ui:include src="Menu.xhtml" />
+	</aside>
+
+	<h:form>
+		<p:confirmDialog global="true">
+			<p:commandButton value="Não" type="button"
+				styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+
+			<p:commandButton value="Sim" type="button"
+				styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+		</p:confirmDialog>
+	</h:form>
+
+</h:body>
+
+<div class="footer">
+	<footer style="margin-top: 3px">
+		#{seguranca.empresaLogada} - #{seguranca.regimeTributario} -
+		#{seguranca.grupoUsuarioLogado} - <a href="http://www.amsoft.com.br/"
+			target="_blank">www.amsoft.com.br</a>
+
+	</footer>
+</div>
+
+</html>

@@ -1,0 +1,65 @@
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<f:metadata>
+		<f:event listener="#{gestaoHomeBean.inicializar}" type="preRenderView" />
+		<f:viewAction action="#{gestaoHomeBean.consultar}" />>
+	</f:metadata>
+
+
+	<ui:define name="titulo">Log de acessos</ui:define>
+	<ui:define name="content">
+		<h:form id="frm" styleClass="form-principal">
+			<p:fieldset class="grupo-geral">
+				<h:panelGrid columns="2">
+					<div class="barra-vertical"></div>
+					<h:outputLabel value="Logs"
+						styleClass="titulo-pesquisa"></h:outputLabel>
+				</h:panelGrid>
+
+
+				<p:panelGrid columns="5" layout="grid" style="margin-top: 20px"
+					styleClass="panelgrid-noborder"
+					columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4 , ui-grid-col-4">
+
+					<p:outputLabel value="Datas entre" />
+					<h:panelGroup>
+						<p:calendar value="#{gestaoHomeBean.filtro.dataCriacaoDe}"
+							style="margin: 5px" label="Data inicial" pattern="dd/MM/yyyy"
+							maxdate="new Date()" size="10">
+							<p:ajax event="dateSelect" update="dataFinal" />
+						</p:calendar>
+	    			e
+	    			<p:calendar	value="#{gestaoHomeBean.filtro.dataCriacaoAte}"
+							style="margin: 5px" label="Data final" pattern="dd/MM/yyyy" id="dataFinal"
+							maxdate="new Date()" mindate="#{gestaoHomeBean.filtro.dataCriacaoDe}" size="10" />
+					</h:panelGroup>
+
+					<p:commandButton value="Pesqusiar"
+						actionListener="#{gestaoHomeBean.consultar}"
+						styleClass="button-filtro" icon="fa fas fa-search" update="frm" />
+
+				</p:panelGrid>
+
+				<p:tabView style="margin-top: 25px">
+					<p:tab title="Acessos">
+						<ui:include
+							src="/WEB-INF/template/logacesso/TabelaLogAcesso.xhtml" />
+					</p:tab>
+					<p:tab title="NF-e">
+						<ui:include
+							src="/WEB-INF/template/logacesso/TabelaNfeDiarias.xhtml" />
+					</p:tab>
+						<p:tab title="NFC-e">
+						<ui:include
+							src="/WEB-INF/template/logacesso/TabelaNfceDiarias.xhtml" />
+					</p:tab>
+				</p:tabView>
+			</p:fieldset>
+		</h:form>
+	</ui:define>
+</ui:composition>
