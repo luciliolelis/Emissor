@@ -4,8 +4,10 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 
+
+
 	<p:panelGrid columns="4" layout="grid" style="margin-top: 10px"
-		styleClass="panelgrid-noborder"
+		styleClass="panelgrid-noborder " 
 		columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4">
 
 		<p:outputLabel value="CNPJ" for="cnpj" />
@@ -36,7 +38,7 @@
 			value="#{gestaoEmpresasBean.empresaEdicao.inscricao_estadual}" />
 
 		<p:outputLabel value="Regime tributário" for="tributacao" />
-		<p:selectOneMenu id="tributacao" required="true"
+		<p:selectOneMenu id="tributacao" required="true"  style="width: 100%"
 			value="#{gestaoEmpresasBean.empresaEdicao.regimeTributario}">
 			<f:selectItem itemLabel="Selecione" />
 			<f:selectItems value="#{gestaoEmpresasBean.regimeTributarios}"
