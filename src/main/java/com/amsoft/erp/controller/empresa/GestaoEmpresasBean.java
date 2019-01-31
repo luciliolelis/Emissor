@@ -207,7 +207,7 @@ public class GestaoEmpresasBean implements Serializable {
 	}
 
 	public void prepararNovoCadastro() {
-		empresaEdicao = new Empresa();
+		this.empresaEdicao = new Empresa();
 	}
 
 	public void inicializar() {
@@ -230,7 +230,7 @@ public class GestaoEmpresasBean implements Serializable {
 
 		usuarioLogado.getUsuario().setEmpresa(this.empresaEdicao);
 
-		consultar();
+		this.consultar();
 		FacesUtil.addInfoMessage("Empresa salva com sucesso!");
 		this.empresaEdicao.adicionarItemVazio();
 		this.empresaEdicao.adicionarItemVazioFcp();
@@ -275,12 +275,12 @@ public class GestaoEmpresasBean implements Serializable {
 		empresa = cadastroEmpresa.salvar(empresa);
 
 		messages.info("Empresa excluída com sucesso!");
-		consultar();
+		this.consultar();
 
 	}
 
 	public void consultar() {
-		todasEmpresas = empresas.todas();
+		this.todasEmpresas = empresas.todas();
 	}
 
 	public List<Empresa> getTodasEmpresas() {

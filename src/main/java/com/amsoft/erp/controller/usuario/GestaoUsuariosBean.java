@@ -40,60 +40,22 @@ public class GestaoUsuariosBean implements Serializable {
 	@Inject
 	private CadastroUsuarioService cadastroUsuario;
 
-	private List<EmpresaGrupo> gruposEmprsasUsuario;
-
-	public List<EmpresaGrupo> getGruposEmprsasUsuario() {
-		return gruposEmprsasUsuario;
-	}
-
-	public void setGruposEmprsasUsuario(List<EmpresaGrupo> gruposEmprsasUsuario) {
-		this.gruposEmprsasUsuario = gruposEmprsasUsuario;
-	}
-
-	private List<Usuario> todosUsuarios;
-	private Usuario usuarioEdicao = new Usuario();
-	private Usuario usuarioSelecionado;
-
-	private Empresa empresaSelecionada;
-
 	@Inject
 	private Grupos grupos;
+
+	private List<Empresa> todasEmpresas;
+	private List<EmpresaGrupo> gruposEmprsasUsuario;
+	private List<Usuario> todosUsuarios;
 	private List<Grupo> gruposTodos;
+
+	private Usuario usuarioEdicao = new Usuario();
+	private Usuario usuarioSelecionado;
+	private Empresa empresaSelecionada;
 	private Grupo grupoSelecionado;
-
-	public Grupo getGrupoSelecionado() {
-		return grupoSelecionado;
-	}
-
-	public void setGrupoSelecionado(Grupo grupoSelecionado) {
-		this.grupoSelecionado = grupoSelecionado;
-	}
 
 	@PostConstruct
 	public void init() {
 		gruposTodos = this.grupos.todos();
-	}
-
-	public List<Grupo> getGruposTodos() {
-		return gruposTodos;
-	}
-
-	public void setGruposTodos(List<Grupo> gruposTodos) {
-		this.gruposTodos = gruposTodos;
-	}
-
-	public Empresa getEmpresaSelecionada() {
-		return empresaSelecionada;
-	}
-
-	public void setEmpresaSelecionada(Empresa empresaSelecionada) {
-		this.empresaSelecionada = empresaSelecionada;
-	}
-
-	private List<Empresa> todasEmpresas;
-
-	public List<Empresa> getTodasEmpresas() {
-		return todasEmpresas;
 	}
 
 	public void inicializar() {
@@ -135,15 +97,14 @@ public class GestaoUsuariosBean implements Serializable {
 			}
 
 			if (this.usuarioEdicao.getEmpresa() == null) {
-				this.usuarioEdicao.setEmpresa(this.usuarioEdicao
-						.getEmpresasGrupos().get(0).getEmpresa());
+				this.usuarioEdicao.setEmpresa(this.usuarioEdicao.getEmpresasGrupos().get(0).getEmpresa());
 			}
 
 			if (this.usuarioEdicao.getEmpresaGrupo() == null) {
 				this.usuarioEdicao.setEmpresaGrupo(this.retGrupoEmpresaByUsuario());
 			}
 
-			this.usuarioEdicao = cadastroUsuario.salvar(usuarioEdicao);
+			this.usuarioEdicao = this.salvar(usuarioEdicao);
 			consultar();
 			FacesUtil.addInfoMessage("Usuário salvo com sucesso!");
 
@@ -163,8 +124,7 @@ public class GestaoUsuariosBean implements Serializable {
 			System.out.println(grupo.getEmpresa().getId());
 			System.out.println(this.usuarioEdicao.getEmpresa().getId());
 
-			if (grupo.getEmpresa().getId()
-					.equals(this.usuarioEdicao.getEmpresa().getId())) {
+			if (grupo.getEmpresa().getId().equals(this.usuarioEdicao.getEmpresa().getId())) {
 				ret = grupo;
 			}
 		}
@@ -178,6 +138,29 @@ public class GestaoUsuariosBean implements Serializable {
 
 	public LogAcesso salvarLogAcesso(LogAcesso log) {
 		return this.cadastroUsuario.salvarLogAcesso(log);
+	}
+
+	public void onConfirmaGrupo() {
+		System.out.println("Vincula Grupo de usuários");
+
+		EmpresaGrupo empresaGrupo = new EmpresaGrupo();
+		empresaGrupo.setEmpresa(empresaSelecionada);
+		empresaGrupo.setGrupo(grupoSelecionado);
+		empresaGrupo.setUsuario(usuarioEdicao);
+
+		this.usuarioEdicao.getEmpresasGrupos().add(empresaGrupo);
+
+		this.onEmpresasUsuario();
+	}
+
+	public void selecionaEmpresasPossiveis() {
+		this.onEmpresasUsuario();
+	}
+
+	public void onRowDblClckSelect(SelectEvent event) throws IOException {
+		Usuario obj = (Usuario) event.getObject();
+		this.setUsuarioEdicao(obj);
+		FacesContext.getCurrentInstance().getExternalContext().redirect("CadastroUsuario.xhtml?usuario=" + obj.getId());
 	}
 
 	public void removerEmpresa() {
@@ -219,31 +202,44 @@ public class GestaoUsuariosBean implements Serializable {
 		this.usuarioSelecionado = usuarioSelecionado;
 	}
 
+	public Grupo getGrupoSelecionado() {
+		return grupoSelecionado;
+	}
+
+	public void setGrupoSelecionado(Grupo grupoSelecionado) {
+		this.grupoSelecionado = grupoSelecionado;
+	}
+
+	public List<EmpresaGrupo> getGruposEmprsasUsuario() {
+		return gruposEmprsasUsuario;
+	}
+
+	public void setGruposEmprsasUsuario(List<EmpresaGrupo> gruposEmprsasUsuario) {
+		this.gruposEmprsasUsuario = gruposEmprsasUsuario;
+	}
+
+	public List<Grupo> getGruposTodos() {
+		return gruposTodos;
+	}
+
+	public void setGruposTodos(List<Grupo> gruposTodos) {
+		this.gruposTodos = gruposTodos;
+	}
+
+	public Empresa getEmpresaSelecionada() {
+		return empresaSelecionada;
+	}
+
+	public void setEmpresaSelecionada(Empresa empresaSelecionada) {
+		this.empresaSelecionada = empresaSelecionada;
+	}
+
+	public List<Empresa> getTodasEmpresas() {
+		return todasEmpresas;
+	}
+
 	public boolean isEditando() {
 		return this.usuarioEdicao.getId() != null;
 	}
 
-	public void onConfirmaGrupo() {
-		System.out.println("Vincula Grupo de usuários");
-
-		EmpresaGrupo empresaGrupo = new EmpresaGrupo();
-		empresaGrupo.setEmpresa(empresaSelecionada);
-		empresaGrupo.setGrupo(grupoSelecionado);
-		empresaGrupo.setUsuario(usuarioEdicao);
-
-		this.usuarioEdicao.getEmpresasGrupos().add(empresaGrupo);
-
-		this.onEmpresasUsuario();
-	}
-
-	public void selecionaEmpresasPossiveis() {
-		this.onEmpresasUsuario();
-	}
-
-	public void onRowDblClckSelect(SelectEvent event) throws IOException {
-		Usuario obj = (Usuario) event.getObject();
-		this.setUsuarioEdicao(obj);
-		FacesContext.getCurrentInstance().getExternalContext()
-				.redirect("CadastroUsuario.xhtml?usuario=" + obj.getId());
-	}
 }

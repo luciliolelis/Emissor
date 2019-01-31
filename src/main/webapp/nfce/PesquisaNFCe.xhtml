@@ -37,13 +37,13 @@
 					<p:outputLabel value="Data de emissão" />
 					<h:panelGroup>
 						<p:calendar value="#{pesquisaNFCeBean.filtro.dataCriacaoDe}"
-							style="margin: 5px" label="Data inicial" pattern="dd/MM/yyyy"
+							style="margin: 5px" label="Data inicial" pattern="dd/MM/yyyy"  locale="pt"
 							maxdate="new Date()" size="10">
 							<p:ajax event="dateSelect" update="dataFinal" />
 						</p:calendar>
 	    			a
 	    			<p:calendar value="#{pesquisaNFCeBean.filtro.dataCriacaoAte}"
-							style="margin: 5px" label="Data final" pattern="dd/MM/yyyy"
+							style="margin: 5px" label="Data final" pattern="dd/MM/yyyy"  locale="pt"
 							id="dataFinal" maxdate="new Date()"
 							mindate="#{pesquisaNFCeBean.filtro.dataCriacaoDe}" size="10" />
 					</h:panelGroup>

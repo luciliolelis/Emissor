@@ -5,18 +5,26 @@
 	xmlns:p="http://primefaces.org/ui">
 
 
-	<p:dataTable value="#{gestaoHomeBean.acessos}" var="acesso"
+	<p:dataTable value="#{gestaoHomeBean.acessosList}" var="acesso"
 		styleClass="myTable" emptyMessage="Nenhum acesso encontrado."
 		rows="10" paginator="true" paginatorPosition="bottom"
 		style="margin-top: 10px" id="acessos-table" reflow="true">
 
-		<p:column headerText="Data/hora">
-			<h:outputText value="#{acesso.data_hora}">
+		<p:column headerText="Ação">
+			<h:outputText value="#{acesso.acao}" />
+		</p:column>
+
+		<p:column headerText="Usuário">
+			<h:outputText value="#{acesso.nome}" />
+		</p:column>
+
+		<p:column headerText="Data/hora" style="width:13%">
+			<h:outputText value="#{acesso.data_hora}" >
 				<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" timeZone="GMT-3" />
 			</h:outputText>
 		</p:column>
 
-		<p:column headerText="IP">
+		<p:column headerText="IP" >
 			<h:outputText value="#{acesso.ip_cliente}" />
 		</p:column>
 
@@ -24,16 +32,14 @@
 			<h:outputText value="#{acesso.email}" />
 		</p:column>
 
-		<p:column headerText="Nome">
-			<h:outputText value="#{acesso.nome}" />
-		</p:column>
+
 
 		<p:column headerText="Empresa">
 			<h:outputText value="#{acesso.empresa}" />
 		</p:column>
 
 		<f:facet name="footer">
-									(#{gestaoHomeBean.acessos.size()}) registros
+									(#{gestaoHomeBean.acessosList.size()}) registros
 				    			</f:facet>
 	</p:dataTable>
 

@@ -10,6 +10,8 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
+import javax.enterprise.event.Event;
+import javax.enterprise.inject.Any;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -56,6 +58,10 @@ public class LoginEmpresaBean implements Serializable {
 
 	@Inject
 	private GestaoUsuariosBean gestaoUsuariosBean;
+
+	@Inject
+	@Any
+	private Event<Usuario> eventLog;
 
 	private Empresa empresa;
 
@@ -117,18 +123,7 @@ public class LoginEmpresaBean implements Serializable {
 		System.out.println(this.usuario.getEmpresa().getRazao_social());
 	}
 
-	private String retNomeMaquinaCliente() {
-		InetAddress address = null;
-
-		try {
-			address = InetAddress.getByName(request.getRemoteHost());
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
-
-		return address.getHostName();
-	}
-
+	
 	public void onGravaLogIn() {
 
 		LogAcesso log = new LogAcesso();
@@ -142,6 +137,21 @@ public class LoginEmpresaBean implements Serializable {
 		this.gestaoUsuariosBean.salvarLogAcesso(log);
 
 		System.out.println(usuarioLogado.getUsername() + "Login na empresa " + log.getEmpresa());
+	}
+
+
+
+	public String retNomeMaquinaCliente() {
+
+		InetAddress address = null;
+
+		try {
+			address = InetAddress.getByName(request.getRemoteHost());
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+
+		return address.getHostName();
 	}
 
 	public void onGravaLogOut() throws ServletException, IOException {

@@ -15,7 +15,6 @@ import org.primefaces.event.SelectEvent;
 
 import com.amsoft.erp.model.EmpresaGrupo;
 import com.amsoft.erp.model.Grupo;
-import com.amsoft.erp.model.LogAcesso;
 import com.amsoft.erp.model.Usuario;
 import com.amsoft.erp.model.emitente.Empresa;
 import com.amsoft.erp.repository.Empresas;
@@ -187,10 +186,6 @@ public class GestaoPerfilUsuariosBean implements Serializable {
 
 	public Usuario salvar(Usuario usuario) {
 		return this.cadastroUsuario.salvar(usuario);
-	}
-
-	public LogAcesso salvarLogAcesso(LogAcesso log) {
-		return this.cadastroUsuario.salvarLogAcesso(log);
 	}
 
 	public void removerEmpresa() {

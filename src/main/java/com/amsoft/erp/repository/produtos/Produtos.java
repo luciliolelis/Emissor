@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.enterprise.event.Event;
+import javax.enterprise.inject.Any;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -42,9 +44,14 @@ public class Produtos implements Serializable {
 
 	@Inject
 	private EntityManager manager;
+	
+	@Inject @Any
+	private Event<Produto> event;
 
 	public Produto guardar(Produto produto) {
-		return manager.merge(produto);
+		Produto prod = manager.merge(produto);
+		this.event.fire(prod);		
+		return prod;
 	}
 
 	@Transactional
@@ -211,4 +218,9 @@ public class Produtos implements Serializable {
 
 		return query.getResultList();
 	}
+
+	
+
+	
+	
 }

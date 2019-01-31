@@ -5,9 +5,13 @@
 	xmlns:p="http://primefaces.org/ui">
 
 	<p:dataTable id="nfcediariasTable" value="#{gestaoHomeBean.nfceList}"
-		var="nfce" styleClass="myTable" emptyMessage="Nenhuma NFC-e encontrada."
-		rows="10" paginator="true" paginatorPosition="bottom"
-		style="margin-top: 10px" reflow="true">
+		var="nfce" styleClass="myTable"
+		emptyMessage="Nenhuma NFC-e encontrada." rows="10" paginator="true"
+		paginatorPosition="bottom" style="margin-top: 10px" reflow="true">
+
+		<p:column headerText="Usúario">
+			<h:outputText value="#{nfce.usuario.nome}" />
+		</p:column>
 
 		<p:column headerText="Emissão">
 			<h:outputText value="#{nfce.emissao}">
@@ -17,9 +21,6 @@
 
 		<p:column headerText="Empresa">
 			<h:outputText value="#{nfce.empresa.nome_fantasia}" />
-		</p:column>
-		<p:column headerText="Usúario">
-			<h:outputText value="#{nfce.usuario.nome}" />
 		</p:column>
 
 		<p:column headerText="Valor" style="text-align: right">

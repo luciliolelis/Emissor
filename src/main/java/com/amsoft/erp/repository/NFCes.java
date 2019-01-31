@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import javax.enterprise.event.Event;
+import javax.enterprise.inject.Any;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -40,7 +42,10 @@ import com.amsoft.erp.security.UsuarioSistema;
 public class NFCes implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-
+	
+	@Inject @Any
+	private Event<NFCe> event;
+	
 	@Inject
 	@UsuarioLogado
 	UsuarioSistema usuarioLogado;
@@ -57,7 +62,9 @@ public class NFCes implements Serializable {
 	}
 
 	public NFCe guardar(NFCe nfce) {
-		return manager.merge(nfce);
+		NFCe nfc = manager.merge(nfce);
+		 this.event.fire(nfc);
+		return nfc;
 	}
 
 	public void remover(NFCe nfce) {
