@@ -113,7 +113,7 @@
 				<center>
 
 					<p:commandButton value="Salvar" icon="fa far fa-save"
-						process="@this" class="button-salvar" id="salvar-button"
+						process="@form" class="button-salvar" id="salvar-button"
 						onsuccess="setConfirmUnload(false)"
 						rendered="#{seguranca.editarUsuario or seguranca.incluirUsuario}"
 						action="#{gestaoUsuariosBean.salvar}" update="msgs usuarios-table" />

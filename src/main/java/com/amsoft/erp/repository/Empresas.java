@@ -3,6 +3,8 @@ package com.amsoft.erp.repository;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.enterprise.event.Event;
+import javax.enterprise.inject.Any;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
@@ -27,7 +29,10 @@ public class Empresas implements Serializable {
 	@Inject
 	@UsuarioLogado
 	UsuarioSistema usuarioLogado;
-
+	
+	@Inject @Any
+	private Event<Empresa> event;
+	
 	public Empresa porId(Integer id) {
 		return manager.find(Empresa.class, id);
 	}
@@ -41,7 +46,9 @@ public class Empresas implements Serializable {
 	}
 
 	public Empresa guardar(Empresa empresa) {
-		return manager.merge(empresa);
+		Empresa empr = manager.merge(empresa);
+		this.event.fire(empr);
+		return  empr;
 	}
 
 	public void remover(Empresa empresa) {

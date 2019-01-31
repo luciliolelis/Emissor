@@ -1,0 +1,32 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:dataTable id="clientesTable" value="#{gestaoHomeBean.clientesList}"
+		var="cliente" styleClass="myTable"
+		emptyMessage="Nenhum Cliente encontrado." rows="10" paginator="true"
+		paginatorPosition="bottom" style="margin-top: 10px" reflow="true">
+
+		<p:column headerText="Usúario">
+			<h:outputText value="#{cliente.nome}" />
+		</p:column>
+
+		<p:column headerText="Data/hora do Cadastro">
+			<h:outputText value="#{cadastro.data_hora}">
+				<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" timeZone="GMT-3" />
+			</h:outputText>
+		</p:column>
+
+		<p:column headerText="Cliente">
+			<h:outputText value="#{cadastro.cliente}" />
+		</p:column>
+
+		<f:facet name="footer">
+			(#{gestaoHomeBean.clientesList.size()}) registros
+		</f:facet>
+
+	</p:dataTable>
+
+</ui:composition>

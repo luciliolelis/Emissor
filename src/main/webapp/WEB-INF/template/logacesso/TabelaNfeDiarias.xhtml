@@ -9,6 +9,10 @@
 		rows="10" paginator="true" paginatorPosition="bottom"
 		style="margin-top: 10px" reflow="true">
 
+		<p:column headerText="Usúario">
+			<h:outputText value="#{nfe.usuario.nome}" />
+		</p:column>
+
 		<p:column headerText="Emissão">
 			<h:outputText value="#{nfe.emissao}">
 				<f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="GMT-3" />
@@ -17,9 +21,6 @@
 
 		<p:column headerText="Empresa">
 			<h:outputText value="#{nfe.empresa.nome_fantasia}" />
-		</p:column>
-		<p:column headerText="Usúario">
-			<h:outputText value="#{nfe.usuario.nome}" />
 		</p:column>
 
 		<p:column headerText="Valor" style="text-align: right">

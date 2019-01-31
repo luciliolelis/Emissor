@@ -27,8 +27,7 @@ public class LogAcessos implements Serializable {
 		return manager.merge(log);
 	}
 
-
-	public List<LogAcesso> filtrados(NfeFilter filtro) {		
+	public List<LogAcesso> filtrados(NfeFilter filtro) {
 		From<?, ?> orderByFromEntity = null;
 
 		CriteriaBuilder builder = manager.getCriteriaBuilder();
@@ -36,7 +35,7 @@ public class LogAcessos implements Serializable {
 
 		Root<LogAcesso> LogRoot = criteriaQuery.from(LogAcesso.class);
 
-		List<Predicate> predicates = criarPredicatesParaEmitidas(filtro, LogRoot);
+		List<Predicate> predicates = criarPredicates(filtro, LogRoot);
 
 		criteriaQuery.select(LogRoot);
 		criteriaQuery.where(predicates.toArray(new Predicate[0]));
@@ -49,7 +48,6 @@ public class LogAcessos implements Serializable {
 				nomePropriedadeOrdenacao = nomePropriedadeOrdenacao
 						.substring(filtro.getPropriedadeOrdenacao().indexOf(".") + 1);
 			}
-
 
 			if (filtro.isAscendente() && filtro.getPropriedadeOrdenacao() != null) {
 				criteriaQuery.orderBy(builder.asc(orderByFromEntity.get(nomePropriedadeOrdenacao)));
@@ -66,24 +64,24 @@ public class LogAcessos implements Serializable {
 		return query.getResultList();
 	}
 
+	private List<Predicate> criarPredicates(NfeFilter filtro, Root<LogAcesso> LogRoot) {
+		CriteriaBuilder builder = manager.getCriteriaBuilder();
+		List<Predicate> predicates = new ArrayList<>();
 
+		filtro.setPropriedadeOrdenacao("data_hora");
+		filtro.setAscendente(false);
 
-		private List<Predicate> criarPredicatesParaEmitidas(NfeFilter filtro, Root<LogAcesso> LogRoot ) {
-			CriteriaBuilder builder = manager.getCriteriaBuilder();
-			List<Predicate> predicates = new ArrayList<>();
-
-			filtro.setPropriedadeOrdenacao("data_hora");
-			filtro.setAscendente(false);
-
-			if (filtro.getDataCriacaoDe() != null) {
-				predicates.add(builder.greaterThanOrEqualTo(LogRoot.get("data_hora"), filtro.getDataCriacaoDe()));
-			}
-
-			if (filtro.getDataCriacaoAte() != null) {
-				predicates.add(builder.lessThanOrEqualTo(LogRoot.get("data_hora"), filtro.getDataCriacaoAte()));
-			}
-
-			return predicates;
+		if (filtro.getDataCriacaoDe() != null) {
+			predicates.add(builder.greaterThanOrEqualTo(LogRoot.get("data_hora"), filtro.getDataCriacaoDe()));
 		}
-		
+
+		if (filtro.getDataCriacaoAte() != null) {
+			predicates.add(builder.lessThanOrEqualTo(LogRoot.get("data_hora"), filtro.getDataCriacaoAte()));
+		}
+
+		return predicates;
+	}
+
+	
+	
 }

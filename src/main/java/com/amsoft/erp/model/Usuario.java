@@ -132,4 +132,12 @@ public class Usuario implements Serializable {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "Usuario [id=" + id + ", nome=" + nome + ", email=" + email + ", senha=" + senha + ", empresa=" + empresa
+				+ ", empresaGrupo=" + empresaGrupo + ", empresasGrupos=" + empresasGrupos + "]";
+	}
+	
+	
+
 }

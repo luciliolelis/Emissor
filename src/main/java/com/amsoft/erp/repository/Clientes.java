@@ -3,6 +3,8 @@ package com.amsoft.erp.repository;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.enterprise.event.Event;
+import javax.enterprise.inject.Any;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
@@ -32,6 +34,9 @@ public class Clientes implements Serializable {
 	@Inject
 	@UsuarioLogado
 	UsuarioSistema usuarioLogado;
+	
+	@Inject @Any
+	private Event<Cliente> event;
 
 	public Cliente porId(Long id) {
 		return manager.find(Cliente.class, id);
@@ -42,7 +47,9 @@ public class Clientes implements Serializable {
 	}
 
 	public Cliente guardar(Cliente cliente) {
-		return manager.merge(cliente);
+		Cliente client = manager.merge(cliente);
+		this.event.fire(client);
+		return client;
 	}
 
 	public void remover(Cliente cliente) {
@@ -187,4 +194,6 @@ public class Clientes implements Serializable {
 
 	}
 
+
+	
 }

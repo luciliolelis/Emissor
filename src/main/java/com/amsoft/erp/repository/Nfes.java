@@ -12,6 +12,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.enterprise.event.Event;
+import javax.enterprise.inject.Any;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -53,6 +55,9 @@ import com.amsoft.erp.security.UsuarioSistema;
 public class Nfes implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	
+	@Inject @Any
+	private Event<Nfe> event;
 
 	@Inject
 	@UsuarioLogado
@@ -70,7 +75,9 @@ public class Nfes implements Serializable {
 	}
 
 	public Nfe guardar(Nfe nfe) {
-		return manager.merge(nfe);
+		Nfe nfE = manager.merge(nfe);
+		this.event.fire(nfE);
+		return nfE;
 	}
 
 	public void remover(Nfe nfe) {

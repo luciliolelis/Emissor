@@ -17,8 +17,7 @@
 			<p:fieldset class="grupo-geral">
 				<h:panelGrid columns="2">
 					<div class="barra-vertical"></div>
-					<h:outputLabel value="Logs"
-						styleClass="titulo-pesquisa"></h:outputLabel>
+					<h:outputLabel value="Logs" styleClass="titulo-pesquisa"></h:outputLabel>
 				</h:panelGrid>
 
 
@@ -30,13 +29,15 @@
 					<h:panelGroup>
 						<p:calendar value="#{gestaoHomeBean.filtro.dataCriacaoDe}"
 							style="margin: 5px" label="Data inicial" pattern="dd/MM/yyyy"
-							maxdate="new Date()" size="10">
+							maxdate="new Date()" size="10" locale="pt">
 							<p:ajax event="dateSelect" update="dataFinal" />
 						</p:calendar>
 	    			e
-	    			<p:calendar	value="#{gestaoHomeBean.filtro.dataCriacaoAte}"
-							style="margin: 5px" label="Data final" pattern="dd/MM/yyyy" id="dataFinal"
-							maxdate="new Date()" mindate="#{gestaoHomeBean.filtro.dataCriacaoDe}" size="10" />
+	    			<p:calendar value="#{gestaoHomeBean.filtro.dataCriacaoAte}"
+							style="margin: 5px" label="Data final" pattern="dd/MM/yyyy"
+							id="dataFinal" maxdate="new Date()"
+							mindate="#{gestaoHomeBean.filtro.dataCriacaoDe}" size="10"
+							locale="pt" />
 					</h:panelGroup>
 
 					<p:commandButton value="Pesqusiar"
@@ -54,10 +55,11 @@
 						<ui:include
 							src="/WEB-INF/template/logacesso/TabelaNfeDiarias.xhtml" />
 					</p:tab>
-						<p:tab title="NFC-e">
+					<p:tab title="NFC-e">
 						<ui:include
 							src="/WEB-INF/template/logacesso/TabelaNfceDiarias.xhtml" />
 					</p:tab>
+
 				</p:tabView>
 			</p:fieldset>
 		</h:form>

@@ -33,10 +33,10 @@ public class GestaoHomeBean implements Serializable {
 
 	@Inject
 	private Nfes nfes;
-	
+
 	@Inject
 	private NFCes nfces;
-	
+
 	@Inject
 	private LogAcessos logAcessos;
 
@@ -44,7 +44,7 @@ public class GestaoHomeBean implements Serializable {
 	private BigDecimal totalNotasNfeFiltadas;
 	private BigDecimal totalNotasNfceFiltadas;
 
-	private List<LogAcesso> acessos = new ArrayList<>();
+	private List<LogAcesso> acessosList = new ArrayList<>();
 	private List<Nfe> nfeList = new ArrayList<>();
 	private List<NFCe> nfceList = new ArrayList<>();
 
@@ -70,9 +70,11 @@ public class GestaoHomeBean implements Serializable {
 		filtro.setDataCriacaoDe(ini);
 		filtro.setDataCriacaoAte(fin);
 
+		this.acessosList = this.logAcessos.filtrados(filtro);
+
 		this.nfeList = this.nfes.emitidas(filtro);
 		this.nfceList = this.nfces.emitidas(filtro);
-		this.acessos = this.logAcessos.filtrados(filtro);
+
 		this.somarNotasFiltradas();
 	}
 
@@ -95,8 +97,8 @@ public class GestaoHomeBean implements Serializable {
 		this.filtro = filtro;
 	}
 
-	public List<LogAcesso> getAcessos() {
-		return acessos;
+	public List<LogAcesso> getacessosList() {
+		return acessosList;
 	}
 
 	public List<NFCe> getNfceList() {
@@ -105,6 +107,10 @@ public class GestaoHomeBean implements Serializable {
 
 	public List<Nfe> getNfeList() {
 		return nfeList;
+	}
+
+	public List<LogAcesso> getAcessosList() {
+		return acessosList;
 	}
 
 	public BigDecimal getTotalNotasNfeFiltadas() {

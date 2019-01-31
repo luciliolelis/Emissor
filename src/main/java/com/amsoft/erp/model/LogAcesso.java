@@ -16,15 +16,17 @@ public class LogAcesso implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private String nome;
-	private String email;
-	private String nome_maquina;
-	private String ip_cliente;
-	private Date data_hora;
-	private String empresa;
 	private String acao;
+	private Date data_hora;
+	private String email;
+	private String empresa;
+	private String ip_cliente;
+	private String nome;
+	private String nome_maquina;
+	
+
 	
 	public Long getId() {
 		return id;
@@ -81,7 +83,6 @@ public class LogAcesso implements Serializable {
 	public void setEmpresa(String empresa) {
 		this.empresa = empresa;
 	}
-	
 
 	public String getAcao() {
 		return acao;
