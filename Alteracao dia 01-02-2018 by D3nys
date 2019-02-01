@@ -1,0 +1,16 @@
+Lista de Alteracao 
+
+	1 - Alteracao de Tela de LogAcesso ;
+	2 - Busca de por Periodos entre Data ;
+	3 - Criado metodo para buscas as NFe e NFCe utilizando filtro existe da Classe NFeFilter ;
+	4 - Os Filtro para fazer a busca do Acessos/Cadastros e utilizado filtro existe da Classe NFeFilter ;
+	5 - AS Listas dos log e pesquisa das Notas emitidas estao centralizada na class GestaoHomeBean.java ;
+	6 - Para Utilização dos Log de Acessos/Cadastros esta sendo utilizado o Pradrão de Obejeto Observer,
+		usando a implementacao do CDI. Onde cada merge dispara um evento com o obejeto para ser gravado, 
+		a escuta deste evento acontece na Class LogAcessoSerice.java
+	7 - A Class LogAcessoService.java e responsavel de receber os objetos e evetuar o casdastro do Log;	
+	8 - Realizado dos testes de log onde foi constatado que o cadastro de usuario nao estava funcinal, 
+	9 -	Sendo assim foi realizado a busca do Bug e evetuado a correção ;
+	 
+	 
+	 
