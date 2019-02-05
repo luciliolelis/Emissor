@@ -27,13 +27,13 @@
 
 					<p:outputLabel value="Datas entre" />
 					<h:panelGroup>
-						<p:calendar value="#{gestaoHomeBean.filtro.dataCriacaoDe}"
-							style="margin: 5px" label="Data inicial" pattern="dd/MM/yyyy"
+						<p:calendar value="#{gestaoHomeBean.filtro.dataCriacaoDe}" navigator="true"
+							style="margin: 5px" label="Data inicial" pattern="dd/MM/yyyy" mask="true"
 							maxdate="new Date()" size="10" locale="pt">
 							<p:ajax event="dateSelect" update="dataFinal" />
 						</p:calendar>
 	    			e
-	    			<p:calendar value="#{gestaoHomeBean.filtro.dataCriacaoAte}"
+	    			<p:calendar value="#{gestaoHomeBean.filtro.dataCriacaoAte}" navigator="true" mask="true"
 							style="margin: 5px" label="Data final" pattern="dd/MM/yyyy"
 							id="dataFinal" maxdate="new Date()"
 							mindate="#{gestaoHomeBean.filtro.dataCriacaoDe}" size="10"

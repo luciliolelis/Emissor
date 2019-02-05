@@ -4,5 +4,6 @@ encoding//src/main/resources=UTF-8
 encoding//src/main/webapp/relatorios/relatorioLogPeriodo.jrxml=UTF-8
 encoding//src/main/webapp/relatorios/relatorioNfCePeriodo.jrxml=UTF-8
 encoding//src/main/webapp/relatorios/relatorioNfePeriodo.jrxml=UTF-8
+encoding//src/main/webapp/relatorios/relatorio_pedidos_emitidos.jrxml=UTF-8
 encoding//src/test/java=UTF-8
 encoding/<project>=UTF-8

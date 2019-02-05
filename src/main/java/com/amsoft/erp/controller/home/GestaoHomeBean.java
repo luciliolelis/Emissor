@@ -91,30 +91,21 @@ public class GestaoHomeBean implements Serializable {
 				this.nfceList.stream().map(NFCe::getValorTotalNota).reduce(BigDecimal.ZERO, BigDecimal::add));
 	}
 
-	@SuppressWarnings("rawtypes")
 	public void emitirPDFNfe() {
-		if (!nfceList.isEmpty()) {
-			HashMap parametros = new HashMap<>();
-			RelatorioUtil.imprimeRelatorio("relatorioNfePeriodo", parametros, nfeList);
-		}
-		
+		HashMap<Object, Object> parametros = new HashMap<>();
+		RelatorioUtil.imprimeRelatorio("relatorioNfePeriodo", parametros, nfeList);
 	}
 
-	@SuppressWarnings("rawtypes")
 	public void emitirPDFNfce() {
-		if (!nfceList.isEmpty()) {
-			HashMap parametros = new HashMap<>();
-			RelatorioUtil.imprimeRelatorio("relatorioNfCePeriodo", parametros, nfceList);
-		}
-		
+
+		HashMap<Object, Object> parametros = new HashMap<>();
+		RelatorioUtil.imprimeRelatorio("relatorioNfCePeriodo", parametros, nfceList);
+
 	}
-	@SuppressWarnings("rawtypes")
+
 	public void emitirPDFLog() {
-		if (!acessosList.isEmpty()) {
-			HashMap parametros = new HashMap<>();
-			RelatorioUtil.imprimeRelatorio("relatorioLogPeriodo", parametros, acessosList);
-		}
-		
+		HashMap<Object, Object> parametros = new HashMap<>();
+		RelatorioUtil.imprimeRelatorio("relatorioLogPeriodo", parametros, acessosList);
 	}
 
 	public NfeFilter getFiltro() {
