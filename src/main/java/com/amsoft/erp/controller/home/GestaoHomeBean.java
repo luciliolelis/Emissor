@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -18,6 +19,7 @@ import com.amsoft.erp.repository.LogAcessos;
 import com.amsoft.erp.repository.NFCes;
 import com.amsoft.erp.repository.Nfes;
 import com.amsoft.erp.repository.filter.NfeFilter;
+import com.amsoft.erp.util.RelatorioUtil;
 import com.amsoft.erp.util.date.AmsoftUtilsDate;
 import com.amsoft.erp.util.jsf.FacesUtil;
 
@@ -87,6 +89,23 @@ public class GestaoHomeBean implements Serializable {
 				this.nfeList.stream().map(Nfe::getValorTotalNota).reduce(BigDecimal.ZERO, BigDecimal::add));
 		this.setTotalNotasNfceFiltadas(
 				this.nfceList.stream().map(NFCe::getValorTotalNota).reduce(BigDecimal.ZERO, BigDecimal::add));
+	}
+
+	public void emitirPDFNfe() {
+		HashMap<Object, Object> parametros = new HashMap<>();
+		RelatorioUtil.imprimeRelatorio("relatorioNfePeriodo", parametros, nfeList);
+	}
+
+	public void emitirPDFNfce() {
+
+		HashMap<Object, Object> parametros = new HashMap<>();
+		RelatorioUtil.imprimeRelatorio("relatorioNfCePeriodo", parametros, nfceList);
+
+	}
+
+	public void emitirPDFLog() {
+		HashMap<Object, Object> parametros = new HashMap<>();
+		RelatorioUtil.imprimeRelatorio("relatorioLogPeriodo", parametros, acessosList);
 	}
 
 	public NfeFilter getFiltro() {

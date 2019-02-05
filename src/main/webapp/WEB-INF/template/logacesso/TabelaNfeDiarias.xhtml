@@ -4,6 +4,18 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 
+	<p:toolbar id="toolbarPDFNFe" style="margin-top:15px">
+		<p:toolbarGroup>
+
+			<p:commandButton value="Exportar para PDF" class="button-pesquisa"
+				icon="fa fa-file-pdf-o" action="#{gestaoHomeBean.emitirPDFNfe}"
+				ajax="false" onclick="this.form.target='_blank'"  disabled="#{empty gestaoHomeBean.nfeList}" />
+
+
+		</p:toolbarGroup>
+
+	</p:toolbar>
+
 	<p:dataTable id="nfediariasTable" value="#{gestaoHomeBean.nfeList}"
 		var="nfe" styleClass="myTable" emptyMessage="Nenhuma NF-e encontrada."
 		rows="10" paginator="true" paginatorPosition="bottom"
@@ -24,7 +36,7 @@
 		</p:column>
 
 		<p:column headerText="Valor" style="text-align: right">
-			<h:outputText value="#{nfe.valorTotalNota}">
+			<h:outputText value="#{nfe.valorTotal}">
 				<f:convertNumber type="currency" />
 			</h:outputText>
 		</p:column>
@@ -48,5 +60,4 @@
 		</f:facet>
 
 	</p:dataTable>
-
 </ui:composition>

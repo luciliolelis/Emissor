@@ -18,7 +18,7 @@
 			<p:outputLabel value="#{gestaoUsuariosBean.usuarioEdicao.nome}" />
 
 			<p:outputLabel value="Emitente" for="empresa" />
-			<p:selectOneMenu id="empresa" required="true" var="e"
+			<p:selectOneMenu id="empresa" required="true" var="e" style="max-width:250px" panelStyle="max-width:400px"
 				value="#{gestaoUsuariosBean.empresaSelecionada}">
 
 				<f:selectItems value="#{gestaoUsuariosBean.todasEmpresas}"
@@ -55,7 +55,7 @@
 				oncomplete="if (!args.validationFailed) PF('grupoDialog').hide()"
 				update="msgsAutosizacao :frm:tableGrupoEmpresa"
 				actionListener="#{gestaoUsuariosBean.onConfirmaGrupo}"
-				styleClass="ui-priority-primary">
+				styleClass="button-filtro" >
 			</p:commandButton>
 		</h:panelGrid>
 	</p:dialog>
