@@ -3,6 +3,18 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
+	
+	<p:toolbar id="toolbarPDFNFCE" style="margin-top:15px">
+		<p:toolbarGroup>
+
+			<p:commandButton value="Exportar para PDF" class="button-pesquisa"
+				icon="fa fa-file-pdf-o" action="#{gestaoHomeBean.emitirPDFNfce}"
+				ajax="false" onclick="this.form.target='_blank'" />
+
+
+		</p:toolbarGroup>
+
+	</p:toolbar>
 
 	<p:dataTable id="nfcediariasTable" value="#{gestaoHomeBean.nfceList}"
 		var="nfce" styleClass="myTable"

@@ -10,14 +10,18 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.jdbc.Work;
 
-import net.sf.jasperreports.engine.JRExporter;
-import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
+import net.sf.jasperreports.export.Exporter;
+import net.sf.jasperreports.export.ExporterInput;
+import net.sf.jasperreports.export.OutputStreamExporterOutput;
+import net.sf.jasperreports.export.PdfExporterConfiguration;
+import net.sf.jasperreports.export.PdfReportConfiguration;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 
-@SuppressWarnings("deprecation")
 public class ExecutorRelatorio implements Work {
 
 	private String caminhoRelatorio;
@@ -46,10 +50,12 @@ public class ExecutorRelatorio implements Work {
 			JasperPrint print = JasperFillManager.fillReport(relatorioStream, this.parametros, connection);
 			this.relatorioGerado = print.getPages().size() > 0;
 			
+			
 			if (this.relatorioGerado) {
-				JRExporter<?, ?, ?, ?> exportador = new JRPdfExporter();
-				exportador.setParameter(JRExporterParameter.OUTPUT_STREAM, response.getOutputStream());
-				exportador.setParameter(JRExporterParameter.JASPER_PRINT, print);
+				Exporter<ExporterInput, PdfReportConfiguration, PdfExporterConfiguration, 
+			    	OutputStreamExporterOutput> exportador = new JRPdfExporter();
+				exportador.setExporterInput(new SimpleExporterInput(print));
+				exportador.setExporterOutput(new SimpleOutputStreamExporterOutput(response.getOutputStream()));
 				
 				response.setContentType("application/pdf");
 				response.setHeader("Content-Disposition", "attachment; filename=\"" 

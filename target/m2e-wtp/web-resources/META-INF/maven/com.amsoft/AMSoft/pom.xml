@@ -209,7 +209,6 @@
 			<groupId>net.sf.jasperreports</groupId>
 			<artifactId>jasperreports</artifactId>
 			<version>6.2.0</version>
-			<scope>compile</scope>
 		</dependency>
 
 		<!-- API de Servlet -->
