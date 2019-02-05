@@ -93,19 +93,28 @@ public class GestaoHomeBean implements Serializable {
 
 	@SuppressWarnings("rawtypes")
 	public void emitirPDFNfe() {
-		HashMap parametros = new HashMap<>();
-		RelatorioUtil.imprimeRelatorio("relatorioNfePeriodo", parametros, nfeList);
+		if (!nfceList.isEmpty()) {
+			HashMap parametros = new HashMap<>();
+			RelatorioUtil.imprimeRelatorio("relatorioNfePeriodo", parametros, nfeList);
+		}
+		
 	}
 
 	@SuppressWarnings("rawtypes")
 	public void emitirPDFNfce() {
-		HashMap parametros = new HashMap<>();
-		RelatorioUtil.imprimeRelatorio("relatorioNfCePeriodo", parametros, nfceList);
+		if (!nfceList.isEmpty()) {
+			HashMap parametros = new HashMap<>();
+			RelatorioUtil.imprimeRelatorio("relatorioNfCePeriodo", parametros, nfceList);
+		}
+		
 	}
 	@SuppressWarnings("rawtypes")
 	public void emitirPDFLog() {
-		HashMap parametros = new HashMap<>();
-		RelatorioUtil.imprimeRelatorio("relatorioLogPeriodo", parametros, acessosList);
+		if (!acessosList.isEmpty()) {
+			HashMap parametros = new HashMap<>();
+			RelatorioUtil.imprimeRelatorio("relatorioLogPeriodo", parametros, acessosList);
+		}
+		
 	}
 
 	public NfeFilter getFiltro() {

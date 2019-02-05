@@ -9,7 +9,7 @@
 
 			<p:commandButton value="Exportar para PDF" class="button-pesquisa"
 				icon="fa fa-file-pdf-o" action="#{gestaoHomeBean.emitirPDFNfce}"
-				ajax="false" onclick="this.form.target='_blank'" />
+				ajax="false" onclick="this.form.target='_blank'"  disabled="#{empty gestaoHomeBean.nfceList}" />
 
 
 		</p:toolbarGroup>
